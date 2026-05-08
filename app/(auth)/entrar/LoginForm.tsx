@@ -2,6 +2,9 @@
 
 import { useActionState } from "react";
 import { loginAction, type AuthState } from "../actions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function LoginForm({ redirectTo }: { redirectTo: string }) {
   const [state, formAction, isPending] = useActionState<AuthState, FormData>(
@@ -10,36 +13,30 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
   );
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-5">
       <input type="hidden" name="redirect" value={redirectTo} />
 
-      <div>
-        <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-700">
-          Email
-        </label>
-        <input
+      <div className="space-y-1.5">
+        <Label htmlFor="email">Email</Label>
+        <Input
           id="email"
           name="email"
           type="email"
           autoComplete="email"
           required
           placeholder="seu@email.com"
-          className="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
         />
       </div>
 
-      <div>
-        <label htmlFor="password" className="mb-1 block text-sm font-medium text-slate-700">
-          Palavra-passe
-        </label>
-        <input
+      <div className="space-y-1.5">
+        <Label htmlFor="password">Palavra-passe</Label>
+        <Input
           id="password"
           name="password"
           type="password"
           autoComplete="current-password"
           required
           placeholder="••••••••"
-          className="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
         />
       </div>
 
@@ -52,13 +49,14 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
         </div>
       )}
 
-      <button
+      <Button
         type="submit"
         disabled={isPending}
-        className="inline-flex w-full items-center justify-center rounded-md bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full bg-emerald-600 hover:bg-emerald-700"
+        size="lg"
       >
         {isPending ? "A entrar…" : "Entrar"}
-      </button>
+      </Button>
     </form>
   );
 }

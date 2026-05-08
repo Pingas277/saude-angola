@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -8,6 +7,11 @@ import {
   formatAOA,
   formatDateTimePT,
 } from "@/lib/labels";
+import StatCard from "../_ui/StatCard";
+import ActionCard from "../_ui/ActionCard";
+import SectionHeading from "../_ui/SectionHeading";
+import PageHeading from "../_ui/PageHeading";
+import EmptyState from "../_ui/EmptyState";
 
 export const metadata = { title: "Painel da Clínica · Saúde Angola" };
 
@@ -64,6 +68,12 @@ function startOfMonthISO(): string {
   d.setHours(0, 0, 0, 0);
   return d.toISOString();
 }
+function greetingPT(d = new Date()): string {
+  const h = d.getHours();
+  if (h < 12) return "Bom dia";
+  if (h < 19) return "Boa tarde";
+  return "Boa noite";
+}
 
 export default async function ClinicaHomePage() {
   const supabase = await createClient();
@@ -82,13 +92,11 @@ export default async function ClinicaHomePage() {
   if (!clinicId) {
     return (
       <main className="mx-auto max-w-3xl px-6 py-10">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-          Sem clínica atribuída
-        </h1>
-        <p className="mt-2 text-sm text-slate-600">
-          O seu utilizador é administrador, mas ainda não está associado a
-          nenhuma clínica. Contacte o suporte da Saúde Angola.
-        </p>
+        <EmptyState
+          icon="🏥"
+          title="Sem clínica atribuída"
+          desc="O seu utilizador é administrador, mas ainda não está associado a nenhuma clínica. Contacte o suporte da Saúde Angola."
+        />
       </main>
     );
   }
@@ -149,75 +157,79 @@ export default async function ClinicaHomePage() {
   }
   const staffCount = (staff ?? []).filter((s) => s.role !== "patient").length;
 
+  const firstName = profile?.full_name?.split(" ")[0] ?? "administrador";
+
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-          Bom dia, {profile?.full_name?.split(" ")[0] ?? "administrador"}
-        </h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Resumo da atividade da clínica.
-        </p>
-      </div>
+      <PageHeading
+        eyebrow={`${greetingPT()}, ${firstName}`}
+        title="Painel da clínica"
+        subtitle="Atividade do dia, faturação do mês e atalhos para a gestão da equipa."
+      />
 
-      <section className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard
+          tone="emerald"
+          icon="🗓️"
           label="Consultas hoje"
-          value={todayList.length.toString()}
+          value={todayList.length}
           hint={`${monthApptCount ?? 0} este mês`}
         />
         <StatCard
-          label="Faturação (mês)"
+          tone="amber"
+          icon="💰"
+          label="Faturação"
           value={formatAOA(monthRevenue)}
-          hint={`${(paidThisMonth ?? []).length} faturas pagas`}
+          hint={`${(paidThisMonth ?? []).length} faturas pagas (mês)`}
         />
         <StatCard
+          tone="slate"
+          icon="👥"
           label="Equipa"
-          value={staffCount.toString()}
-          hint={Object.entries(staffByRole)
-            .filter(([role]) => role !== "patient")
-            .map(([role, n]) => `${n} ${ROLE_LABELS[role] ?? role}`)
-            .join(" · ") || "—"}
+          value={staffCount}
+          hint={
+            Object.entries(staffByRole)
+              .filter(([role]) => role !== "patient")
+              .map(([role, n]) => `${n} ${ROLE_LABELS[role] ?? role}`)
+              .join(" · ") || "—"
+          }
         />
         <StatCard
-          label="Pacientes únicos hoje"
+          tone="sky"
+          icon="🩺"
+          label="Pacientes hoje"
           value={
             new Set(
               todayList.map((a) => {
                 const p = Array.isArray(a.patient) ? a.patient[0] : a.patient;
                 return p?.id;
               })
-            ).size.toString()
+            ).size
           }
           hint="Distintos com consulta hoje"
         />
       </section>
 
       <section className="mt-10">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-            Agenda de hoje
-          </h2>
-          <Link
-            href="/clinica/agenda"
-            className="text-sm font-medium text-emerald-700 hover:text-emerald-800"
-          >
-            Ver agenda completa →
-          </Link>
-        </div>
+        <SectionHeading
+          title="Agenda de hoje"
+          action={{ href: "/clinica/agenda", label: "Ver agenda completa" }}
+        />
 
         {todayList.length === 0 ? (
-          <div className="mt-3 rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
-            Sem consultas marcadas para hoje.
-          </div>
+          <EmptyState
+            icon="🗓️"
+            title="Sem consultas marcadas para hoje"
+            desc="Quando os médicos da clínica receberem marcações, aparecem aqui."
+          />
         ) : (
-          <ul className="mt-3 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
             {todayList.map((a) => (
               <li
                 key={a.id}
                 className="flex flex-wrap items-center gap-4 px-5 py-4"
               >
-                <div className="w-24 shrink-0 text-sm font-medium text-slate-900">
+                <div className="w-20 shrink-0 text-sm font-bold text-slate-900">
                   {new Date(a.scheduled_at).toLocaleTimeString("pt-PT", {
                     hour: "2-digit",
                     minute: "2-digit",
@@ -250,15 +262,18 @@ export default async function ClinicaHomePage() {
 
       <section className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-            Atividade recente
-          </h2>
+          <SectionHeading
+            title="Atividade recente"
+            action={{ href: "/clinica/faturas", label: "Ver todas" }}
+          />
           {(latestInvoices ?? []).length === 0 ? (
-            <div className="mt-3 rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500">
-              Sem faturas emitidas.
-            </div>
+            <EmptyState
+              icon="🧾"
+              title="Sem faturas emitidas"
+              desc="As faturas dos médicos aparecem aqui assim que forem emitidas."
+            />
           ) : (
-            <ul className="mt-3 divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
+            <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
               {(latestInvoices as Array<{
                 id: string;
                 amount: number | string;
@@ -277,7 +292,7 @@ export default async function ClinicaHomePage() {
                     className="flex flex-wrap items-center gap-3 px-5 py-3 text-sm"
                   >
                     <div className="min-w-0 flex-1">
-                      <div className="font-medium text-slate-900">
+                      <div className="font-semibold text-slate-900">
                         {formatAOA(Number(inv.amount))}
                       </div>
                       <div className="text-xs text-slate-500">
@@ -308,77 +323,30 @@ export default async function ClinicaHomePage() {
         </div>
 
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-            Atalhos
-          </h2>
-          <div className="mt-3 grid grid-cols-1 gap-3">
+          <SectionHeading title="Atalhos" />
+          <div className="grid grid-cols-1 gap-3">
             <ActionCard
               href="/clinica/equipa"
+              icon="👥"
               title="Gerir equipa"
-              desc="Adicionar ou remover médicos, enfermeiros e recepcionistas."
+              desc="Adicionar ou remover médicos, enfermeiros e recepção."
             />
             <ActionCard
               href="/clinica/faturas"
-              title="Ver todas as faturas"
+              icon="🧾"
+              title="Todas as faturas"
               desc="Pendentes, pagas e em atraso."
             />
             <ActionCard
               href="/clinica/perfil"
-              title="Editar perfil da clínica"
-              desc="Nome, morada, contacto e plano de subscrição."
+              icon="🏥"
+              title="Perfil da clínica"
+              desc="Nome, morada, contacto, plano de subscrição."
             />
           </div>
         </div>
       </section>
     </main>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  hint,
-}: {
-  label: string;
-  value: string;
-  hint?: string;
-}) {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5">
-      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-        {label}
-      </div>
-      <div className="mt-2 text-2xl font-bold text-slate-900">{value}</div>
-      {hint && <div className="mt-1 text-xs text-slate-500">{hint}</div>}
-    </div>
-  );
-}
-
-function ActionCard({
-  href,
-  title,
-  desc,
-}: {
-  href: string;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4 transition hover:border-emerald-300 hover:bg-emerald-50/40"
-    >
-      <div>
-        <div className="text-sm font-semibold text-slate-900">{title}</div>
-        <div className="mt-0.5 text-xs text-slate-600">{desc}</div>
-      </div>
-      <span
-        aria-hidden
-        className="text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-600"
-      >
-        →
-      </span>
-    </Link>
   );
 }
 

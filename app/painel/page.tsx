@@ -6,6 +6,10 @@ import {
   APPOINTMENT_TYPE_LABELS,
   formatDateTimePT,
 } from "@/lib/labels";
+import StatCard from "../_ui/StatCard";
+import ActionCard from "../_ui/ActionCard";
+import SectionHeading from "../_ui/SectionHeading";
+import PageHeading from "../_ui/PageHeading";
 
 export const metadata = { title: "Painel · Saúde Angola" };
 
@@ -43,13 +47,14 @@ export default async function PainelPage({
   }
 
   const nowIso = new Date().toISOString();
+  const fallbackId = "00000000-0000-0000-0000-000000000000";
 
   const [{ data: nextAppt }, { count: pastApptCount }, { data: lastRx }, { data: lastLab }] =
     await Promise.all([
       supabase
         .from("appointments")
         .select("id, scheduled_at, status, appointment_type, reason")
-        .eq("patient_id", patient?.id ?? "00000000-0000-0000-0000-000000000000")
+        .eq("patient_id", patient?.id ?? fallbackId)
         .gte("scheduled_at", nowIso)
         .order("scheduled_at", { ascending: true })
         .limit(1)
@@ -57,23 +62,25 @@ export default async function PainelPage({
       supabase
         .from("appointments")
         .select("id", { count: "exact", head: true })
-        .eq("patient_id", patient?.id ?? "00000000-0000-0000-0000-000000000000")
+        .eq("patient_id", patient?.id ?? fallbackId)
         .lt("scheduled_at", nowIso),
       supabase
         .from("prescriptions")
         .select("id, issued_at, notes")
-        .eq("patient_id", patient?.id ?? "00000000-0000-0000-0000-000000000000")
+        .eq("patient_id", patient?.id ?? fallbackId)
         .order("issued_at", { ascending: false })
         .limit(1)
         .maybeSingle(),
       supabase
         .from("lab_results")
         .select("id, test_name, lab_name, result_date")
-        .eq("patient_id", patient?.id ?? "00000000-0000-0000-0000-000000000000")
+        .eq("patient_id", patient?.id ?? fallbackId)
         .order("result_date", { ascending: false, nullsFirst: false })
         .limit(1)
         .maybeSingle(),
     ]);
+
+  const firstName = profile?.full_name?.split(" ")[0] ?? "paciente";
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
@@ -86,25 +93,24 @@ export default async function PainelPage({
         <Banner kind="success">Perfil atualizado com sucesso.</Banner>
       )}
 
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            Olá, {profile?.full_name?.split(" ")[0] ?? user.email}
-          </h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Aqui está um resumo da sua saúde.
-          </p>
-        </div>
-        <Link
-          href="/painel/marcar"
-          className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
-        >
-          + Marcar consulta
-        </Link>
-      </div>
+      <PageHeading
+        eyebrow={`Olá, ${firstName}`}
+        title="O seu painel de saúde"
+        subtitle="Aqui está um resumo da sua atividade clínica e atalhos para o que precisa."
+        action={
+          <Link
+            href="/painel/marcar"
+            className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+          >
+            + Marcar consulta
+          </Link>
+        }
+      />
 
-      <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
+          tone="emerald"
+          icon="🗓️"
           label="Próxima consulta"
           value={nextAppt ? formatDateTimePT(nextAppt.scheduled_at) : "—"}
           hint={
@@ -114,115 +120,109 @@ export default async function PainelPage({
           }
         />
         <StatCard
-          label="Consultas anteriores"
-          value={(pastApptCount ?? 0).toString()}
-          hint="Histórico de consultas"
+          tone="slate"
+          icon="📋"
+          label="Histórico"
+          value={pastApptCount ?? 0}
+          hint={(pastApptCount ?? 0) === 1 ? "consulta anterior" : "consultas anteriores"}
         />
         <StatCard
+          tone="amber"
+          icon="💊"
           label="Última receita"
-          value={lastRx ? formatDateTimePT(lastRx.issued_at) : "—"}
-          hint={lastRx ? "Disponível em receitas" : "Sem receitas"}
+          value={lastRx ? "Disponível" : "—"}
+          hint={lastRx ? formatDateTimePT(lastRx.issued_at) : "Sem receitas"}
         />
         <StatCard
+          tone="sky"
+          icon="🔬"
           label="Último exame"
           value={lastLab?.test_name ?? "—"}
           hint={lastLab?.lab_name ?? "Sem exames carregados"}
         />
       </section>
 
-      <section className="mt-8 rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      {/* === Telemedicina hero card === */}
+      <section className="mt-8 overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-emerald-50/50">
+        <div className="grid gap-6 p-6 sm:p-8 md:grid-cols-[2fr_1fr] md:items-center">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wide text-emerald-800">
-              Telemedicina
+            <div className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+              Telemedicina · disponível agora
             </div>
-            <h2 className="mt-1 text-lg font-bold text-slate-900">
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-900">
               Falar agora com um médico por vídeo
             </h2>
-            <p className="mt-1 max-w-xl text-sm text-slate-600">
-              Triagem rápida e atendimento por vídeo sem sair de casa.
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600">
+              Triagem rápida, atendimento por vídeo e receita digital em
+              minutos. Sem deslocações, sem filas.
             </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <Link
+                href="/painel/telemedicina"
+                className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-emerald-600/20 transition hover:bg-emerald-700"
+              >
+                Iniciar consulta →
+              </Link>
+              <Link
+                href="/painel/marcar"
+                className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+              >
+                Marcar para mais tarde
+              </Link>
+            </div>
           </div>
-          <Link
-            href="/painel/telemedicina"
-            className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
-          >
-            Iniciar consulta →
-          </Link>
+          <div className="hidden md:block">
+            <div className="grid grid-cols-2 gap-2 text-center">
+              <Mini label="Triagem" value="< 1 min" />
+              <Mini label="Espera" value="≈ 3 min" />
+              <Mini label="Receita" value="QR + PDF" />
+              <Mini label="Pagamento" value="MCX" />
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <ActionCard
-          href="/painel/marcar"
-          title="Marcar uma consulta"
-          desc="Presencial numa clínica ou por telemedicina."
-        />
-        <ActionCard
-          href="/painel/consultas"
-          title="Ver as minhas consultas"
-          desc="Próximas e anteriores."
-        />
-        <ActionCard
-          href="/painel/receitas"
-          title="Ver receitas médicas"
-          desc="Acesso rápido com código QR."
-        />
-        <ActionCard
-          href="/perfil"
-          title="Atualizar perfil clínico"
-          desc="Alergias, doenças crónicas e contacto de emergência."
-        />
+      <section className="mt-10">
+        <SectionHeading title="O que pode fazer" />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <ActionCard
+            href="/painel/marcar"
+            icon="📅"
+            title="Marcar uma consulta"
+            desc="Presencial numa clínica ou por telemedicina."
+          />
+          <ActionCard
+            href="/painel/consultas"
+            icon="🩺"
+            title="As minhas consultas"
+            desc="Próximas marcações e histórico recente."
+          />
+          <ActionCard
+            href="/painel/receitas"
+            icon="💊"
+            title="Receitas médicas"
+            desc="Acesso rápido com código QR e PDF."
+          />
+          <ActionCard
+            href="/painel/faturas"
+            icon="🧾"
+            title="As minhas faturas"
+            desc="Pagar com Multicaixa Express e ver comprovativos."
+          />
+        </div>
       </section>
     </main>
   );
 }
 
-function StatCard({
-  label,
-  value,
-  hint,
-}: {
-  label: string;
-  value: string;
-  hint?: string;
-}) {
+function Mini({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5">
-      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <div className="rounded-lg border border-emerald-100 bg-white px-3 py-2.5">
+      <div className="text-[10px] font-medium uppercase tracking-wider text-emerald-700">
         {label}
       </div>
-      <div className="mt-2 text-base font-semibold text-slate-900">{value}</div>
-      {hint && <div className="mt-1 text-xs text-slate-500">{hint}</div>}
+      <div className="mt-0.5 text-sm font-bold text-slate-900">{value}</div>
     </div>
-  );
-}
-
-function ActionCard({
-  href,
-  title,
-  desc,
-}: {
-  href: string;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white p-5 transition hover:border-emerald-300 hover:bg-emerald-50/40"
-    >
-      <div>
-        <div className="text-base font-semibold text-slate-900">{title}</div>
-        <div className="mt-0.5 text-sm text-slate-600">{desc}</div>
-      </div>
-      <span
-        aria-hidden
-        className="text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-600"
-      >
-        →
-      </span>
-    </Link>
   );
 }
 

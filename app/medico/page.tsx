@@ -5,6 +5,11 @@ import {
   APPOINTMENT_STATUS_LABELS,
   APPOINTMENT_TYPE_LABELS,
 } from "@/lib/labels";
+import StatCard from "../_ui/StatCard";
+import ActionCard from "../_ui/ActionCard";
+import SectionHeading from "../_ui/SectionHeading";
+import PageHeading from "../_ui/PageHeading";
+import EmptyState from "../_ui/EmptyState";
 
 export const metadata = { title: "Painel do Médico · Saúde Angola" };
 
@@ -48,12 +53,25 @@ function endOfTodayISO(): string {
   return d.toISOString();
 }
 
+function greetingPT(d = new Date()): string {
+  const h = d.getHours();
+  if (h < 12) return "Bom dia";
+  if (h < 19) return "Boa tarde";
+  return "Boa noite";
+}
+
 export default async function MedicoHomePage() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/entrar");
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name")
+    .eq("id", user.id)
+    .maybeSingle();
 
   const startToday = startOfTodayISO();
   const endToday = endOfTodayISO();
@@ -100,55 +118,123 @@ export default async function MedicoHomePage() {
   const todayList = (today as ApptRow[] | null) ?? [];
   const upcomingToday = todayList.filter((a) => a.scheduled_at >= nowIso);
 
+  const lastName = profile?.full_name?.split(" ").slice(-1)[0] ?? "";
+
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-          Bom dia, Doutor
-        </h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Resumo da sua atividade clínica.
-        </p>
-      </div>
+      <PageHeading
+        eyebrow={`${greetingPT()}, Doutor${lastName ? ` ${lastName}` : ""}`}
+        title="Painel clínico"
+        subtitle="Resumo da sua atividade de hoje. Atalhos para a agenda, telemedicina e pacientes."
+      />
 
-      <section className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard label="Consultas hoje" value={todayList.length.toString()} hint="No total" />
+      <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard
-          label="Próximas hoje"
-          value={upcomingToday.length.toString()}
-          hint="Ainda por atender"
+          tone="emerald"
+          icon="🗓️"
+          label="Hoje"
+          value={todayList.length}
+          hint={
+            upcomingToday.length === 1
+              ? `${upcomingToday.length} ainda por atender`
+              : `${upcomingToday.length} ainda por atender`
+          }
         />
         <StatCard
-          label="Próximas consultas"
-          value={(upcomingCount ?? 0).toString()}
-          hint="Marcadas e por atender"
+          tone="sky"
+          icon="📅"
+          label="Próximas"
+          value={upcomingCount ?? 0}
+          hint="Marcadas e confirmadas"
         />
         <StatCard
-          label="Receitas emitidas"
-          value={(rxCount ?? 0).toString()}
-          hint={`${recordCount ?? 0} registos clínicos`}
+          tone="amber"
+          icon="💊"
+          label="Receitas"
+          value={rxCount ?? 0}
+          hint="Total emitidas"
+        />
+        <StatCard
+          tone="slate"
+          icon="📋"
+          label="Registos"
+          value={recordCount ?? 0}
+          hint="Anotações clínicas"
         />
       </section>
 
-      <section className="mt-10">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-            Agenda de hoje
-          </h2>
+      {/* Telemedicina banner */}
+      <section
+        className={
+          "mt-8 overflow-hidden rounded-2xl border " +
+          ((teleWaitingCount ?? 0) > 0
+            ? "border-red-200 bg-gradient-to-br from-red-50 via-white to-amber-50"
+            : "border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-emerald-50/50")
+        }
+      >
+        <div className="flex flex-wrap items-center justify-between gap-4 p-6">
+          <div className="flex items-center gap-4">
+            <div
+              className={
+                "grid h-12 w-12 place-items-center rounded-xl text-2xl " +
+                ((teleWaitingCount ?? 0) > 0
+                  ? "bg-red-600 text-white"
+                  : "bg-emerald-600 text-white")
+              }
+            >
+              {(teleWaitingCount ?? 0) > 0 ? "🚨" : "🎥"}
+            </div>
+            <div>
+              <div
+                className={
+                  "text-xs font-bold uppercase tracking-wider " +
+                  ((teleWaitingCount ?? 0) > 0
+                    ? "text-red-700"
+                    : "text-emerald-700")
+                }
+              >
+                Telemedicina
+              </div>
+              <h2 className="mt-1 text-lg font-bold text-slate-900">
+                {(teleWaitingCount ?? 0) > 0
+                  ? `${teleWaitingCount} paciente${(teleWaitingCount ?? 0) === 1 ? "" : "s"} à espera`
+                  : "Sem pacientes em espera"}
+              </h2>
+              <p className="text-sm text-slate-600">
+                {(teleWaitingCount ?? 0) > 0
+                  ? "Atendimento por vídeo pendente."
+                  : "Será notificado quando alguém entrar na fila."}
+              </p>
+            </div>
+          </div>
           <Link
-            href="/medico/agenda"
-            className="text-sm font-medium text-emerald-700 hover:text-emerald-800"
+            href="/medico/telemedicina"
+            className={
+              "inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold shadow-sm transition " +
+              ((teleWaitingCount ?? 0) > 0
+                ? "bg-red-600 text-white hover:bg-red-700"
+                : "bg-emerald-600 text-white hover:bg-emerald-700")
+            }
           >
-            Ver agenda completa →
+            Abrir lista →
           </Link>
         </div>
+      </section>
+
+      <section className="mt-10">
+        <SectionHeading
+          title="Agenda de hoje"
+          action={{ href: "/medico/agenda", label: "Ver agenda completa" }}
+        />
 
         {todayList.length === 0 ? (
-          <div className="mt-3 rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
-            Não tem consultas marcadas para hoje.
-          </div>
+          <EmptyState
+            icon="🗓️"
+            title="Sem consultas marcadas para hoje"
+            desc="Quando algum paciente marcar consulta consigo, aparece aqui."
+          />
         ) : (
-          <ul className="mt-3 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
             {todayList.map((a) => {
               const patient = pickPatient(a.patient);
               return (
@@ -157,26 +243,34 @@ export default async function MedicoHomePage() {
                     href={`/medico/consulta/${a.id}`}
                     className="flex flex-wrap items-center gap-4 px-5 py-4 transition hover:bg-emerald-50/40"
                   >
-                    <div className="w-24 shrink-0 text-sm font-medium text-slate-900">
+                    <div className="w-20 shrink-0 text-sm font-bold text-slate-900">
                       {new Date(a.scheduled_at).toLocaleTimeString("pt-PT", {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="font-medium text-slate-900">{patient.name}</div>
+                      <div className="font-medium text-slate-900">
+                        {patient.name}
+                      </div>
                       <div className="mt-0.5 truncate text-sm text-slate-600">
                         {a.duration_minutes} min
                         {a.reason ? ` · ${a.reason}` : ""}
                       </div>
                     </div>
-                    <Badge className={STATUS_BADGE[a.status] ?? "bg-slate-100 text-slate-700"}>
+                    <Badge
+                      className={
+                        STATUS_BADGE[a.status] ?? "bg-slate-100 text-slate-700"
+                      }
+                    >
                       {APPOINTMENT_STATUS_LABELS[a.status] ?? a.status}
                     </Badge>
                     <Badge className="bg-slate-100 text-slate-700">
                       {APPOINTMENT_TYPE_LABELS[a.appointment_type] ?? a.appointment_type}
                     </Badge>
-                    <span aria-hidden className="text-slate-400">→</span>
+                    <span aria-hidden className="text-slate-400 group-hover:translate-x-0.5">
+                      →
+                    </span>
                   </Link>
                 </li>
               );
@@ -185,88 +279,36 @@ export default async function MedicoHomePage() {
         )}
       </section>
 
-      <section className="mt-8 rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-wide text-emerald-800">
-              Telemedicina
-            </div>
-            <h2 className="mt-1 text-lg font-bold text-slate-900">
-              {(teleWaitingCount ?? 0) > 0
-                ? `${teleWaitingCount} paciente(s) à espera de atendimento por vídeo`
-                : "Sem pacientes em espera no momento"}
-            </h2>
-          </div>
-          <Link
+      <section className="mt-10">
+        <SectionHeading title="Atalhos" />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <ActionCard
+            href="/medico/agenda"
+            icon="📅"
+            title="Agenda completa"
+            desc="Próximas consultas e histórico do mês."
+          />
+          <ActionCard
+            href="/medico/pacientes"
+            icon="🩺"
+            title="Os meus pacientes"
+            desc="Pacientes que já consultou."
+          />
+          <ActionCard
             href="/medico/telemedicina"
-            className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
-          >
-            Abrir lista →
-          </Link>
+            icon="🎥"
+            title="Telemedicina"
+            desc="Atender pacientes por vídeo."
+          />
+          <ActionCard
+            href="/medico/perfil"
+            icon="👤"
+            title="O meu perfil"
+            desc="Cédula profissional, especialidade, contactos."
+          />
         </div>
       </section>
-
-      <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <ActionCard
-          href="/medico/agenda"
-          title="Ver agenda completa"
-          desc="Próximas consultas e histórico."
-        />
-        <ActionCard
-          href="/medico/pacientes"
-          title="Lista de pacientes"
-          desc="Pacientes que já consultou."
-        />
-      </section>
     </main>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  hint,
-}: {
-  label: string;
-  value: string;
-  hint?: string;
-}) {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5">
-      <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-        {label}
-      </div>
-      <div className="mt-2 text-2xl font-bold text-slate-900">{value}</div>
-      {hint && <div className="mt-1 text-xs text-slate-500">{hint}</div>}
-    </div>
-  );
-}
-
-function ActionCard({
-  href,
-  title,
-  desc,
-}: {
-  href: string;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white p-5 transition hover:border-emerald-300 hover:bg-emerald-50/40"
-    >
-      <div>
-        <div className="text-base font-semibold text-slate-900">{title}</div>
-        <div className="mt-0.5 text-sm text-slate-600">{desc}</div>
-      </div>
-      <span
-        aria-hidden
-        className="text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-600"
-      >
-        →
-      </span>
-    </Link>
   );
 }
 
@@ -285,4 +327,3 @@ function Badge({
     </span>
   );
 }
-

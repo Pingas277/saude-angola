@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { logoutAction } from "../(auth)/actions";
+import Logo from "../_brand/Logo";
 import RecepcaoNav from "./RecepcaoNav";
 
 export default async function RecepcaoLayout({
@@ -27,20 +27,15 @@ export default async function RecepcaoLayout({
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-slate-200 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-          <Link href="/recepcao" className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-md bg-amber-500 text-sm font-bold text-white">
-              S
-            </span>
-            <div className="leading-tight">
-              <div className="font-semibold text-slate-900">Saúde Angola</div>
-              <div className="text-[11px] uppercase tracking-wide text-amber-700">
-                Recepção
-              </div>
-            </div>
-          </Link>
-          <div className="flex items-center gap-4">
+          <Logo
+            href="/recepcao"
+            size="md"
+            subtitle="Recepção"
+            subtitleColor="text-amber-700"
+          />
+          <div className="flex items-center gap-3">
             <div className="hidden text-right text-sm sm:block">
               <div className="font-medium text-slate-900">
                 {profile?.full_name ?? user.email}
@@ -52,9 +47,9 @@ export default async function RecepcaoLayout({
             <form action={logoutAction}>
               <button
                 type="submit"
-                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
               >
-                Terminar sessão
+                Sair
               </button>
             </form>
           </div>

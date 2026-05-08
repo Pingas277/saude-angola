@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { logoutAction } from "../(auth)/actions";
+import Logo from "../_brand/Logo";
 import MedicoNav from "./MedicoNav";
 
 export default async function MedicoLayout({
@@ -17,7 +17,7 @@ export default async function MedicoLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role, clinic:clinics(name)")
+    .select("full_name, role, specialty, clinic:clinics(name)")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -27,34 +27,28 @@ export default async function MedicoLayout({
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-slate-200 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-          <Link href="/medico" className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-md bg-emerald-600 text-sm font-bold text-white">
-              S
-            </span>
-            <div className="leading-tight">
-              <div className="font-semibold text-slate-900">Saúde Angola</div>
-              <div className="text-[11px] uppercase tracking-wide text-emerald-700">
-                Área do Médico
-              </div>
-            </div>
-          </Link>
-          <div className="flex items-center gap-4">
+          <Logo href="/medico" size="md" subtitle="Médico" />
+          <div className="flex items-center gap-3">
             <div className="hidden text-right text-sm sm:block">
               <div className="font-medium text-slate-900">
                 Dr. {profile?.full_name ?? user.email}
               </div>
-              {clinic?.name && (
-                <div className="text-xs text-slate-500">{clinic.name}</div>
+              {(clinic?.name || profile?.specialty) && (
+                <div className="text-xs text-slate-500">
+                  {profile?.specialty}
+                  {profile?.specialty && clinic?.name ? " · " : ""}
+                  {clinic?.name}
+                </div>
               )}
             </div>
             <form action={logoutAction}>
               <button
                 type="submit"
-                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
               >
-                Terminar sessão
+                Sair
               </button>
             </form>
           </div>

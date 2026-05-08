@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { logoutAction } from "../(auth)/actions";
+import Logo from "../_brand/Logo";
 import PainelNav from "./PainelNav";
 
 export default async function PainelLayout({
@@ -21,29 +21,24 @@ export default async function PainelLayout({
     .eq("id", user.id)
     .maybeSingle();
 
+  const firstName = profile?.full_name?.split(" ")[0] ?? user.email;
+
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-slate-200 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-          <Link href="/painel" className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-md bg-emerald-600 text-sm font-bold text-white">
-              S
-            </span>
-            <span className="font-semibold text-slate-900">Saúde Angola</span>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/perfil"
-              className="hidden text-sm text-slate-600 hover:text-slate-900 sm:inline"
-            >
-              {profile?.full_name ?? user.email}
-            </Link>
+          <Logo href="/painel" size="md" subtitle="Paciente" />
+          <div className="flex items-center gap-3">
+            <div className="hidden text-right text-sm sm:block">
+              <div className="font-medium text-slate-900">{firstName}</div>
+              <div className="text-xs text-slate-500">Bem-vindo</div>
+            </div>
             <form action={logoutAction}>
               <button
                 type="submit"
-                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
               >
-                Terminar sessão
+                Sair
               </button>
             </form>
           </div>

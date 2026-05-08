@@ -12,6 +12,7 @@ import {
   Users,
 } from "lucide-react";
 import Logo from "./_brand/Logo";
+import { Reveal, Stagger, StaggerItem } from "./_motion/Reveal";
 import {
   Accordion,
   AccordionContent,
@@ -224,54 +225,64 @@ export default function HomePage() {
           style={{ background: "#FCD116" }}
         />
 
-        <div className="mx-auto max-w-6xl px-6 pb-24 pt-20 text-center sm:pt-28">
-          <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-emerald-50 px-3.5 py-1.5 text-xs font-semibold text-emerald-800">
-            <span
-              aria-hidden
-              className="inline-block h-2 w-2 rounded-full"
-              style={{ background: "#CD1126" }}
-            />
-            Plataforma desenhada em Angola
-          </span>
+        <Stagger className="mx-auto max-w-6xl px-6 pb-24 pt-20 text-center sm:pt-28">
+          <StaggerItem>
+            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-emerald-50 px-3.5 py-1.5 text-xs font-semibold text-emerald-800">
+              <span
+                aria-hidden
+                className="inline-block h-2 w-2 rounded-full"
+                style={{ background: "#CD1126" }}
+              />
+              Plataforma desenhada em Angola
+            </span>
+          </StaggerItem>
 
-          <h1 className="mx-auto mt-6 max-w-4xl text-5xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
-            Cuidados de saúde{" "}
-            <span className="bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 bg-clip-text text-transparent">
-              modernos
-            </span>{" "}
-            para todos os angolanos.
-          </h1>
+          <StaggerItem>
+            <h1 className="mx-auto mt-6 max-w-4xl text-5xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
+              Cuidados de saúde{" "}
+              <span className="bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 bg-clip-text text-transparent">
+                modernos
+              </span>{" "}
+              para todos os angolanos.
+            </h1>
+          </StaggerItem>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
-            Telemedicina, receitas digitais e gestão clínica numa só
-            plataforma. Concebido para o paciente em Luanda ou no interior — e
-            para a clínica que quer deixar o papel para trás.
-          </p>
+          <StaggerItem>
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
+              Telemedicina, receitas digitais e gestão clínica numa só
+              plataforma. Concebido para o paciente em Luanda ou no interior — e
+              para a clínica que quer deixar o papel para trás.
+            </p>
+          </StaggerItem>
 
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              href="/registar"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 px-7 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-600/30 sm:w-auto"
-            >
-              Começar gratuitamente
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="#como-funciona"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-7 py-4 text-base font-semibold text-slate-800 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 sm:w-auto"
-            >
-              Ver como funciona
-            </Link>
-          </div>
+          <StaggerItem>
+            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link
+                href="/registar"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 px-7 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-600/30 sm:w-auto"
+              >
+                Começar gratuitamente
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="#como-funciona"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-7 py-4 text-base font-semibold text-slate-800 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 sm:w-auto"
+              >
+                Ver como funciona
+              </Link>
+            </div>
+          </StaggerItem>
 
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-slate-500">
-            <TrustItem>Multicaixa Express integrado</TrustItem>
-            <TrustItem>Receita com QR válida em farmácias</TrustItem>
-            <TrustItem>Conformidade RGPD</TrustItem>
-          </div>
+          <StaggerItem>
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-slate-500">
+              <TrustItem>Multicaixa Express integrado</TrustItem>
+              <TrustItem>Receita com QR válida em farmácias</TrustItem>
+              <TrustItem>Conformidade RGPD</TrustItem>
+            </div>
+          </StaggerItem>
 
           {/* === Hero device card === */}
-          <div className="relative mx-auto mt-16 max-w-3xl">
+          <StaggerItem className="relative mx-auto mt-16 max-w-3xl">
             <div
               aria-hidden
               className="absolute -inset-6 -z-10 rounded-[44px] bg-gradient-to-br from-emerald-200/50 via-white to-amber-100/30 opacity-70 blur-2xl"
@@ -340,13 +351,13 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </StaggerItem>
+        </Stagger>
       </section>
 
       {/* === Trust strip — regions === */}
       <section className="border-y border-slate-100 bg-slate-50/60 py-10">
-        <div className="mx-auto max-w-6xl px-6 text-center">
+        <Reveal className="mx-auto max-w-6xl px-6 text-center">
           <p className="text-xs font-bold uppercase tracking-widest text-slate-500">
             Disponível em todas as 18 províncias de Angola
           </p>
@@ -362,13 +373,13 @@ export default function HomePage() {
             ))}
             <span className="text-slate-400">+ 11 outras</span>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* === Features === */}
       <section id="caracteristicas" className="bg-white py-24">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
               Características
             </span>
@@ -379,11 +390,11 @@ export default function HomePage() {
               Construído para a realidade angolana. Funciona em qualquer rede,
               em qualquer telemóvel, em qualquer província.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Stagger className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((f) => (
-              <div
+              <StaggerItem
                 key={f.title}
                 className="group rounded-3xl border border-slate-200 bg-white p-7 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-900/5"
               >
@@ -396,9 +407,9 @@ export default function HomePage() {
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
                   {f.desc}
                 </p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
 
@@ -408,7 +419,7 @@ export default function HomePage() {
         className="relative overflow-hidden border-y border-slate-100 bg-gradient-to-br from-slate-50 via-white to-emerald-50/40 py-24"
       >
         <div className="mx-auto max-w-6xl px-6">
-          <div className="max-w-2xl">
+          <Reveal className="max-w-2xl">
             <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
               Como funciona
             </span>
@@ -419,16 +430,16 @@ export default function HomePage() {
               Um fluxo simples, pensado para quem nunca usou uma aplicação de
               saúde. Sem jargão. Sem deslocações.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="relative mt-16 grid gap-6 lg:grid-cols-3">
+          <Stagger className="relative mt-16 grid gap-6 lg:grid-cols-3">
             {/* connecting line on desktop */}
             <div
               aria-hidden
               className="absolute left-0 right-0 top-7 hidden h-px bg-gradient-to-r from-transparent via-emerald-300 to-transparent lg:block"
             />
             {STEPS.map((s, i) => (
-              <div
+              <StaggerItem
                 key={s.n}
                 className="relative rounded-3xl border border-slate-200 bg-white p-7 shadow-sm"
               >
@@ -451,21 +462,21 @@ export default function HomePage() {
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
                   {s.desc}
                 </p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
 
       {/* === Stats === */}
       <section className="bg-white py-20">
-        <div className="mx-auto max-w-6xl px-6">
+        <Reveal className="mx-auto max-w-6xl px-6">
           <div className="grid gap-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-900 to-slate-800 p-10 text-white sm:grid-cols-3 lg:p-14">
             <Stat icon={<Clock className="h-5 w-5" />} value="≈ 3 min" label="Tempo médio até atendimento" />
             <Stat icon={<Users className="h-5 w-5" />} value="500+" label="Clínicas privadas em Angola" />
             <Stat icon={<ShieldCheck className="h-5 w-5" />} value="18 / 18" label="Províncias com cobertura" />
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* === Pricing === */}
@@ -474,7 +485,7 @@ export default function HomePage() {
         className="relative overflow-hidden bg-slate-50/50 py-24"
       >
         <div className="mx-auto max-w-6xl px-6">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
               Preços para clínicas
             </span>
@@ -486,11 +497,11 @@ export default function HomePage() {
               subscrição mensal.{" "}
               <strong className="text-slate-900">Pacientes usam grátis.</strong>
             </p>
-          </div>
+          </Reveal>
 
-          <div className="mt-16 grid gap-6 lg:grid-cols-3">
+          <Stagger className="mt-16 grid gap-6 lg:grid-cols-3">
             {PLANS.map((p) => (
-              <div
+              <StaggerItem
                 key={p.name}
                 className={
                   "relative rounded-3xl border p-8 transition " +
@@ -539,9 +550,9 @@ export default function HomePage() {
                   Escolher {p.name}
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
 
           <p className="mt-10 text-center text-sm text-slate-500">
             Precisa de algo personalizado?{" "}
@@ -558,18 +569,19 @@ export default function HomePage() {
       {/* === Testimonials === */}
       <section className="bg-white py-24">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="max-w-2xl">
+          <Reveal className="max-w-2xl">
             <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
               Histórias reais
             </span>
             <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
               Médicos e pacientes em Angola.
             </h2>
-          </div>
+          </Reveal>
 
-          <div className="mt-14 grid gap-6 lg:grid-cols-3">
+          <Stagger className="mt-14 grid gap-6 lg:grid-cols-3">
             {TESTIMONIALS.map((t) => (
-              <figure
+              <StaggerItem
+                as="figure"
                 key={t.author}
                 className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-slate-50/50 p-8"
               >
@@ -587,23 +599,23 @@ export default function HomePage() {
                     <div className="text-xs text-slate-500">{t.role}</div>
                   </div>
                 </figcaption>
-              </figure>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       </section>
 
       {/* === FAQ === */}
       <section id="faq" className="border-y border-slate-100 bg-slate-50/40 py-24">
         <div className="mx-auto max-w-3xl px-6">
-          <div className="text-center">
+          <Reveal className="text-center">
             <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
               Perguntas frequentes
             </span>
             <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
               Tudo o que precisa de saber.
             </h2>
-          </div>
+          </Reveal>
 
           <Accordion className="mt-12 space-y-3">
             {FAQ.map((item, i) => (
@@ -655,7 +667,7 @@ export default function HomePage() {
           style={{ background: "#FCD116" }}
         />
 
-        <div className="mx-auto max-w-4xl px-6 text-center">
+        <Reveal className="mx-auto max-w-4xl px-6 text-center">
           <h2 className="text-4xl font-extrabold tracking-tight sm:text-6xl">
             Pronto para começar?
           </h2>
@@ -678,7 +690,7 @@ export default function HomePage() {
               Já tenho conta
             </Link>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* === Footer === */}

@@ -7,9 +7,23 @@ const AUTH_ROUTES = ["/entrar", "/registar"];
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // If the deploy is missing Supabase credentials, just let requests through
+  // unauthenticated rather than crashing the whole site. Visitors will see the
+  // landing page; protected routes will redirect to /entrar where the auth
+  // form will surface a clearer error.
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.warn(
+      "[middleware] Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY — skipping auth refresh."
+    );
+    return response;
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {

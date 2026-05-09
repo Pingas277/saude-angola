@@ -80,7 +80,8 @@ const STEPS = [
 const PLANS = [
   {
     name: "Básico",
-    price: "$50",
+    price: "100.000",
+    currency: "Kz",
     period: "/mês",
     desc: "Ideal para clínicas pequenas a iniciar a digitalização.",
     features: [
@@ -93,7 +94,8 @@ const PLANS = [
   },
   {
     name: "Padrão",
-    price: "$120",
+    price: "250.000",
+    currency: "Kz",
     period: "/mês",
     desc: "Para clínicas estabelecidas que querem escalar operações.",
     features: [
@@ -107,7 +109,8 @@ const PLANS = [
   },
   {
     name: "Premium",
-    price: "$250",
+    price: "500.000",
+    currency: "Kz",
     period: "/mês",
     desc: "Para grupos hospitalares e redes de clínicas.",
     features: [
@@ -490,7 +493,7 @@ export default function HomePage() {
               Preços para clínicas
             </span>
             <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-              Comece com $50/mês. Pare de tudo quando quiser.
+              A partir de 100.000 Kz/mês. Cancele quando quiser.
             </h2>
             <p className="mt-4 text-base text-slate-600">
               Sem contrato anual. Sem custos de instalação. Apenas a
@@ -518,9 +521,12 @@ export default function HomePage() {
                 <div className="text-sm font-bold uppercase tracking-wider text-emerald-700">
                   {p.name}
                 </div>
-                <div className="mt-3 flex items-baseline gap-1">
+                <div className="mt-3 flex items-baseline gap-1.5">
                   <span className="text-5xl font-extrabold tracking-tight text-slate-900">
                     {p.price}
+                  </span>
+                  <span className="text-base font-semibold text-slate-700">
+                    {p.currency}
                   </span>
                   <span className="text-sm text-slate-500">{p.period}</span>
                 </div>

@@ -1,14 +1,28 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Search, MapPin, Stethoscope, Star } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import MarcarForm from "./MarcarForm";
+import PageHeading from "@/app/_ui/PageHeading";
+import EmptyState from "@/app/_ui/EmptyState";
+import BookingSheet from "./BookingSheet";
 
 export const metadata = { title: "Marcar consulta · Saúde Angola" };
 
 type DoctorRow = {
   id: string;
-  full_name: string;
-  clinic: { name: string | null } | { name: string | null }[] | null;
+  full_name: string | null;
+  specialty: string | null;
+  medical_license: string | null;
+  clinic:
+    | { name: string | null; province: string | null; address: string | null }
+    | { name: string | null; province: string | null; address: string | null }[]
+    | null;
 };
+
+function pickClinic(c: DoctorRow["clinic"]) {
+  if (!c) return null;
+  return Array.isArray(c) ? c[0] : c;
+}
 
 function tomorrowISODate(): string {
   const d = new Date();
@@ -16,7 +30,26 @@ function tomorrowISODate(): string {
   return d.toISOString().slice(0, 10);
 }
 
-export default async function MarcarPage() {
+function initials(name: string | null): string {
+  if (!name) return "—";
+  const parts = name.trim().split(/\s+/);
+  return ((parts[0]?.[0] ?? "") + (parts[parts.length - 1]?.[0] ?? "")).toUpperCase();
+}
+
+export default async function MarcarPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    q?: string;
+    especialidade?: string;
+    provincia?: string;
+  }>;
+}) {
+  const params = await searchParams;
+  const q = (params.q ?? "").trim();
+  const specialty = (params.especialidade ?? "").trim();
+  const province = (params.provincia ?? "").trim();
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -32,40 +65,273 @@ export default async function MarcarPage() {
 
   const { data: rawDoctors } = await supabase
     .from("profiles")
-    .select("id, full_name, clinic:clinics(name)")
+    .select(
+      "id, full_name, specialty, medical_license, clinic:clinics(name, province, address)"
+    )
     .eq("role", "doctor")
     .order("full_name", { ascending: true });
 
-  const doctors = ((rawDoctors as DoctorRow[] | null) ?? []).map((d) => {
-    const c = Array.isArray(d.clinic) ? d.clinic[0] : d.clinic;
-    return {
-      id: d.id,
-      full_name: d.full_name,
-      clinic_name: c?.name ?? null,
-    };
+  const allDoctors = (rawDoctors as DoctorRow[] | null) ?? [];
+
+  const allSpecialties = Array.from(
+    new Set(allDoctors.map((d) => d.specialty).filter((s): s is string => !!s))
+  ).sort();
+  const allProvinces = Array.from(
+    new Set(
+      allDoctors
+        .map((d) => pickClinic(d.clinic)?.province)
+        .filter((p): p is string => !!p)
+    )
+  ).sort();
+
+  const qLower = q.toLowerCase();
+  const filtered = allDoctors.filter((d) => {
+    if (specialty && d.specialty !== specialty) return false;
+    if (province) {
+      const c = pickClinic(d.clinic);
+      if (c?.province !== province) return false;
+    }
+    if (q) {
+      const name = (d.full_name ?? "").toLowerCase();
+      const spec = (d.specialty ?? "").toLowerCase();
+      const c = pickClinic(d.clinic);
+      const clinicName = (c?.name ?? "").toLowerCase();
+      if (
+        !name.includes(qLower) &&
+        !spec.includes(qLower) &&
+        !clinicName.includes(qLower)
+      )
+        return false;
+    }
+    return true;
   });
 
-  return (
-    <main className="mx-auto max-w-3xl px-6 py-10">
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-        Marcar consulta
-      </h1>
-      <p className="mt-1 text-sm text-slate-600">
-        Escolha um médico, a data e o tipo de consulta.
-      </p>
+  const baseHref = "/painel/marcar";
+  const filterUrl = (key: string, value: string | null) => {
+    const u = new URLSearchParams();
+    if (q) u.set("q", q);
+    if (specialty && key !== "especialidade") u.set("especialidade", specialty);
+    if (province && key !== "provincia") u.set("provincia", province);
+    if (value) u.set(key, value);
+    const s = u.toString();
+    return s ? `${baseHref}?${s}` : baseHref;
+  };
 
-      {doctors.length === 0 ? (
-        <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">
-          <p className="font-semibold">Ainda não há médicos disponíveis.</p>
-          <p className="mt-1">
-            A clínica precisa de adicionar médicos antes de poder marcar consultas.
-          </p>
+  return (
+    <main className="mx-auto max-w-6xl px-6 py-10">
+      <PageHeading
+        eyebrow="Marketplace de saúde"
+        title="Encontre o seu médico"
+        subtitle="Procure por especialidade, clínica ou nome. Marque online, sem telefonemas."
+      />
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <form
+          method="GET"
+          action={baseHref}
+          className="flex flex-wrap items-center gap-3"
+        >
+          {specialty && (
+            <input type="hidden" name="especialidade" value={specialty} />
+          )}
+          {province && <input type="hidden" name="provincia" value={province} />}
+
+          <div className="flex flex-1 items-center gap-3 rounded-full border border-slate-200 bg-slate-50/60 px-4 py-2.5 focus-within:border-emerald-500 focus-within:bg-white">
+            <Search className="h-4 w-4 shrink-0 text-slate-400" />
+            <input
+              type="search"
+              name="q"
+              defaultValue={q}
+              placeholder="Especialidade, clínica ou nome do médico…"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+            />
+          </div>
+          <button
+            type="submit"
+            className="rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+          >
+            Pesquisar
+          </button>
+          {(q || specialty || province) && (
+            <Link
+              href={baseHref}
+              className="text-xs font-medium text-slate-500 hover:text-slate-900"
+            >
+              Limpar filtros
+            </Link>
+          )}
+        </form>
+
+        {(allSpecialties.length > 0 || allProvinces.length > 0) && (
+          <div className="mt-4 space-y-3">
+            {allSpecialties.length > 0 && (
+              <FacetRow label="Especialidade">
+                {allSpecialties.map((s) => (
+                  <FacetPill
+                    key={s}
+                    href={filterUrl("especialidade", s === specialty ? null : s)}
+                    active={s === specialty}
+                  >
+                    {s}
+                  </FacetPill>
+                ))}
+              </FacetRow>
+            )}
+            {allProvinces.length > 0 && (
+              <FacetRow label="Província">
+                {allProvinces.map((p) => (
+                  <FacetPill
+                    key={p}
+                    href={filterUrl("provincia", p === province ? null : p)}
+                    active={p === province}
+                  >
+                    {p}
+                  </FacetPill>
+                ))}
+              </FacetRow>
+            )}
+          </div>
+        )}
+      </section>
+
+      <div className="mt-6 flex flex-wrap items-baseline justify-between gap-2">
+        <p className="text-sm text-slate-600">
+          <strong className="text-slate-900">{filtered.length}</strong>{" "}
+          {filtered.length === 1 ? "médico" : "médicos"}
+          {q ? ` para "${q}"` : ""}
+          {specialty ? ` · ${specialty}` : ""}
+          {province ? ` · ${province}` : ""}
+        </p>
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className="mt-4">
+          <EmptyState
+            icon="🩺"
+            title="Nenhum médico encontrado"
+            desc={
+              q || specialty || province
+                ? "Tente ajustar os filtros ou limpar a pesquisa."
+                : "Ainda não há médicos no sistema. Volte mais tarde."
+            }
+            action={
+              q || specialty || province
+                ? { href: baseHref, label: "Limpar filtros" }
+                : undefined
+            }
+          />
         </div>
       ) : (
-        <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6">
-          <MarcarForm doctors={doctors} defaultDate={tomorrowISODate()} />
-        </div>
+        <ul className="mt-4 space-y-3">
+          {filtered.map((d) => {
+            const c = pickClinic(d.clinic);
+            return (
+              <li
+                key={d.id}
+                className="group flex flex-wrap items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-emerald-300 hover:shadow-md"
+              >
+                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-600 to-emerald-700 text-base font-bold text-white shadow-sm">
+                  {initials(d.full_name)}
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-base font-bold text-slate-900">
+                      Dr(a). {d.full_name ?? "—"}
+                    </span>
+                    {d.medical_license && (
+                      <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200">
+                        Verificado
+                      </span>
+                    )}
+                    <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-1.5 py-0.5 text-[11px] font-bold text-amber-700">
+                      <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
+                      Novo
+                    </span>
+                  </div>
+
+                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-600">
+                    {d.specialty ? (
+                      <span className="inline-flex items-center gap-1">
+                        <Stethoscope className="h-3.5 w-3.5 text-emerald-600" />
+                        {d.specialty}
+                      </span>
+                    ) : (
+                      <span className="italic text-slate-400">
+                        Especialidade não indicada
+                      </span>
+                    )}
+                    {c?.name && (
+                      <>
+                        <span aria-hidden className="text-slate-300">·</span>
+                        <span>{c.name}</span>
+                      </>
+                    )}
+                    {c?.province && (
+                      <>
+                        <span aria-hidden className="text-slate-300">·</span>
+                        <span className="inline-flex items-center gap-1">
+                          <MapPin className="h-3.5 w-3.5" />
+                          {c.province}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <BookingSheet
+                  doctorId={d.id}
+                  doctorName={d.full_name ?? "Médico"}
+                  doctorSpecialty={d.specialty}
+                  clinicName={c?.name ?? null}
+                  defaultDate={tomorrowISODate()}
+                />
+              </li>
+            );
+          })}
+        </ul>
       )}
     </main>
+  );
+}
+
+function FacetRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        {label}
+      </span>
+      <div className="flex flex-wrap gap-1.5">{children}</div>
+    </div>
+  );
+}
+
+function FacetPill({
+  href,
+  active,
+  children,
+}: {
+  href: string;
+  active?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className={
+        "inline-flex items-center rounded-full px-3 py-1 text-xs font-medium transition " +
+        (active
+          ? "bg-emerald-600 text-white shadow-sm"
+          : "border border-slate-200 bg-white text-slate-700 hover:border-emerald-300 hover:bg-emerald-50/40")
+      }
+    >
+      {children}
+    </Link>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { ArrowRight, CalendarClock } from "lucide-react";
+import { useActionState, useEffect, useMemo, useState } from "react";
+import { ArrowRight, CalendarClock, Clock, Loader2 } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -15,7 +15,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { createClient } from "@/lib/supabase/client";
+import { generateSlots, timeToMinutes } from "@/lib/slots";
 import { bookAppointmentAction, type BookingState } from "./actions";
+
+const ALL_SLOTS = generateSlots();
 
 export default function BookingSheet({
   doctorId,
@@ -31,10 +35,51 @@ export default function BookingSheet({
   defaultDate: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [date, setDate] = useState(defaultDate);
+  const [time, setTime] = useState<string | null>(null);
+  const [busySlots, setBusySlots] = useState<string[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
   const [state, formAction, isPending] = useActionState<BookingState, FormData>(
     bookAppointmentAction,
     null
   );
+
+  // Today's "minutes since midnight" — used to grey-out past slots when the
+  // selected date is today.
+  const isToday = useMemo(() => {
+    const today = new Date();
+    const ymd = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    return ymd === date;
+  }, [date]);
+
+  const nowMinutes = useMemo(() => {
+    const d = new Date();
+    return d.getHours() * 60 + d.getMinutes();
+  }, [date]);
+
+  // Fetch busy slots whenever doctor or date changes
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    setLoadingSlots(true);
+    setTime(null);
+    const supabase = createClient();
+    supabase
+      .rpc("get_doctor_busy_slots", { doctor_uuid: doctorId, day: date })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          console.error("[booking] get_doctor_busy_slots failed:", error);
+          setBusySlots([]);
+        } else {
+          setBusySlots(Array.isArray(data) ? data : []);
+        }
+        setLoadingSlots(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [doctorId, date, open]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -57,30 +102,76 @@ export default function BookingSheet({
 
         <form action={formAction} className="grid gap-5 px-4 pb-4">
           <input type="hidden" name="doctor_id" value={doctorId} />
+          <input type="hidden" name="time" value={time ?? ""} />
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <Label htmlFor="date">Data</Label>
-              <Input
-                id="date"
-                name="date"
-                type="date"
-                required
-                min={defaultDate}
-                defaultValue={defaultDate}
-              />
+          <div className="space-y-1.5">
+            <Label htmlFor="date">Data</Label>
+            <Input
+              id="date"
+              name="date"
+              type="date"
+              required
+              min={defaultDate}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          </div>
+
+          {/* Slot picker */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5" />
+                Horário disponível
+              </Label>
+              {loadingSlots && (
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-slate-400" />
+              )}
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="time">Hora</Label>
-              <Input
-                id="time"
-                name="time"
-                type="time"
-                required
-                defaultValue="09:00"
-                step={900}
-              />
+
+            <div className="grid grid-cols-4 gap-1.5">
+              {ALL_SLOTS.map((slot) => {
+                const isBusy = busySlots.includes(slot);
+                const isPast = isToday && timeToMinutes(slot) <= nowMinutes;
+                const isDisabled = isBusy || isPast;
+                const isSelected = slot === time;
+                return (
+                  <button
+                    type="button"
+                    key={slot}
+                    disabled={isDisabled}
+                    onClick={() => setTime(slot)}
+                    className={
+                      "rounded-md px-2 py-1.5 text-xs font-semibold transition " +
+                      (isSelected
+                        ? "bg-emerald-600 text-white shadow-sm"
+                        : isDisabled
+                        ? "cursor-not-allowed border border-slate-200 bg-slate-50 text-slate-300 line-through"
+                        : "border border-slate-300 bg-white text-slate-800 hover:border-emerald-400 hover:bg-emerald-50")
+                    }
+                  >
+                    {slot}
+                  </button>
+                );
+              })}
             </div>
+
+            {!loadingSlots && (
+              <p className="flex items-center gap-3 text-[11px] text-slate-500">
+                <span className="inline-flex items-center gap-1">
+                  <span className="h-2 w-2 rounded-sm bg-white ring-1 ring-slate-300" />
+                  livre
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <span className="h-2 w-2 rounded-sm bg-slate-100 ring-1 ring-slate-200" />
+                  ocupado
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <span className="h-2 w-2 rounded-sm bg-emerald-600" />
+                  selecionado
+                </span>
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -133,11 +224,15 @@ export default function BookingSheet({
           <SheetFooter className="px-0">
             <Button
               type="submit"
-              disabled={isPending}
+              disabled={isPending || !time}
               className="w-full bg-emerald-600 hover:bg-emerald-700"
               size="lg"
             >
-              {isPending ? "A confirmar…" : "Confirmar marcação"}
+              {isPending
+                ? "A confirmar…"
+                : time
+                ? `Confirmar ${date} às ${time}`
+                : "Escolha um horário"}
             </Button>
           </SheetFooter>
 

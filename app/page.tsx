@@ -167,7 +167,11 @@ const FAQ = [
   },
   {
     q: "A minha clínica pode aderir?",
-    a: "Sim. A subscrição começa em $50/mês para clínicas pequenas. Inclui marcações online, receitas digitais e suporte. Contacte-nos em /registar.",
+    a: "Sim. As subscrições começam em 100.000 Kz/mês com contrato anual e setup personalizado para a clínica. Para aderir, contacte a nossa equipa em suporte@saudeangola.ao — tratamos de tudo, do onboarding à formação.",
+  },
+  {
+    q: "Há contrato anual? Posso cancelar?",
+    a: "Sim, há contrato anual. Cobre o setup inicial, formação da equipa e suporte prioritário. As condições de renovação são acordadas com cada clínica antes de aderir.",
   },
 ];
 
@@ -493,12 +497,14 @@ export default function HomePage() {
               Preços para clínicas
             </span>
             <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-              A partir de 100.000 Kz/mês. Cancele quando quiser.
+              A partir de 100.000 Kz / mês.
             </h2>
             <p className="mt-4 text-base text-slate-600">
-              Sem contrato anual. Sem custos de instalação. Apenas a
-              subscrição mensal.{" "}
-              <strong className="text-slate-900">Pacientes usam grátis.</strong>
+              Contrato anual com setup personalizado.{" "}
+              <strong className="text-slate-900">
+                Para aderir, fale connosco.
+              </strong>{" "}
+              Pacientes usam grátis.
             </p>
           </Reveal>
 
@@ -545,7 +551,7 @@ export default function HomePage() {
                   ))}
                 </ul>
                 <Link
-                  href="/registar"
+                  href={`mailto:suporte@saudeangola.ao?subject=Ades%C3%A3o%20ao%20plano%20${encodeURIComponent(p.name)}&body=Bom%20dia%2C%20gostar%C3%ADamos%20de%20aderir%20ao%20plano%20${encodeURIComponent(p.name)}.`}
                   className={
                     "mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition " +
                     (p.highlighted
@@ -553,7 +559,7 @@ export default function HomePage() {
                       : "border border-slate-300 bg-white text-slate-800 hover:border-slate-400 hover:bg-slate-50")
                   }
                 >
-                  Escolher {p.name}
+                  Falar com a equipa
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </StaggerItem>
@@ -561,12 +567,12 @@ export default function HomePage() {
           </Stagger>
 
           <p className="mt-10 text-center text-sm text-slate-500">
-            Precisa de algo personalizado?{" "}
+            Hospital ou rede com necessidades específicas?{" "}
             <Link
-              href="/registar"
+              href="mailto:suporte@saudeangola.ao?subject=Plano%20personalizado"
               className="font-semibold text-emerald-700 hover:text-emerald-800"
             >
-              Falar com a equipa →
+              Pedir proposta personalizada →
             </Link>
           </p>
         </div>

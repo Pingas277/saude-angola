@@ -6,7 +6,7 @@ import { ImageResponse } from "next/og";
 // add another `opengraph-image.tsx` inside any subroute to override it.
 
 export const runtime = "edge";
-export const alt = "Saúde Angola — Saúde digital para todos os angolanos";
+export const alt = "Saúde Angola — Marque com qualquer médico, em qualquer clínica";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -98,7 +98,7 @@ export default async function OG() {
         >
           <div
             style={{
-              fontSize: 86,
+              fontSize: 80,
               fontWeight: 800,
               color: "#0f172a",
               lineHeight: 1.05,
@@ -106,21 +106,22 @@ export default async function OG() {
               maxWidth: 1000,
             }}
           >
-            Saúde digital ao alcance de{" "}
-            <span style={{ color: "#057857" }}>todos os angolanos</span>.
+            Marque com{" "}
+            <span style={{ color: "#057857" }}>qualquer médico</span>, em qualquer
+            clínica.
           </div>
 
           <div
             style={{
               marginTop: 28,
-              fontSize: 28,
+              fontSize: 26,
               color: "#475569",
               lineHeight: 1.4,
               maxWidth: 900,
             }}
           >
-            Telemedicina, receitas digitais e gestão clínica numa só
-            plataforma.
+            A primeira plataforma que junta médicos e clínicas privadas em
+            Angola num só sítio.
           </div>
         </div>
 

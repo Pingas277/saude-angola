@@ -14,11 +14,11 @@ const SITE_URL =
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Saúde Angola — Saúde digital para todos os angolanos",
+    default: "Saúde Angola — Marque com qualquer médico, em qualquer clínica",
     template: "%s · Saúde Angola",
   },
   description:
-    "Telemedicina, receitas digitais e gestão clínica numa só plataforma. Para pacientes em Luanda ou no interior, e para clínicas que querem deixar o papel para trás.",
+    "A primeira plataforma que junta médicos e clínicas privadas em Angola num só sítio. Procure por especialidade, escolha o profissional e marque online — sem telefonemas.",
   applicationName: "Saúde Angola",
   authors: [{ name: "Saúde Angola" }],
   keywords: [
@@ -35,16 +35,16 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_AO",
     url: SITE_URL,
-    title: "Saúde Angola — Saúde digital para todos os angolanos",
+    title: "Saúde Angola — Marque com qualquer médico, em qualquer clínica",
     description:
-      "Telemedicina, receitas digitais e gestão clínica numa só plataforma.",
+      "A primeira plataforma que junta médicos e clínicas privadas em Angola num só sítio.",
     siteName: "Saúde Angola",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Saúde Angola",
+    title: "Saúde Angola — Marque com qualquer médico, em qualquer clínica",
     description:
-      "Telemedicina, receitas digitais e gestão clínica numa só plataforma.",
+      "A primeira plataforma que junta médicos e clínicas privadas em Angola num só sítio.",
   },
   robots: {
     index: true,

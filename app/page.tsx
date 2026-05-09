@@ -10,6 +10,9 @@ import {
   CreditCard,
   Clock,
   Users,
+  Search,
+  MapPin,
+  Star,
 } from "lucide-react";
 import Logo from "./_brand/Logo";
 import { Reveal, Stagger, StaggerItem } from "./_motion/Reveal";
@@ -28,9 +31,14 @@ import {
 
 const FEATURES = [
   {
+    icon: Search,
+    title: "Marketplace de médicos",
+    desc: "Procure por especialidade, clínica ou nome. Veja preço, disponibilidade e marque online — em qualquer cidade de Angola.",
+  },
+  {
     icon: Video,
     title: "Telemedicina por vídeo",
-    desc: "Triagem assistida por IA em segundos. Consulta com médico licenciado por vídeo, em minutos.",
+    desc: "Sem deslocações. Triagem assistida por IA em segundos e consulta com médico licenciado em minutos.",
   },
   {
     icon: FileText,
@@ -40,7 +48,7 @@ const FEATURES = [
   {
     icon: Pill,
     title: "Histórico clínico unificado",
-    desc: "Diagnósticos, prescrições, exames e sinais vitais — tudo num passaporte de saúde digital seu.",
+    desc: "Diagnósticos, prescrições, exames e sinais vitais — todos num passaporte de saúde digital seu.",
   },
   {
     icon: CreditCard,
@@ -50,30 +58,25 @@ const FEATURES = [
   {
     icon: Stethoscope,
     title: "Plataforma para clínicas",
-    desc: "Gestão de equipa, agenda, faturação e perfil clínico — substitua livros de marcações pelo digital.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Privacidade e RLS",
-    desc: "Cada paciente vê apenas os seus dados. Cada clínica acede apenas aos seus. Conformidade RGPD.",
+    desc: "Gestão de equipa, agenda e faturação — substitua livros de marcações em papel pelo digital.",
   },
 ];
 
 const STEPS = [
   {
     n: "01",
-    title: "Triagem inicial",
-    desc: "Responda a algumas perguntas rápidas. A nossa IA classifica a urgência e envia o resumo ao médico.",
+    title: "Procure",
+    desc: "Pesquise por especialidade, clínica ou nome do médico. Filtre por província ou disponibilidade.",
   },
   {
     n: "02",
-    title: "Atendimento por vídeo",
-    desc: "O próximo médico disponível atende — em média 3 minutos. Anamnese, diagnóstico e plano terapêutico.",
+    title: "Marque",
+    desc: "Escolha o horário e o tipo — presencial na clínica ou por vídeo. Pagamento via Multicaixa Express.",
   },
   {
     n: "03",
-    title: "Receita e pagamento",
-    desc: "Receita digital com QR descarregável. Pagamento por Multicaixa Express. Tudo no telemóvel.",
+    title: "Consulte",
+    desc: "Atendimento com o médico. Receita digital com QR e histórico clínico ficam no seu painel.",
   },
 ];
 
@@ -193,8 +196,8 @@ export default function HomePage() {
         <header className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-slate-200/80 bg-white/80 px-5 py-2.5 shadow-sm backdrop-blur-md sm:px-7">
           <Logo size="md" />
           <nav className="hidden items-center gap-1 lg:flex">
+            <NavLink href="#marcar">Marcar consulta</NavLink>
             <NavLink href="#caracteristicas">Características</NavLink>
-            <NavLink href="#como-funciona">Como funciona</NavLink>
             <NavLink href="#precos">Preços</NavLink>
             <NavLink href="#faq">Perguntas</NavLink>
           </nav>
@@ -240,25 +243,25 @@ export default function HomePage() {
                 className="inline-block h-2 w-2 rounded-full"
                 style={{ background: "#CD1126" }}
               />
-              Plataforma desenhada em Angola
+              Marketplace de saúde · Angola
             </span>
           </StaggerItem>
 
           <StaggerItem>
             <h1 className="mx-auto mt-6 max-w-4xl text-5xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
-              Cuidados de saúde{" "}
+              Marque com{" "}
               <span className="bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 bg-clip-text text-transparent">
-                modernos
-              </span>{" "}
-              para todos os angolanos.
+                qualquer médico
+              </span>
+              , em qualquer clínica.
             </h1>
           </StaggerItem>
 
           <StaggerItem>
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
-              Telemedicina, receitas digitais e gestão clínica numa só
-              plataforma. Concebido para o paciente em Luanda ou no interior — e
-              para a clínica que quer deixar o papel para trás.
+              A primeira plataforma que junta médicos e clínicas privadas em Angola
+              num só sítio. Procure por especialidade, escolha o profissional e
+              marque online — sem telefonemas, sem deslocações para confirmar.
             </p>
           </StaggerItem>
 
@@ -272,10 +275,10 @@ export default function HomePage() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="#como-funciona"
+                href="#marcar"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-7 py-4 text-base font-semibold text-slate-800 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 sm:w-auto"
               >
-                Ver como funciona
+                Procurar médicos
               </Link>
             </div>
           </StaggerItem>
@@ -383,8 +386,119 @@ export default function HomePage() {
         </Reveal>
       </section>
 
+      {/* === Marketplace / Discovery === */}
+      <section
+        id="marcar"
+        className="relative overflow-hidden bg-white py-24"
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-32 right-1/4 -z-10 h-96 w-96 rounded-full bg-emerald-100/60 blur-3xl"
+        />
+
+        <div className="mx-auto max-w-6xl px-6">
+          <Reveal className="mx-auto max-w-2xl text-center">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
+              Marketplace de saúde
+            </span>
+            <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+              Encontre o seu médico.
+            </h2>
+            <p className="mt-4 text-base text-slate-600">
+              Pesquise por especialidade, clínica ou nome. Compare disponibilidade
+              e preços. Marque online — em qualquer cidade de Angola, sem fazer
+              um único telefonema.
+            </p>
+          </Reveal>
+
+          {/* === Mock search interface === */}
+          <Reveal className="mx-auto mt-14 max-w-4xl">
+            <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-emerald-900/10">
+              {/* Search bar */}
+              <div className="flex flex-wrap items-center gap-3 border-b border-slate-100 bg-slate-50/60 p-5">
+                <div className="flex flex-1 items-center gap-3 rounded-full border border-slate-200 bg-white px-4 py-3 shadow-sm">
+                  <Search className="h-4 w-4 shrink-0 text-slate-400" />
+                  <span className="text-sm text-slate-500">
+                    Especialidade, clínica ou médico…
+                  </span>
+                </div>
+                <span className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm">
+                  Pesquisar
+                </span>
+              </div>
+
+              {/* Filter pills */}
+              <div className="flex flex-wrap gap-2 border-b border-slate-100 px-5 py-3">
+                <FilterPill active>Medicina Geral</FilterPill>
+                <FilterPill>Cardiologia</FilterPill>
+                <FilterPill>Pediatria</FilterPill>
+                <FilterPill>Ginecologia</FilterPill>
+                <FilterPill>Dermatologia</FilterPill>
+                <span className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-slate-400">
+                  + 24 especialidades
+                </span>
+              </div>
+
+              {/* Doctor cards */}
+              <ul className="divide-y divide-slate-100">
+                <DoctorRow
+                  initials="MS"
+                  name="Dr. Manuel Silva"
+                  specialty="Medicina Geral"
+                  clinic="Clínica Demo"
+                  city="Luanda"
+                  rating="4.9"
+                  price="15.000 Kz"
+                  next="Hoje, 14:30"
+                />
+                <DoctorRow
+                  initials="EC"
+                  name="Dra. Esperança Cardoso"
+                  specialty="Cardiologia"
+                  clinic="Hospital Sagrada Esperança"
+                  city="Luanda"
+                  rating="4.8"
+                  price="35.000 Kz"
+                  next="Amanhã, 10:00"
+                />
+                <DoctorRow
+                  initials="AM"
+                  name="Dr. António Mateus"
+                  specialty="Pediatria"
+                  clinic="Clínica Multiperfil"
+                  city="Benguela"
+                  rating="4.7"
+                  price="20.000 Kz"
+                  next="Quarta, 09:15"
+                  highlighted
+                />
+              </ul>
+            </div>
+          </Reveal>
+
+          {/* Discovery stats */}
+          <Reveal
+            className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-sm font-medium text-slate-600"
+            delay={0.1}
+          >
+            <span className="inline-flex items-center gap-2">
+              <Stethoscope className="h-4 w-4 text-emerald-600" />
+              Centenas de médicos verificados
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-emerald-600" />
+              Em todas as 18 províncias
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <CreditCard className="h-4 w-4 text-emerald-600" />
+              Pagamento por Multicaixa Express
+            </span>
+          </Reveal>
+        </div>
+      </section>
+
       {/* === Features === */}
-      <section id="caracteristicas" className="bg-white py-24">
+      <section id="caracteristicas" className="bg-slate-50/40 py-24">
         <div className="mx-auto max-w-6xl px-6">
           <Reveal className="mx-auto max-w-2xl text-center">
             <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
@@ -851,6 +965,91 @@ function FooterCol({
         ))}
       </ul>
     </div>
+  );
+}
+
+function FilterPill({
+  children,
+  active,
+}: {
+  children: React.ReactNode;
+  active?: boolean;
+}) {
+  return (
+    <span
+      className={
+        "inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium transition " +
+        (active
+          ? "bg-emerald-600 text-white shadow-sm"
+          : "border border-slate-200 bg-white text-slate-700 hover:border-emerald-300")
+      }
+    >
+      {children}
+    </span>
+  );
+}
+
+function DoctorRow({
+  initials,
+  name,
+  specialty,
+  clinic,
+  city,
+  rating,
+  price,
+  next,
+  highlighted,
+}: {
+  initials: string;
+  name: string;
+  specialty: string;
+  clinic: string;
+  city: string;
+  rating: string;
+  price: string;
+  next: string;
+  highlighted?: boolean;
+}) {
+  return (
+    <li
+      className={
+        "flex flex-wrap items-center gap-4 px-5 py-4 transition " +
+        (highlighted ? "bg-emerald-50/50" : "hover:bg-slate-50/60")
+      }
+    >
+      <span
+        className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-600 to-emerald-700 text-sm font-bold text-white shadow-sm"
+      >
+        {initials}
+      </span>
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm font-bold text-slate-900">{name}</span>
+          <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
+            <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
+            {rating}
+          </span>
+        </div>
+        <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-slate-600">
+          <span>{specialty}</span>
+          <span aria-hidden className="text-slate-300">·</span>
+          <span>{clinic}</span>
+          <span aria-hidden className="text-slate-300">·</span>
+          <span className="inline-flex items-center gap-0.5">
+            <MapPin className="h-3 w-3" />
+            {city}
+          </span>
+        </div>
+      </div>
+      <div className="flex flex-col items-end gap-0.5 text-right">
+        <span className="text-sm font-bold text-slate-900">{price}</span>
+        <span className="text-[11px] text-emerald-700">próx.: {next}</span>
+      </div>
+      <span className="inline-flex items-center justify-center gap-1 rounded-full bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm">
+        Marcar
+        <ArrowRight className="h-3 w-3" />
+      </span>
+    </li>
   );
 }
 

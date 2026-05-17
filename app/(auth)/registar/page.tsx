@@ -12,7 +12,7 @@ export default function RegistarPage() {
       footer={
         <>
           Já tem conta?{" "}
-          <Link href="/entrar" className="font-semibold text-emerald-700 hover:underline">
+          <Link href="/entrar" className="font-medium text-primary hover:underline">
             Entrar
           </Link>
         </>

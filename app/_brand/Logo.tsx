@@ -2,46 +2,48 @@ import Link from "next/link";
 
 type LogoProps = {
   href?: string;
-  variant?: "light" | "dark";
+  /** "auto" follows the active theme; "light" is an alias of "auto" kept for
+   *  back-compat; "dark" forces light text (for fixed dark surfaces). */
+  variant?: "auto" | "light" | "dark";
   size?: "sm" | "md" | "lg";
   subtitle?: string;
   subtitleColor?: string;
 };
 
 const SIZES = {
-  sm: { square: 28, text: "text-sm", subtitleSize: "text-[10px]" },
-  md: { square: 32, text: "text-base", subtitleSize: "text-[11px]" },
-  lg: { square: 40, text: "text-lg", subtitleSize: "text-xs" },
+  sm: { square: 26, text: "text-sm", subtitleSize: "text-[10px]" },
+  md: { square: 30, text: "text-[15px]", subtitleSize: "text-[10px]" },
+  lg: { square: 38, text: "text-lg", subtitleSize: "text-xs" },
 } as const;
 
 export default function Logo({
   href = "/",
-  variant = "light",
+  variant = "auto",
   size = "md",
   subtitle,
   subtitleColor,
 }: LogoProps) {
   const s = SIZES[size];
-  const textColor = variant === "light" ? "text-slate-900" : "text-white";
+  const textColor = variant === "dark" ? "text-white" : "text-foreground";
   const subColor =
     subtitleColor ??
-    (variant === "light" ? "text-emerald-700" : "text-emerald-200");
+    (variant === "dark" ? "text-emerald-300" : "text-muted-foreground");
 
   const Inner = (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2.5">
       <span
-        className="grid shrink-0 place-items-center rounded-md bg-emerald-600 font-bold text-white shadow-sm ring-1 ring-emerald-700/30"
-        style={{ width: s.square, height: s.square, fontSize: s.square / 1.7 }}
+        className="grid shrink-0 place-items-center rounded-md bg-primary font-semibold text-primary-foreground"
+        style={{ width: s.square, height: s.square, fontSize: s.square / 1.9 }}
       >
         S
       </span>
-      <div className="flex flex-col leading-tight">
-        <span className={`font-bold tracking-tight ${textColor} ${s.text}`}>
+      <div className="flex flex-col leading-none">
+        <span className={`font-semibold tracking-tight ${textColor} ${s.text}`}>
           Saúde Angola
         </span>
         {subtitle && (
           <span
-            className={`uppercase tracking-wider ${s.subtitleSize} ${subColor}`}
+            className={`mt-1 font-medium uppercase tracking-[0.14em] ${s.subtitleSize} ${subColor}`}
           >
             {subtitle}
           </span>

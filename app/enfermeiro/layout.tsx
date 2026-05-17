@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AppShell from "../_app/AppShell";
 
-export default async function MedicoLayout({
+export default async function EnfermeiroLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -15,22 +15,21 @@ export default async function MedicoLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role, specialty, clinic:clinics(name)")
+    .select("full_name, role, clinic:clinics(name)")
     .eq("id", user.id)
     .maybeSingle();
 
-  if (profile?.role !== "doctor") redirect("/painel");
+  if (profile?.role !== "nurse") redirect("/painel");
 
   const clinic = Array.isArray(profile?.clinic)
     ? profile?.clinic[0]
     : profile?.clinic;
-  const meta = [profile?.specialty, clinic?.name].filter(Boolean).join(" · ");
 
   return (
     <AppShell
-      role="doctor"
-      userName={`Dr. ${profile?.full_name ?? user.email}`}
-      userMeta={meta || undefined}
+      role="nurse"
+      userName={profile?.full_name ?? user.email ?? "Enfermagem"}
+      userMeta={clinic?.name ?? undefined}
     >
       {children}
     </AppShell>

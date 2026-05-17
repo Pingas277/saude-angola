@@ -8,10 +8,19 @@ export type Encounter = {
   id: string;
 };
 
+export type InitialVitals = {
+  temp?: string;
+  bp?: string;
+  pulse?: string;
+  weight?: string;
+};
+
 export default function MedicalRecordForm({
   encounter,
+  initialVitals,
 }: {
   encounter: Encounter;
+  initialVitals?: InitialVitals;
 }) {
   const [state, formAction, isPending] = useActionState<RecordState, FormData>(
     saveMedicalRecordAction,
@@ -59,6 +68,11 @@ export default function MedicalRecordForm({
       <fieldset className="rounded-lg border border-slate-200 p-4">
         <legend className="px-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
           Sinais vitais
+          {initialVitals && (
+            <span className="ml-2 rounded-full bg-sky-100 px-2 py-0.5 text-[10px] font-medium text-sky-700">
+              pré-preenchido pela triagem
+            </span>
+          )}
         </legend>
         <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Field label="Temp. (°C)">
@@ -67,6 +81,7 @@ export default function MedicalRecordForm({
               type="text"
               inputMode="decimal"
               placeholder="36.5"
+              defaultValue={initialVitals?.temp}
               className={inputClass}
             />
           </Field>
@@ -75,6 +90,7 @@ export default function MedicalRecordForm({
               name="vital_bp"
               type="text"
               placeholder="120/80"
+              defaultValue={initialVitals?.bp}
               className={inputClass}
             />
           </Field>
@@ -84,6 +100,7 @@ export default function MedicalRecordForm({
               type="text"
               inputMode="numeric"
               placeholder="72"
+              defaultValue={initialVitals?.pulse}
               className={inputClass}
             />
           </Field>
@@ -93,6 +110,7 @@ export default function MedicalRecordForm({
               type="text"
               inputMode="decimal"
               placeholder="70"
+              defaultValue={initialVitals?.weight}
               className={inputClass}
             />
           </Field>

@@ -92,24 +92,72 @@ export default async function ConsultaPage({
     : patientRel.profile;
   const clinicRel = Array.isArray(appt.clinic) ? appt.clinic[0] : appt.clinic;
 
-  const [{ data: records }, { data: rxs }] = await Promise.all([
-    supabase
-      .from("medical_records")
-      .select(
-        "id, diagnosis, symptoms, notes, vitals, record_date, doctor:profiles!medical_records_doctor_id_fkey(full_name)"
-      )
-      .eq("patient_id", patientRel.id)
-      .order("record_date", { ascending: false })
-      .limit(20),
-    supabase
-      .from("prescriptions")
-      .select(
-        "id, medications, qr_code, notes, issued_at, expires_at, doctor:profiles!prescriptions_doctor_id_fkey(full_name)"
-      )
-      .eq("patient_id", patientRel.id)
-      .order("issued_at", { ascending: false })
-      .limit(10),
-  ]);
+  const [{ data: records }, { data: rxs }, { data: triageVitals }] =
+    await Promise.all([
+      supabase
+        .from("medical_records")
+        .select(
+          "id, diagnosis, symptoms, notes, vitals, record_date, doctor:profiles!medical_records_doctor_id_fkey(full_name)"
+        )
+        .eq("patient_id", patientRel.id)
+        .order("record_date", { ascending: false })
+        .limit(20),
+      supabase
+        .from("prescriptions")
+        .select(
+          "id, medications, qr_code, notes, issued_at, expires_at, doctor:profiles!prescriptions_doctor_id_fkey(full_name)"
+        )
+        .eq("patient_id", patientRel.id)
+        .order("issued_at", { ascending: false })
+        .limit(10),
+      supabase
+        .from("vital_signs")
+        .select(
+          "temperature_c, blood_pressure, pulse_bpm, respiratory_rate, oxygen_saturation, weight_kg, height_cm, notes, recorded_at, recorded_by:profiles!vital_signs_recorded_by_fkey(full_name)"
+        )
+        .eq("appointment_id", appt.id)
+        .order("recorded_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+    ]);
+
+  const nurseVitals = triageVitals as {
+    temperature_c: number | null;
+    blood_pressure: string | null;
+    pulse_bpm: number | null;
+    respiratory_rate: number | null;
+    oxygen_saturation: number | null;
+    weight_kg: number | null;
+    height_cm: number | null;
+    notes: string | null;
+    recorded_at: string;
+    recorded_by:
+      | { full_name: string | null }
+      | { full_name: string | null }[]
+      | null;
+  } | null;
+  const nurseName = nurseVitals
+    ? Array.isArray(nurseVitals.recorded_by)
+      ? nurseVitals.recorded_by[0]?.full_name
+      : nurseVitals.recorded_by?.full_name
+    : null;
+  const initialVitals = nurseVitals
+    ? {
+        temp:
+          nurseVitals.temperature_c != null
+            ? String(nurseVitals.temperature_c)
+            : undefined,
+        bp: nurseVitals.blood_pressure ?? undefined,
+        pulse:
+          nurseVitals.pulse_bpm != null
+            ? String(nurseVitals.pulse_bpm)
+            : undefined,
+        weight:
+          nurseVitals.weight_kg != null
+            ? String(nurseVitals.weight_kg)
+            : undefined,
+      }
+    : undefined;
 
   const patientName = profileRel?.full_name ?? "Paciente";
   const patientAge = age(patientRel.date_of_birth);
@@ -250,6 +298,46 @@ export default async function ConsultaPage({
             </div>
           </div>
 
+          {nurseVitals && (
+            <div className="mt-6 rounded-xl border border-sky-200 bg-sky-50/60 p-5">
+              <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-sky-800">
+                Triagem de enfermagem
+              </h2>
+              <p className="mt-0.5 text-xs text-sky-700">
+                {formatDateTimePT(nurseVitals.recorded_at)}
+                {nurseName ? ` · ${nurseName}` : ""}
+              </p>
+              <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                {nurseVitals.temperature_c != null && (
+                  <VitalRow label="Temperatura" value={`${nurseVitals.temperature_c} °C`} />
+                )}
+                {nurseVitals.blood_pressure && (
+                  <VitalRow label="Pressão art." value={nurseVitals.blood_pressure} />
+                )}
+                {nurseVitals.pulse_bpm != null && (
+                  <VitalRow label="Pulso" value={`${nurseVitals.pulse_bpm} bpm`} />
+                )}
+                {nurseVitals.respiratory_rate != null && (
+                  <VitalRow label="Freq. resp." value={String(nurseVitals.respiratory_rate)} />
+                )}
+                {nurseVitals.oxygen_saturation != null && (
+                  <VitalRow label="SpO₂" value={`${nurseVitals.oxygen_saturation} %`} />
+                )}
+                {nurseVitals.weight_kg != null && (
+                  <VitalRow label="Peso" value={`${nurseVitals.weight_kg} kg`} />
+                )}
+                {nurseVitals.height_cm != null && (
+                  <VitalRow label="Altura" value={`${nurseVitals.height_cm} cm`} />
+                )}
+              </dl>
+              {nurseVitals.notes && (
+                <p className="mt-3 border-t border-sky-200 pt-3 text-sm text-slate-700">
+                  {nurseVitals.notes}
+                </p>
+              )}
+            </div>
+          )}
+
           <HistorySection
             title="Registos clínicos"
             empty="Sem registos clínicos anteriores."
@@ -340,7 +428,10 @@ export default async function ConsultaPage({
               Diagnóstico, sintomas, notas e sinais vitais desta consulta.
             </p>
             <div className="mt-4">
-              <MedicalRecordForm encounter={{ kind: "appointment", id: appt.id }} />
+              <MedicalRecordForm
+                encounter={{ kind: "appointment", id: appt.id }}
+                initialVitals={initialVitals}
+              />
             </div>
           </div>
 
@@ -378,6 +469,15 @@ function Row({ label, value }: { label: string; value: string | null }) {
     <div className="flex justify-between gap-3">
       <dt className="text-slate-500">{label}</dt>
       <dd className="text-right text-slate-900">{value ?? "—"}</dd>
+    </div>
+  );
+}
+
+function VitalRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-xs text-sky-700">{label}</dt>
+      <dd className="font-semibold text-slate-900">{value}</dd>
     </div>
   );
 }

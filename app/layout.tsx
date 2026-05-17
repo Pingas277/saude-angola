@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import AngolanAccent from "./_brand/AngolanAccent";
+import ThemeProvider from "./_theme/ThemeProvider";
 import { Geist } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -66,12 +66,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-AO" className={cn("font-sans", geist.variable)}>
+    <html
+      lang="pt-AO"
+      className={cn("font-sans", geist.variable)}
+      suppressHydrationWarning
+    >
       <body className="min-h-screen antialiased">
-        <AngolanAccent />
-        {children}
-        <Analytics />
-        <SpeedInsights />
+        <ThemeProvider>
+          {children}
+          <Analytics />
+          <SpeedInsights />
+        </ThemeProvider>
       </body>
     </html>
   );

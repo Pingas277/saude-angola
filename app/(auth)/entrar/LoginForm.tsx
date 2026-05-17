@@ -43,18 +43,13 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
       {state?.error && (
         <div
           role="alert"
-          className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+          className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
         >
           {state.error}
         </div>
       )}
 
-      <Button
-        type="submit"
-        disabled={isPending}
-        className="w-full bg-emerald-600 hover:bg-emerald-700"
-        size="lg"
-      >
+      <Button type="submit" disabled={isPending} className="w-full" size="lg">
         {isPending ? "A entrar…" : "Entrar"}
       </Button>
     </form>

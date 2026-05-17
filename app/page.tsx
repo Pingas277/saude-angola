@@ -15,6 +15,7 @@ import {
   Star,
 } from "lucide-react";
 import Logo from "./_brand/Logo";
+import ThemeToggle from "./_theme/ThemeToggle";
 import { Reveal, Stagger, StaggerItem } from "./_motion/Reveal";
 import {
   Accordion,
@@ -24,9 +25,9 @@ import {
 } from "@/components/ui/accordion";
 
 // =============================================================================
-// Saúde Angola · A-grade SaaS landing page
-// Inspired by the FinWise SaaS template (vercel.com/templates) — adapted for
-// healthcare with our emerald primary + Angolan flag accent.
+// Saúde Angola · landing page — clinical-minimal
+// Linear/Vercel-inspired: airy, hairline borders, one emerald accent, fully
+// token-driven so it works in light and dark. No gradients/glows/heavy shadows.
 // =============================================================================
 
 const FEATURES = [
@@ -188,175 +189,152 @@ const REGIONS = [
   "Bié",
 ];
 
+const btnPrimary =
+  "inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+const btnOutline =
+  "inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground";
+
 export default function HomePage() {
   return (
-    <main className="overflow-hidden bg-white">
-      {/* === Floating nav === */}
-      <div className="px-3 pt-4 sm:px-6">
-        <header className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-slate-200/80 bg-white/80 px-5 py-2.5 shadow-sm backdrop-blur-md sm:px-7">
+    <main className="bg-background text-foreground">
+      {/* === Nav === */}
+      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Logo size="md" />
-          <nav className="hidden items-center gap-1 lg:flex">
+          <nav className="hidden items-center gap-1 md:flex">
             <NavLink href="#marcar">Marcar consulta</NavLink>
             <NavLink href="#caracteristicas">Características</NavLink>
             <NavLink href="#precos">Preços</NavLink>
             <NavLink href="#faq">Perguntas</NavLink>
           </nav>
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Link
               href="/entrar"
-              className="hidden rounded-full px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 sm:inline-flex"
+              className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
             >
               Entrar
             </Link>
-            <Link
-              href="/registar"
-              className="inline-flex items-center justify-center gap-1.5 rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
-            >
+            <Link href="/registar" className={btnPrimary}>
               Começar
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight className="size-4" />
             </Link>
           </div>
-        </header>
-      </div>
+        </div>
+      </header>
 
       {/* === Hero === */}
-      <section className="relative">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_50%_0%,rgba(16,185,129,0.10),transparent)]"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-32 top-32 -z-10 h-96 w-96 rounded-full bg-emerald-200/30 blur-3xl"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -left-32 top-72 -z-10 h-80 w-80 rounded-full opacity-15 blur-3xl"
-          style={{ background: "#FCD116" }}
-        />
-
-        <Stagger className="mx-auto max-w-6xl px-6 pb-24 pt-20 text-center sm:pt-28">
+      <section className="border-b border-border">
+        <Stagger className="mx-auto max-w-4xl px-6 py-24 text-center sm:py-32">
           <StaggerItem>
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200/80 bg-emerald-50 px-3.5 py-1.5 text-xs font-semibold text-emerald-800">
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
               <span
                 aria-hidden
-                className="inline-block h-2 w-2 rounded-full"
-                style={{ background: "#CD1126" }}
+                className="inline-block size-1.5 rounded-full bg-primary"
               />
               Marketplace de saúde · Angola
             </span>
           </StaggerItem>
 
           <StaggerItem>
-            <h1 className="mx-auto mt-6 max-w-4xl text-5xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
-              Marque com{" "}
-              <span className="bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 bg-clip-text text-transparent">
-                qualquer médico
-              </span>
-              , em qualquer clínica.
+            <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+              Marque com <span className="text-primary">qualquer médico</span>,
+              em qualquer clínica.
             </h1>
           </StaggerItem>
 
           <StaggerItem>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
-              A primeira plataforma que junta médicos e clínicas privadas em Angola
-              num só sítio. Procure por especialidade, escolha o profissional e
-              marque online — sem telefonemas, sem deslocações para confirmar.
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
+              A primeira plataforma que junta médicos e clínicas privadas em
+              Angola num só sítio. Procure por especialidade, escolha o
+              profissional e marque online — sem telefonemas.
             </p>
           </StaggerItem>
 
           <StaggerItem>
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link
-                href="/registar"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-600 px-7 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-600/30 sm:w-auto"
-              >
+              <Link href="/registar" className={btnPrimary}>
                 Começar gratuitamente
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="size-4" />
               </Link>
-              <Link
-                href="#marcar"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-7 py-4 text-base font-semibold text-slate-800 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 sm:w-auto"
-              >
+              <Link href="#marcar" className={btnOutline}>
                 Procurar médicos
               </Link>
             </div>
           </StaggerItem>
 
           <StaggerItem>
-            <div className="mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-slate-500">
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
               <TrustItem>Multicaixa Express integrado</TrustItem>
               <TrustItem>Receita com QR válida em farmácias</TrustItem>
               <TrustItem>Conformidade RGPD</TrustItem>
             </div>
           </StaggerItem>
 
-          {/* === Hero device card === */}
-          <StaggerItem className="relative mx-auto mt-16 max-w-3xl">
-            <div
-              aria-hidden
-              className="absolute -inset-6 -z-10 rounded-[44px] bg-gradient-to-br from-emerald-200/50 via-white to-amber-100/30 opacity-70 blur-2xl"
-            />
-            <div className="overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-2xl shadow-emerald-900/15">
-              <div className="flex items-center gap-1.5 border-b border-slate-100 bg-slate-50/80 px-4 py-3 backdrop-blur">
-                <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
-                <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                <span className="ml-3 truncate text-[11px] text-slate-400">
+          {/* === Hero product preview === */}
+          <StaggerItem className="mx-auto mt-16 max-w-3xl">
+            <div className="overflow-hidden rounded-xl border border-border bg-card text-left shadow-sm">
+              <div className="flex items-center gap-1.5 border-b border-border px-4 py-3">
+                <span className="size-2.5 rounded-full bg-muted-foreground/20" />
+                <span className="size-2.5 rounded-full bg-muted-foreground/20" />
+                <span className="size-2.5 rounded-full bg-muted-foreground/20" />
+                <span className="ml-3 truncate text-[11px] text-muted-foreground">
                   saude-angola.vercel.app
                 </span>
               </div>
-              <div className="grid gap-4 p-6 md:grid-cols-[1.4fr_1fr] md:p-8">
-                <div className="text-left">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-emerald-700">
+              <div className="grid gap-4 p-6 md:grid-cols-[1.4fr_1fr]">
+                <div>
+                  <div className="text-[11px] font-medium uppercase tracking-wider text-primary">
                     Telemedicina · Disponível agora
                   </div>
-                  <div className="mt-1.5 text-2xl font-extrabold tracking-tight text-slate-900">
+                  <div className="mt-1.5 text-xl font-semibold tracking-tight text-foreground">
                     Falar com um médico
                   </div>
 
-                  <div className="mt-5 flex items-center gap-3 rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white px-4 py-3">
-                    <span className="grid h-11 w-11 place-items-center rounded-full bg-emerald-600 text-sm font-bold text-white shadow-sm">
+                  <div className="mt-5 flex items-center gap-3 rounded-lg border border-border px-4 py-3">
+                    <span className="grid size-10 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
                       MS
                     </span>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-bold text-slate-900">
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-semibold text-foreground">
                         Dr. Manuel Silva
                       </div>
-                      <div className="truncate text-xs text-slate-600">
-                        Medicina Geral · ⭐ 4,9
+                      <div className="truncate text-xs text-muted-foreground">
+                        Medicina Geral · ★ 4,9
                       </div>
                     </div>
-                    <span className="rounded-full bg-white px-2.5 py-1 text-[11px] font-semibold text-emerald-700 ring-1 ring-emerald-200">
+                    <span className="rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-primary">
                       ≈ 3 min
                     </span>
                   </div>
 
-                  <div className="mt-3 grid grid-cols-3 gap-2 text-left">
+                  <div className="mt-3 grid grid-cols-3 gap-2">
                     <Mini label="Consulta" value="15.000 Kz" />
                     <Mini label="Receita" value="QR + PDF" />
                     <Mini label="Pagamento" value="MCX" />
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-between gap-4 rounded-2xl bg-gradient-to-br from-slate-50 to-emerald-50/40 p-5 text-left">
+                <div className="flex flex-col justify-between gap-4 rounded-lg border border-border bg-muted/40 p-5">
                   <div>
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                    <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                       Triagem assistida
                     </div>
-                    <div className="mt-1 text-base font-bold text-slate-900">
+                    <div className="mt-1 text-sm font-semibold text-foreground">
                       Urgência: Média
                     </div>
-                    <p className="mt-1.5 text-xs leading-relaxed text-slate-600">
+                    <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                       Cefaleia há 3 dias · Intensidade 6/10 · sem bandeiras
                       vermelhas. Recomenda-se consulta no próprio dia.
                     </p>
                   </div>
                   <div className="flex items-center gap-2 text-xs">
-                    <span className="rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-800">
+                    <span className="rounded-full border border-border px-2 py-0.5 font-medium text-foreground">
                       Média
                     </span>
-                    <span className="text-slate-500">classificação IA</span>
+                    <span className="text-muted-foreground">
+                      classificação IA
+                    </span>
                   </div>
                 </div>
               </div>
@@ -365,82 +343,64 @@ export default function HomePage() {
         </Stagger>
       </section>
 
-      {/* === Trust strip — regions === */}
-      <section className="border-y border-slate-100 bg-slate-50/60 py-10">
-        <Reveal className="mx-auto max-w-6xl px-6 text-center">
-          <p className="text-xs font-bold uppercase tracking-widest text-slate-500">
+      {/* === Regions strip === */}
+      <section className="border-b border-border bg-muted/30">
+        <Reveal className="mx-auto max-w-6xl px-6 py-10 text-center">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Disponível em todas as 18 províncias de Angola
           </p>
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm font-medium text-slate-600">
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground">
             {REGIONS.map((r) => (
               <span key={r} className="inline-flex items-center gap-2">
                 <span
                   aria-hidden
-                  className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500"
+                  className="inline-block size-1.5 rounded-full bg-primary/60"
                 />
                 {r}
               </span>
             ))}
-            <span className="text-slate-400">+ 11 outras</span>
+            <span className="text-muted-foreground/60">+ 11 outras</span>
           </div>
         </Reveal>
       </section>
 
       {/* === Marketplace / Discovery === */}
-      <section
-        id="marcar"
-        className="relative overflow-hidden bg-white py-24"
-      >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-32 right-1/4 -z-10 h-96 w-96 rounded-full bg-emerald-100/60 blur-3xl"
-        />
-
-        <div className="mx-auto max-w-6xl px-6">
+      <section id="marcar" className="border-b border-border">
+        <div className="mx-auto max-w-6xl px-6 py-24">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
-              Marketplace de saúde
-            </span>
-            <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-              Encontre o seu médico.
-            </h2>
-            <p className="mt-4 text-base text-slate-600">
-              Pesquise por especialidade, clínica ou nome. Compare disponibilidade
-              e preços. Marque online — em qualquer cidade de Angola, sem fazer
-              um único telefonema.
-            </p>
+            <SectionEyebrow>Marketplace de saúde</SectionEyebrow>
+            <SectionTitle>Encontre o seu médico.</SectionTitle>
+            <SectionLede>
+              Pesquise por especialidade, clínica ou nome. Compare
+              disponibilidade e preços. Marque online — em qualquer cidade de
+              Angola, sem fazer um único telefonema.
+            </SectionLede>
           </Reveal>
 
-          {/* === Mock search interface === */}
-          <Reveal className="mx-auto mt-14 max-w-4xl">
-            <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-emerald-900/10">
-              {/* Search bar */}
-              <div className="flex flex-wrap items-center gap-3 border-b border-slate-100 bg-slate-50/60 p-5">
-                <div className="flex flex-1 items-center gap-3 rounded-full border border-slate-200 bg-white px-4 py-3 shadow-sm">
-                  <Search className="h-4 w-4 shrink-0 text-slate-400" />
-                  <span className="text-sm text-slate-500">
+          <Reveal className="mx-auto mt-14 max-w-3xl">
+            <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+              <div className="flex flex-wrap items-center gap-3 border-b border-border p-4">
+                <div className="flex flex-1 items-center gap-3 rounded-lg border border-border px-4 py-2.5">
+                  <Search className="size-4 shrink-0 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
                     Especialidade, clínica ou médico…
                   </span>
                 </div>
-                <span className="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white shadow-sm">
-                  Pesquisar
-                </span>
+                <span className={btnPrimary}>Pesquisar</span>
               </div>
 
-              {/* Filter pills */}
-              <div className="flex flex-wrap gap-2 border-b border-slate-100 px-5 py-3">
+              <div className="flex flex-wrap gap-2 border-b border-border px-4 py-3">
                 <FilterPill active>Medicina Geral</FilterPill>
                 <FilterPill>Cardiologia</FilterPill>
                 <FilterPill>Pediatria</FilterPill>
                 <FilterPill>Ginecologia</FilterPill>
                 <FilterPill>Dermatologia</FilterPill>
-                <span className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-slate-400">
+                <span className="inline-flex items-center px-3 py-1.5 text-xs text-muted-foreground">
                   + 24 especialidades
                 </span>
               </div>
 
-              {/* Doctor cards */}
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-border">
                 <DoctorRow
                   initials="MS"
                   name="Dr. Manuel Silva"
@@ -476,21 +436,20 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          {/* Discovery stats */}
           <Reveal
-            className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-sm font-medium text-slate-600"
+            className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-sm text-muted-foreground"
             delay={0.1}
           >
             <span className="inline-flex items-center gap-2">
-              <Stethoscope className="h-4 w-4 text-emerald-600" />
+              <Stethoscope className="size-4 text-primary" />
               Centenas de médicos verificados
             </span>
             <span className="inline-flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-emerald-600" />
+              <MapPin className="size-4 text-primary" />
               Em todas as 18 províncias
             </span>
             <span className="inline-flex items-center gap-2">
-              <CreditCard className="h-4 w-4 text-emerald-600" />
+              <CreditCard className="size-4 text-primary" />
               Pagamento por Multicaixa Express
             </span>
           </Reveal>
@@ -498,34 +457,30 @@ export default function HomePage() {
       </section>
 
       {/* === Features === */}
-      <section id="caracteristicas" className="bg-slate-50/40 py-24">
-        <div className="mx-auto max-w-6xl px-6">
+      <section id="caracteristicas" className="border-b border-border bg-muted/30">
+        <div className="mx-auto max-w-6xl px-6 py-24">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
-              Características
-            </span>
-            <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-              Tudo o que precisa para a saúde digital.
-            </h2>
-            <p className="mt-4 text-base text-slate-600">
+            <SectionEyebrow>Características</SectionEyebrow>
+            <SectionTitle>Tudo o que precisa para a saúde digital.</SectionTitle>
+            <SectionLede>
               Construído para a realidade angolana. Funciona em qualquer rede,
               em qualquer telemóvel, em qualquer província.
-            </p>
+            </SectionLede>
           </Reveal>
 
-          <Stagger className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Stagger className="mt-16 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((f) => (
               <StaggerItem
                 key={f.title}
-                className="group rounded-3xl border border-slate-200 bg-white p-7 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-900/5"
+                className="group bg-card p-7 transition-colors hover:bg-accent/40"
               >
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/70 transition group-hover:bg-emerald-600 group-hover:text-white group-hover:ring-emerald-700">
-                  <f.icon className="h-6 w-6" />
+                <div className="grid size-10 place-items-center rounded-lg border border-border bg-background text-primary">
+                  <f.icon className="size-5" />
                 </div>
-                <h3 className="mt-5 text-lg font-bold text-slate-900">
+                <h3 className="mt-5 text-base font-semibold text-foreground">
                   {f.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {f.desc}
                 </p>
               </StaggerItem>
@@ -535,52 +490,30 @@ export default function HomePage() {
       </section>
 
       {/* === How it works === */}
-      <section
-        id="como-funciona"
-        className="relative overflow-hidden border-y border-slate-100 bg-gradient-to-br from-slate-50 via-white to-emerald-50/40 py-24"
-      >
-        <div className="mx-auto max-w-6xl px-6">
+      <section id="como-funciona" className="border-b border-border">
+        <div className="mx-auto max-w-6xl px-6 py-24">
           <Reveal className="max-w-2xl">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
-              Como funciona
-            </span>
-            <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-              Da triagem à receita em minutos.
-            </h2>
-            <p className="mt-4 max-w-xl text-base text-slate-600">
+            <SectionEyebrow>Como funciona</SectionEyebrow>
+            <SectionTitle>Da triagem à receita em minutos.</SectionTitle>
+            <SectionLede>
               Um fluxo simples, pensado para quem nunca usou uma aplicação de
               saúde. Sem jargão. Sem deslocações.
-            </p>
+            </SectionLede>
           </Reveal>
 
-          <Stagger className="relative mt-16 grid gap-6 lg:grid-cols-3">
-            {/* connecting line on desktop */}
-            <div
-              aria-hidden
-              className="absolute left-0 right-0 top-7 hidden h-px bg-gradient-to-r from-transparent via-emerald-300 to-transparent lg:block"
-            />
-            {STEPS.map((s, i) => (
+          <Stagger className="mt-16 grid gap-6 lg:grid-cols-3">
+            {STEPS.map((s) => (
               <StaggerItem
                 key={s.n}
-                className="relative rounded-3xl border border-slate-200 bg-white p-7 shadow-sm"
+                className="rounded-xl border border-border bg-card p-7"
               >
-                <div className="flex items-center gap-3">
-                  <span className="grid h-14 w-14 place-items-center rounded-full bg-emerald-600 text-base font-extrabold text-white shadow-md shadow-emerald-600/30">
-                    {s.n}
-                  </span>
-                  {i < STEPS.length - 1 && (
-                    <span
-                      aria-hidden
-                      className="hidden text-emerald-300 lg:inline"
-                    >
-                      →
-                    </span>
-                  )}
-                </div>
-                <h3 className="mt-6 text-lg font-bold text-slate-900">
+                <span className="inline-grid size-10 place-items-center rounded-lg border border-border text-sm font-semibold text-primary">
+                  {s.n}
+                </span>
+                <h3 className="mt-6 text-base font-semibold text-foreground">
                   {s.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {s.desc}
                 </p>
               </StaggerItem>
@@ -590,36 +523,41 @@ export default function HomePage() {
       </section>
 
       {/* === Stats === */}
-      <section className="bg-white py-20">
-        <Reveal className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-6 rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-900 to-slate-800 p-10 text-white sm:grid-cols-3 lg:p-14">
-            <Stat icon={<Clock className="h-5 w-5" />} value="≈ 3 min" label="Tempo médio até atendimento" />
-            <Stat icon={<Users className="h-5 w-5" />} value="500+" label="Clínicas privadas em Angola" />
-            <Stat icon={<ShieldCheck className="h-5 w-5" />} value="18 / 18" label="Províncias com cobertura" />
+      <section className="border-b border-border bg-muted/30">
+        <Reveal className="mx-auto max-w-6xl px-6 py-20">
+          <div className="grid gap-10 sm:grid-cols-3">
+            <Stat
+              icon={<Clock className="size-5" />}
+              value="≈ 3 min"
+              label="Tempo médio até atendimento"
+            />
+            <Stat
+              icon={<Users className="size-5" />}
+              value="500+"
+              label="Clínicas privadas em Angola"
+            />
+            <Stat
+              icon={<ShieldCheck className="size-5" />}
+              value="18 / 18"
+              label="Províncias com cobertura"
+            />
           </div>
         </Reveal>
       </section>
 
       {/* === Pricing === */}
-      <section
-        id="precos"
-        className="relative overflow-hidden bg-slate-50/50 py-24"
-      >
-        <div className="mx-auto max-w-6xl px-6">
+      <section id="precos" className="border-b border-border">
+        <div className="mx-auto max-w-6xl px-6 py-24">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
-              Preços para clínicas
-            </span>
-            <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-              A partir de 100.000 Kz / mês.
-            </h2>
-            <p className="mt-4 text-base text-slate-600">
+            <SectionEyebrow>Preços para clínicas</SectionEyebrow>
+            <SectionTitle>A partir de 100.000 Kz / mês.</SectionTitle>
+            <SectionLede>
               Contrato anual com setup personalizado.{" "}
-              <strong className="text-slate-900">
+              <strong className="font-semibold text-foreground">
                 Para aderir, fale connosco.
               </strong>{" "}
               Pacientes usam grátis.
-            </p>
+            </SectionLede>
           </Reveal>
 
           <Stagger className="mt-16 grid gap-6 lg:grid-cols-3">
@@ -627,39 +565,41 @@ export default function HomePage() {
               <StaggerItem
                 key={p.name}
                 className={
-                  "relative rounded-3xl border p-8 transition " +
+                  "relative rounded-xl border bg-card p-8 " +
                   (p.highlighted
-                    ? "border-emerald-300 bg-white shadow-xl shadow-emerald-900/10 ring-1 ring-emerald-100 lg:scale-[1.02]"
-                    : "border-slate-200 bg-white shadow-sm")
+                    ? "border-primary ring-1 ring-primary/20"
+                    : "border-border")
                 }
               >
                 {p.highlighted && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-600 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-md">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
                     Mais popular
                   </span>
                 )}
-                <div className="text-sm font-bold uppercase tracking-wider text-emerald-700">
+                <div className="text-xs font-medium uppercase tracking-wider text-primary">
                   {p.name}
                 </div>
                 <div className="mt-3 flex items-baseline gap-1.5">
-                  <span className="text-5xl font-extrabold tracking-tight text-slate-900">
+                  <span className="text-4xl font-semibold tracking-tight text-foreground">
                     {p.price}
                   </span>
-                  <span className="text-base font-semibold text-slate-700">
+                  <span className="text-sm font-medium text-foreground">
                     {p.currency}
                   </span>
-                  <span className="text-sm text-slate-500">{p.period}</span>
+                  <span className="text-sm text-muted-foreground">
+                    {p.period}
+                  </span>
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                   {p.desc}
                 </p>
                 <ul className="mt-6 space-y-2.5">
                   {p.features.map((feat) => (
                     <li
                       key={feat}
-                      className="flex items-start gap-2.5 text-sm text-slate-700"
+                      className="flex items-start gap-2.5 text-sm text-foreground"
                     >
-                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                      <Check className="mt-0.5 size-4 shrink-0 text-primary" />
                       <span>{feat}</span>
                     </li>
                   ))}
@@ -667,24 +607,22 @@ export default function HomePage() {
                 <Link
                   href={`mailto:suporte@saudeangola.ao?subject=Ades%C3%A3o%20ao%20plano%20${encodeURIComponent(p.name)}&body=Bom%20dia%2C%20gostar%C3%ADamos%20de%20aderir%20ao%20plano%20${encodeURIComponent(p.name)}.`}
                   className={
-                    "mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition " +
-                    (p.highlighted
-                      ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/20 hover:bg-emerald-700"
-                      : "border border-slate-300 bg-white text-slate-800 hover:border-slate-400 hover:bg-slate-50")
+                    "mt-7 w-full " +
+                    (p.highlighted ? btnPrimary : btnOutline)
                   }
                 >
                   Falar com a equipa
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight className="size-4" />
                 </Link>
               </StaggerItem>
             ))}
           </Stagger>
 
-          <p className="mt-10 text-center text-sm text-slate-500">
+          <p className="mt-10 text-center text-sm text-muted-foreground">
             Hospital ou rede com necessidades específicas?{" "}
             <Link
               href="mailto:suporte@saudeangola.ao?subject=Plano%20personalizado"
-              className="font-semibold text-emerald-700 hover:text-emerald-800"
+              className="font-medium text-primary hover:underline"
             >
               Pedir proposta personalizada →
             </Link>
@@ -693,15 +631,11 @@ export default function HomePage() {
       </section>
 
       {/* === Testimonials === */}
-      <section className="bg-white py-24">
-        <div className="mx-auto max-w-6xl px-6">
+      <section className="border-b border-border bg-muted/30">
+        <div className="mx-auto max-w-6xl px-6 py-24">
           <Reveal className="max-w-2xl">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
-              Histórias reais
-            </span>
-            <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-              Médicos e pacientes em Angola.
-            </h2>
+            <SectionEyebrow>Histórias reais</SectionEyebrow>
+            <SectionTitle>Médicos e pacientes em Angola.</SectionTitle>
           </Reveal>
 
           <Stagger className="mt-14 grid gap-6 lg:grid-cols-3">
@@ -709,20 +643,22 @@ export default function HomePage() {
               <StaggerItem
                 as="figure"
                 key={t.author}
-                className="rounded-3xl border border-slate-200 bg-gradient-to-br from-white to-slate-50/50 p-8"
+                className="rounded-xl border border-border bg-card p-8"
               >
-                <blockquote className="text-base leading-relaxed text-slate-800">
+                <blockquote className="text-sm leading-relaxed text-foreground">
                   “{t.quote}”
                 </blockquote>
-                <figcaption className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-5">
-                  <span className="grid h-11 w-11 place-items-center rounded-full bg-emerald-600 text-sm font-bold text-white">
+                <figcaption className="mt-6 flex items-center gap-3 border-t border-border pt-5">
+                  <span className="grid size-10 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
                     {t.initials}
                   </span>
                   <div>
-                    <div className="text-sm font-bold text-slate-900">
+                    <div className="text-sm font-semibold text-foreground">
                       {t.author}
                     </div>
-                    <div className="text-xs text-slate-500">{t.role}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {t.role}
+                    </div>
                   </div>
                 </figcaption>
               </StaggerItem>
@@ -732,15 +668,11 @@ export default function HomePage() {
       </section>
 
       {/* === FAQ === */}
-      <section id="faq" className="border-y border-slate-100 bg-slate-50/40 py-24">
-        <div className="mx-auto max-w-3xl px-6">
+      <section id="faq" className="border-b border-border">
+        <div className="mx-auto max-w-3xl px-6 py-24">
           <Reveal className="text-center">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-700">
-              Perguntas frequentes
-            </span>
-            <h2 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-              Tudo o que precisa de saber.
-            </h2>
+            <SectionEyebrow>Perguntas frequentes</SectionEyebrow>
+            <SectionTitle>Tudo o que precisa de saber.</SectionTitle>
           </Reveal>
 
           <Accordion className="mt-12 space-y-3">
@@ -748,12 +680,12 @@ export default function HomePage() {
               <AccordionItem
                 key={i}
                 value={`item-${i}`}
-                className="rounded-2xl border border-slate-200 bg-white px-6"
+                className="rounded-lg border border-border bg-card px-5"
               >
-                <AccordionTrigger className="text-left text-base font-semibold text-slate-900 hover:no-underline">
+                <AccordionTrigger className="text-left text-sm font-medium text-foreground hover:no-underline">
                   {item.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm leading-relaxed text-slate-600">
+                <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
                   {item.a}
                 </AccordionContent>
               </AccordionItem>
@@ -761,11 +693,11 @@ export default function HomePage() {
           </Accordion>
 
           <div className="mt-10 text-center">
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-muted-foreground">
               Outra pergunta?{" "}
               <Link
                 href="mailto:suporte@saudeangola.ao"
-                className="font-semibold text-emerald-700 hover:text-emerald-800"
+                className="font-medium text-primary hover:underline"
               >
                 suporte@saudeangola.ao
               </Link>
@@ -775,102 +707,94 @@ export default function HomePage() {
       </section>
 
       {/* === Final CTA === */}
-      <section className="relative overflow-hidden bg-slate-900 py-24 text-white">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 flex h-1.5"
-        >
-          <div style={{ background: "#CD1126" }} className="h-full flex-1" />
-          <div style={{ background: "#FCD116" }} className="h-full flex-1" />
-        </div>
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-32 top-0 h-96 w-96 rounded-full bg-emerald-500/15 blur-3xl"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -left-32 bottom-0 h-80 w-80 rounded-full opacity-15 blur-3xl"
-          style={{ background: "#FCD116" }}
-        />
-
-        <Reveal className="mx-auto max-w-4xl px-6 text-center">
-          <h2 className="text-4xl font-extrabold tracking-tight sm:text-6xl">
-            Pronto para começar?
-          </h2>
-          <p className="mx-auto mt-5 max-w-xl text-base text-slate-300">
-            Crie a sua conta em menos de um minuto. Pacientes começam grátis.
-            Clínicas têm 14 dias de teste do plano Padrão.
-          </p>
-          <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              href="/registar"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-500 px-7 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-900/30 transition hover:bg-emerald-400 sm:w-auto"
-            >
-              Começar gratuitamente
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/entrar"
-              className="inline-flex w-full items-center justify-center rounded-full border border-white/20 bg-white/5 px-7 py-4 text-base font-semibold text-white backdrop-blur transition hover:bg-white/10 sm:w-auto"
-            >
-              Já tenho conta
-            </Link>
+      <section className="border-b border-border">
+        <Reveal className="mx-auto max-w-6xl px-6 py-24">
+          <div className="rounded-2xl border border-border bg-muted/40 px-6 py-16 text-center">
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              Pronto para começar?
+            </h2>
+            <p className="mx-auto mt-4 max-w-lg text-sm text-muted-foreground">
+              Crie a sua conta em menos de um minuto. Pacientes começam grátis.
+              Clínicas têm 14 dias de teste do plano Padrão.
+            </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link href="/registar" className={btnPrimary}>
+                Começar gratuitamente
+                <ArrowRight className="size-4" />
+              </Link>
+              <Link href="/entrar" className={btnOutline}>
+                Já tenho conta
+              </Link>
+            </div>
           </div>
         </Reveal>
       </section>
 
       {/* === Footer === */}
-      <footer className="bg-slate-900 text-slate-300">
-        <div className="border-t border-white/10">
-          <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <Logo size="md" variant="dark" />
-              <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-400">
-                Plataforma digital de saúde para Angola — telemedicina e
-                gestão clínica numa só app.
-              </p>
-              <div className="mt-5 flex items-center gap-2 text-xs text-slate-500">
-                <span aria-hidden className="flex overflow-hidden rounded">
-                  <span style={{ background: "#CD1126" }} className="block h-3 w-2.5" />
-                  <span style={{ background: "#000000" }} className="block h-3 w-2.5" />
-                  <span style={{ background: "#FCD116" }} className="block h-3 w-2.5" />
-                </span>
-                <span>Feito em Angola</span>
-              </div>
+      <footer className="bg-background">
+        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <Logo size="md" />
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
+              Plataforma digital de saúde para Angola — telemedicina e gestão
+              clínica numa só app.
+            </p>
+            <div className="mt-5 flex items-center gap-2 text-xs text-muted-foreground">
+              <span
+                aria-hidden
+                className="flex overflow-hidden rounded-sm border border-border"
+              >
+                <span
+                  style={{ background: "#CD1126" }}
+                  className="block h-3 w-2.5"
+                />
+                <span
+                  style={{ background: "#000000" }}
+                  className="block h-3 w-2.5"
+                />
+                <span
+                  style={{ background: "#FCD116" }}
+                  className="block h-3 w-2.5"
+                />
+              </span>
+              <span>Feito em Angola</span>
             </div>
-
-            <FooterCol
-              title="Produto"
-              links={[
-                { href: "#caracteristicas", label: "Características" },
-                { href: "#como-funciona", label: "Como funciona" },
-                { href: "#precos", label: "Preços" },
-                { href: "/registar", label: "Criar conta" },
-              ]}
-            />
-            <FooterCol
-              title="Empresa"
-              links={[
-                { href: "/", label: "Sobre nós" },
-                { href: "mailto:suporte@saudeangola.ao", label: "Contacto" },
-                { href: "/", label: "Imprensa" },
-                { href: "/", label: "Carreiras" },
-              ]}
-            />
-            <FooterCol
-              title="Legal"
-              links={[
-                { href: "/", label: "Termos de Serviço" },
-                { href: "/", label: "Política de Privacidade" },
-                { href: "/", label: "RGPD" },
-                { href: "/", label: "Cookies" },
-              ]}
-            />
           </div>
+
+          <FooterCol
+            title="Produto"
+            links={[
+              { href: "#caracteristicas", label: "Características" },
+              { href: "#como-funciona", label: "Como funciona" },
+              { href: "#precos", label: "Preços" },
+              { href: "/registar", label: "Criar conta" },
+            ]}
+          />
+          <FooterCol
+            title="Empresa"
+            links={[
+              { href: "/", label: "Sobre nós" },
+              { href: "mailto:suporte@saudeangola.ao", label: "Contacto" },
+              { href: "/", label: "Imprensa" },
+              { href: "/", label: "Carreiras" },
+            ]}
+          />
+          <FooterCol
+            title="Legal"
+            links={[
+              { href: "/", label: "Termos de Serviço" },
+              { href: "/", label: "Política de Privacidade" },
+              { href: "/", label: "RGPD" },
+              { href: "/", label: "Cookies" },
+            ]}
+          />
         </div>
-        <div className="border-t border-white/10">
-          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-            <span>© {new Date().getFullYear()} Saúde Angola. Todos os direitos reservados.</span>
+        <div className="border-t border-border">
+          <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+            <span>
+              © {new Date().getFullYear()} Saúde Angola. Todos os direitos
+              reservados.
+            </span>
             <span>Luanda · Angola 🇦🇴</span>
           </div>
         </div>
@@ -889,17 +813,41 @@ function NavLink({
   return (
     <Link
       href={href}
-      className="rounded-full px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-900"
+      className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
     >
       {children}
     </Link>
   );
 }
 
+function SectionEyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="text-xs font-medium uppercase tracking-wider text-primary">
+      {children}
+    </span>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+      {children}
+    </h2>
+  );
+}
+
+function SectionLede({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+      {children}
+    </p>
+  );
+}
+
 function TrustItem({ children }: { children: React.ReactNode }) {
   return (
     <span className="inline-flex items-center gap-1.5">
-      <Check className="h-3.5 w-3.5 text-emerald-600" />
+      <Check className="size-3.5 text-primary" />
       {children}
     </span>
   );
@@ -907,11 +855,11 @@ function TrustItem({ children }: { children: React.ReactNode }) {
 
 function Mini({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-slate-200/70 bg-white px-2.5 py-2">
-      <div className="text-[9px] font-bold uppercase tracking-widest text-slate-500">
+    <div className="rounded-lg border border-border px-2.5 py-2">
+      <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
         {label}
       </div>
-      <div className="mt-0.5 text-xs font-extrabold text-slate-900">
+      <div className="mt-0.5 text-xs font-semibold text-foreground">
         {value}
       </div>
     </div>
@@ -929,11 +877,13 @@ function Stat({
 }) {
   return (
     <div className="text-center">
-      <div className="mx-auto grid h-10 w-10 place-items-center rounded-full bg-white/10 text-emerald-300">
+      <div className="mx-auto grid size-10 place-items-center rounded-lg border border-border text-primary">
         {icon}
       </div>
-      <div className="mt-3 text-3xl font-extrabold tracking-tight">{value}</div>
-      <div className="mt-1 text-xs uppercase tracking-widest text-slate-400">
+      <div className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+        {value}
+      </div>
+      <div className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
         {label}
       </div>
     </div>
@@ -949,7 +899,7 @@ function FooterCol({
 }) {
   return (
     <div>
-      <div className="text-xs font-bold uppercase tracking-widest text-slate-200">
+      <div className="text-xs font-medium uppercase tracking-wider text-foreground">
         {title}
       </div>
       <ul className="mt-4 space-y-2.5">
@@ -957,7 +907,7 @@ function FooterCol({
           <li key={l.label}>
             <Link
               href={l.href}
-              className="text-sm text-slate-400 transition hover:text-white"
+              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               {l.label}
             </Link>
@@ -978,10 +928,10 @@ function FilterPill({
   return (
     <span
       className={
-        "inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium transition " +
+        "inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium transition-colors " +
         (active
-          ? "bg-emerald-600 text-white shadow-sm"
-          : "border border-slate-200 bg-white text-slate-700 hover:border-emerald-300")
+          ? "bg-primary text-primary-foreground"
+          : "border border-border text-muted-foreground hover:text-foreground")
       }
     >
       {children}
@@ -1013,43 +963,40 @@ function DoctorRow({
   return (
     <li
       className={
-        "flex flex-wrap items-center gap-4 px-5 py-4 transition " +
-        (highlighted ? "bg-emerald-50/50" : "hover:bg-slate-50/60")
+        "flex flex-wrap items-center gap-4 px-5 py-4 transition-colors " +
+        (highlighted ? "bg-accent/40" : "hover:bg-accent/30")
       }
     >
-      <span
-        className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-600 to-emerald-700 text-sm font-bold text-white shadow-sm"
-      >
+      <span className="grid size-11 shrink-0 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
         {initials}
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm font-bold text-slate-900">{name}</span>
-          <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">
-            <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
+          <span className="text-sm font-semibold text-foreground">{name}</span>
+          <span className="inline-flex items-center gap-0.5 rounded-full border border-border px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+            <Star className="size-2.5 fill-current text-primary" />
             {rating}
           </span>
         </div>
-        <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-slate-600">
+        <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
           <span>{specialty}</span>
-          <span aria-hidden className="text-slate-300">·</span>
+          <span aria-hidden className="text-border">·</span>
           <span>{clinic}</span>
-          <span aria-hidden className="text-slate-300">·</span>
+          <span aria-hidden className="text-border">·</span>
           <span className="inline-flex items-center gap-0.5">
-            <MapPin className="h-3 w-3" />
+            <MapPin className="size-3" />
             {city}
           </span>
         </div>
       </div>
       <div className="flex flex-col items-end gap-0.5 text-right">
-        <span className="text-sm font-bold text-slate-900">{price}</span>
-        <span className="text-[11px] text-emerald-700">próx.: {next}</span>
+        <span className="text-sm font-semibold text-foreground">{price}</span>
+        <span className="text-[11px] text-primary">próx.: {next}</span>
       </div>
-      <span className="inline-flex items-center justify-center gap-1 rounded-full bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-white shadow-sm">
+      <span className="inline-flex items-center justify-center gap-1 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground">
         Marcar
-        <ArrowRight className="h-3 w-3" />
+        <ArrowRight className="size-3" />
       </span>
     </li>
   );
 }
-

@@ -19,31 +19,33 @@ export default function ActionCard({
     <Link
       href={href}
       className={
-        "group flex items-center gap-4 rounded-xl border p-5 transition " +
+        "group flex items-center gap-4 rounded-xl border p-5 transition-colors " +
         (isPrimary
-          ? "border-emerald-200 bg-gradient-to-br from-emerald-50 to-white hover:border-emerald-400 hover:shadow-md"
-          : "border-slate-200 bg-white hover:border-emerald-300 hover:bg-emerald-50/40 hover:shadow-sm")
+          ? "border-primary/30 bg-primary/5 hover:border-primary/50"
+          : "border-border bg-card hover:border-foreground/15 hover:bg-accent/40")
       }
     >
       {icon && (
         <div
           className={
-            "grid h-12 w-12 shrink-0 place-items-center rounded-xl text-xl transition group-hover:scale-105 " +
+            "grid size-12 shrink-0 place-items-center rounded-lg text-xl " +
             (isPrimary
-              ? "bg-emerald-600 text-white shadow-sm"
-              : "bg-slate-100 text-slate-700 group-hover:bg-emerald-100 group-hover:text-emerald-700")
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary")
           }
         >
           {icon}
         </div>
       )}
       <div className="min-w-0 flex-1">
-        <div className="text-base font-semibold text-slate-900">{title}</div>
-        <div className="mt-0.5 line-clamp-2 text-sm text-slate-600">{desc}</div>
+        <div className="text-base font-semibold text-foreground">{title}</div>
+        <div className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">
+          {desc}
+        </div>
       </div>
       <span
         aria-hidden
-        className="shrink-0 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-600"
+        className="shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
       >
         →
       </span>

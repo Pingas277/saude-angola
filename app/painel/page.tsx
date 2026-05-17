@@ -35,6 +35,7 @@ export default async function PainelPage({
   if (profile?.role === "doctor") redirect("/medico");
   if (profile?.role === "admin") redirect("/clinica");
   if (profile?.role === "receptionist") redirect("/recepcao");
+  if (profile?.role === "nurse") redirect("/enfermeiro");
 
   const { data: patient } = await supabase
     .from("patients")

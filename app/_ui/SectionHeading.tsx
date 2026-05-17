@@ -12,15 +12,17 @@ export default function SectionHeading({
   return (
     <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
       <div>
-        <h2 className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+        <h2 className="text-xs font-medium uppercase tracking-wider text-primary">
           {title}
         </h2>
-        {hint && <p className="mt-1 text-sm text-slate-500">{hint}</p>}
+        {hint && (
+          <p className="mt-1 text-sm text-muted-foreground">{hint}</p>
+        )}
       </div>
       {action && (
         <Link
           href={action.href}
-          className="text-sm font-medium text-emerald-700 hover:text-emerald-800"
+          className="text-sm font-medium text-primary hover:underline"
         >
           {action.label} →
         </Link>

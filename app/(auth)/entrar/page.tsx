@@ -19,7 +19,7 @@ export default async function EntrarPage({
       footer={
         <>
           Ainda não tem conta?{" "}
-          <Link href="/registar" className="font-semibold text-emerald-700 hover:underline">
+          <Link href="/registar" className="font-medium text-primary hover:underline">
             Criar conta
           </Link>
         </>

@@ -2,33 +2,21 @@ import type { ReactNode } from "react";
 
 type Tone = "emerald" | "amber" | "slate" | "sky" | "red";
 
-const TONE_BG: Record<Tone, string> = {
-  emerald: "bg-gradient-to-br from-emerald-50 to-white",
-  amber: "bg-gradient-to-br from-amber-50 to-white",
-  slate: "bg-gradient-to-br from-slate-50 to-white",
-  sky: "bg-gradient-to-br from-sky-50 to-white",
-  red: "bg-gradient-to-br from-red-50 to-white",
-};
-const TONE_BORDER: Record<Tone, string> = {
-  emerald: "border-emerald-100",
-  amber: "border-amber-100",
-  slate: "border-slate-200",
-  sky: "border-sky-100",
-  red: "border-red-100",
-};
+// Clinical-minimal: card stays neutral; the tone only tints the small icon
+// badge and the label, so the accent is a quiet signal, not a fill.
 const TONE_LABEL: Record<Tone, string> = {
-  emerald: "text-emerald-700",
-  amber: "text-amber-700",
-  slate: "text-slate-600",
-  sky: "text-sky-700",
-  red: "text-red-700",
+  emerald: "text-primary",
+  amber: "text-amber-600 dark:text-amber-400",
+  slate: "text-muted-foreground",
+  sky: "text-sky-600 dark:text-sky-400",
+  red: "text-destructive",
 };
 const TONE_ICON: Record<Tone, string> = {
-  emerald: "bg-emerald-100 text-emerald-700",
-  amber: "bg-amber-100 text-amber-700",
-  slate: "bg-slate-200 text-slate-700",
-  sky: "bg-sky-100 text-sky-700",
-  red: "bg-red-100 text-red-700",
+  emerald: "bg-primary/10 text-primary",
+  amber: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  slate: "bg-muted text-muted-foreground",
+  sky: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
+  red: "bg-destructive/10 text-destructive",
 };
 
 export default function StatCard({
@@ -47,24 +35,24 @@ export default function StatCard({
   trend?: { value: string; positive?: boolean };
 }) {
   return (
-    <div
-      className={`relative overflow-hidden rounded-xl border ${TONE_BORDER[tone]} ${TONE_BG[tone]} p-5 transition hover:shadow-md`}
-    >
+    <div className="rounded-xl border border-border bg-card p-5 transition-colors hover:border-foreground/15">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className={`text-[11px] font-semibold uppercase tracking-wider ${TONE_LABEL[tone]}`}>
+          <div
+            className={`text-[11px] font-medium uppercase tracking-wider ${TONE_LABEL[tone]}`}
+          >
             {label}
           </div>
-          <div className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+          <div className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
             {value}
           </div>
           {hint && (
-            <div className="mt-1 text-xs text-slate-500">{hint}</div>
+            <div className="mt-1 text-xs text-muted-foreground">{hint}</div>
           )}
           {trend && (
             <div
               className={`mt-2 inline-flex items-center gap-1 text-xs font-medium ${
-                trend.positive ? "text-emerald-700" : "text-slate-500"
+                trend.positive ? "text-primary" : "text-muted-foreground"
               }`}
             >
               {trend.positive ? "↑" : "→"} {trend.value}
@@ -72,7 +60,9 @@ export default function StatCard({
           )}
         </div>
         {icon && (
-          <div className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg ${TONE_ICON[tone]} text-lg`}>
+          <div
+            className={`grid size-10 shrink-0 place-items-center rounded-lg text-lg ${TONE_ICON[tone]}`}
+          >
             {icon}
           </div>
         )}

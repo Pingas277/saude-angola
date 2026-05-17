@@ -40,7 +40,8 @@ export default function SignupForm() {
 
       <div className="space-y-1.5">
         <Label htmlFor="phone">
-          Telemóvel <span className="font-normal text-slate-400">(opcional)</span>
+          Telemóvel{" "}
+          <span className="font-normal text-muted-foreground">(opcional)</span>
         </Label>
         <Input
           id="phone"
@@ -82,22 +83,17 @@ export default function SignupForm() {
       {state?.error && (
         <div
           role="alert"
-          className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+          className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
         >
           {state.error}
         </div>
       )}
 
-      <Button
-        type="submit"
-        disabled={isPending}
-        className="w-full bg-emerald-600 hover:bg-emerald-700"
-        size="lg"
-      >
+      <Button type="submit" disabled={isPending} className="w-full" size="lg">
         {isPending ? "A criar conta…" : "Criar conta"}
       </Button>
 
-      <p className="text-center text-xs text-slate-500">
+      <p className="text-center text-xs text-muted-foreground">
         Ao criar conta, aceita os Termos de Serviço e a Política de Privacidade.
       </p>
     </form>

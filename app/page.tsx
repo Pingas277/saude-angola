@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   Check,
@@ -740,23 +741,13 @@ export default function HomePage() {
               clínica numa só app.
             </p>
             <div className="mt-5 flex items-center gap-2 text-xs text-muted-foreground">
-              <span
-                aria-hidden
-                className="flex overflow-hidden rounded-sm border border-border"
-              >
-                <span
-                  style={{ background: "#CD1126" }}
-                  className="block h-3 w-2.5"
-                />
-                <span
-                  style={{ background: "#000000" }}
-                  className="block h-3 w-2.5"
-                />
-                <span
-                  style={{ background: "#FCD116" }}
-                  className="block h-3 w-2.5"
-                />
-              </span>
+              <Image
+                src="/brand/angola-flag.png"
+                alt="Bandeira de Angola"
+                width={21}
+                height={14}
+                className="rounded-[2px] ring-1 ring-border"
+              />
               <span>Feito em Angola</span>
             </div>
           </div>
@@ -795,7 +786,16 @@ export default function HomePage() {
               © {new Date().getFullYear()} ANGOLASAUDE. Todos os direitos
               reservados.
             </span>
-            <span>Luanda · Angola 🇦🇴</span>
+            <span className="inline-flex items-center gap-1.5">
+              Luanda · Angola
+              <Image
+                src="/brand/angola-flag.png"
+                alt="Bandeira de Angola"
+                width={18}
+                height={12}
+                className="rounded-[2px] ring-1 ring-border"
+              />
+            </span>
           </div>
         </div>
       </footer>

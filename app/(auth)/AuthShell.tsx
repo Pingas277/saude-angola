@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Check } from "lucide-react";
 import Logo from "../_brand/Logo";
 import ThemeToggle from "../_theme/ThemeToggle";
@@ -51,14 +52,13 @@ export default function AuthShell({
           </div>
 
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span
-              aria-hidden
-              className="flex overflow-hidden rounded-sm border border-border"
-            >
-              <span style={{ background: "#CD1126" }} className="block h-3 w-2" />
-              <span style={{ background: "#000000" }} className="block h-3 w-2" />
-              <span style={{ background: "#FCD116" }} className="block h-3 w-2" />
-            </span>
+            <Image
+              src="/brand/angola-flag.png"
+              alt="Bandeira de Angola"
+              width={21}
+              height={14}
+              className="rounded-[2px] ring-1 ring-border"
+            />
             <span>Feito em Angola · com orgulho</span>
           </div>
         </div>

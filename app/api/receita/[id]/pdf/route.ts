@@ -7,8 +7,20 @@ import {
   rgb,
 } from "pdf-lib";
 import QRCode from "qrcode";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { createClient } from "@/lib/supabase/server";
 import { embedPdfFonts, type PdfFonts } from "@/lib/pdf-fonts";
+
+let logoBytesCache: Buffer | null = null;
+function loadLogoBytes(): Buffer {
+  if (!logoBytesCache) {
+    logoBytesCache = readFileSync(
+      path.join(process.cwd(), "public", "brand", "logo-mark.png")
+    );
+  }
+  return logoBytesCache;
+}
 
 // =====================================================================
 // Receita Médica · Medical Prescription
@@ -108,11 +120,11 @@ const MARGIN = 42;
 const HEADER_BAND_H = 96;
 const FOOTER_PHARMACY_H = 188;
 
-// === Palette ===
-const EMERALD = rgb(0.06, 0.43, 0.34);
-const EMERALD_DARK = rgb(0.04, 0.32, 0.25);
-const EMERALD_50 = rgb(0.94, 0.98, 0.95);
-const EMERALD_100 = rgb(0.86, 0.95, 0.89);
+// === Palette === (ANGOLASAUDE logo blue)
+const EMERALD = rgb(0.184, 0.455, 0.769); // brand blue ≈ #2F74C4
+const EMERALD_DARK = rgb(0.13, 0.33, 0.58);
+const EMERALD_50 = rgb(0.945, 0.965, 0.99);
+const EMERALD_100 = rgb(0.85, 0.91, 0.98);
 const SLATE_900 = rgb(0.06, 0.09, 0.16);
 const SLATE_800 = rgb(0.12, 0.16, 0.23);
 const SLATE_700 = rgb(0.2, 0.25, 0.33);
@@ -123,9 +135,7 @@ const SLATE_200 = rgb(0.86, 0.88, 0.91);
 const SLATE_100 = rgb(0.94, 0.95, 0.96);
 const SLATE_50 = rgb(0.97, 0.98, 0.99);
 const RED_700 = rgb(0.7, 0.13, 0.13);
-const ANGOLA_RED = rgb(0.8, 0.067, 0.149); // #CD1126
-const ANGOLA_BLACK = rgb(0, 0, 0);
-const WATERMARK = rgb(0.94, 0.96, 0.95);
+const WHITE = rgb(1, 1, 1);
 
 function drawText(
   page: PDFPage,
@@ -174,142 +184,96 @@ function drawWrapped(
   return cursorY;
 }
 
-// Subtle diagonal anti-fraud watermark.
-function drawWatermark(page: PDFPage, fonts: PdfFonts) {
-  const txt = "ANGOLASAUDE";
-  const size = 36;
-  for (let row = -1; row < 13; row++) {
-    for (let col = -1; col < 6; col++) {
-      page.drawText(txt, {
-        x: -50 + col * 180,
-        y: 60 + row * 90,
-        font: fonts.bold,
-        size,
-        color: WATERMARK,
-        rotate: degrees(35),
-      });
-    }
-  }
-}
-
 function drawHeaderBand(
   page: PDFPage,
   fonts: PdfFonts,
   qrImage: PDFImage,
+  logo: PDFImage,
   qrCode: string,
   pageNumber: number,
   totalPages: number
 ) {
-  // Angolan flag accent — thin red+black stripe at the very top
-  page.drawRectangle({
-    x: 0,
-    y: A4.h - 5,
-    width: A4.w,
-    height: 5,
-    color: ANGOLA_RED,
-  });
-  page.drawRectangle({
-    x: 0,
-    y: A4.h - 10,
-    width: A4.w,
-    height: 5,
-    color: ANGOLA_BLACK,
-  });
+  // Thin brand accent at the very top
+  page.drawRectangle({ x: 0, y: A4.h - 4, width: A4.w, height: 4, color: EMERALD_DARK });
 
-  // Main emerald band
+  // Main brand band
   page.drawRectangle({
     x: 0,
-    y: A4.h - 10 - HEADER_BAND_H,
+    y: A4.h - 4 - HEADER_BAND_H,
     width: A4.w,
     height: HEADER_BAND_H,
     color: EMERALD,
   });
-  page.drawRectangle({
-    x: 0,
-    y: A4.h - 14 - HEADER_BAND_H,
-    width: A4.w,
-    height: 4,
-    color: EMERALD_DARK,
-  });
 
-  const bandTop = A4.h - 10;
+  const bandTop = A4.h - 4;
+  const cy = bandTop - HEADER_BAND_H / 2; // vertical centre of the band
 
-  // Brand mark — white square with emerald 'S'
+  // Brand mark — logo on a white rounded plate, vertically centred
+  const plate = 56;
+  const logoRatio = logo.width / logo.height;
+  const logoH = 30;
+  const logoW = logoH * logoRatio;
   page.drawRectangle({
     x: MARGIN,
-    y: bandTop - 60,
-    width: 36,
-    height: 36,
-    color: rgb(1, 1, 1),
-    borderColor: EMERALD_DARK,
-    borderWidth: 1,
+    y: cy - plate / 2,
+    width: plate,
+    height: plate,
+    color: WHITE,
   });
-  drawText(page, "S", MARGIN + 11, bandTop - 50, fonts, "bold", 22, EMERALD);
+  page.drawImage(logo, {
+    x: MARGIN + (plate - logoW) / 2,
+    y: cy - logoH / 2,
+    width: logoW,
+    height: logoH,
+  });
 
-  drawText(
-    page,
-    "ANGOLASAUDE",
-    MARGIN + 50,
-    bandTop - 36,
-    fonts,
-    "bold",
-    16,
-    rgb(1, 1, 1)
-  );
+  // Wordmark + subtitle, vertically centred against the plate
+  const tx = MARGIN + plate + 16;
+  drawText(page, "ANGOLASAUDE", tx, cy + 8, fonts, "bold", 17, WHITE);
   drawText(
     page,
     "Receita Médica  ·  Medical Prescription",
-    MARGIN + 50,
-    bandTop - 54,
+    tx,
+    cy - 9,
     fonts,
     "regular",
     10,
-    rgb(0.86, 0.94, 0.9)
+    rgb(0.88, 0.93, 0.99)
   );
   drawText(
     page,
     "Documento clínico oficial",
-    MARGIN + 50,
-    bandTop - 68,
+    tx,
+    cy - 23,
     fonts,
     "italic",
-    9,
-    rgb(0.86, 0.94, 0.9)
+    8.5,
+    rgb(0.82, 0.89, 0.98)
   );
 
-  // QR code top-right, white surround
-  const qrSize = 64;
+  // QR code top-right on a white plate, vertically centred
+  const qrSize = 58;
   const qrX = A4.w - MARGIN - qrSize;
-  const qrY = bandTop - 14 - qrSize;
+  const qrY = cy - qrSize / 2;
   page.drawRectangle({
-    x: qrX - 4,
-    y: qrY - 4,
-    width: qrSize + 8,
-    height: qrSize + 8,
-    color: rgb(1, 1, 1),
+    x: qrX - 5,
+    y: qrY - 5,
+    width: qrSize + 10,
+    height: qrSize + 10,
+    color: WHITE,
   });
   page.drawImage(qrImage, { x: qrX, y: qrY, width: qrSize, height: qrSize });
-  drawText(
-    page,
-    qrCode,
-    qrX,
-    qrY - 14,
-    fonts,
-    "regular",
-    7,
-    rgb(0.86, 0.94, 0.9)
-  );
 
   if (totalPages > 1) {
     drawText(
       page,
       `Página ${pageNumber} de ${totalPages}`,
-      A4.w / 2 - 30,
-      bandTop - 86,
+      qrX - 4,
+      qrY - 14,
       fonts,
       "regular",
-      8,
-      rgb(0.86, 0.94, 0.9)
+      7.5,
+      rgb(0.88, 0.93, 0.99)
     );
   }
 }
@@ -821,6 +785,7 @@ export async function GET(
     errorCorrectionLevel: "M",
   });
   const qrImage = await pdf.embedPng(qrPngBytes);
+  const logoImage = await pdf.embedPng(loadLogoBytes());
 
   // --------------------------------------------------------------------
   // Layout pass — write content first, decorate (header band, watermark)
@@ -900,10 +865,10 @@ export async function GET(
 
   const lastPage = currentPage;
 
-  // Decorate every page (watermark + header band)
+  // Decorate every page — header band only (no full-page watermark, so
+  // nothing is ever painted over the prescription text).
   pages.forEach((p, idx) => {
-    drawWatermark(p, fonts);
-    drawHeaderBand(p, fonts, qrImage, rx.qr_code, idx + 1, pages.length);
+    drawHeaderBand(p, fonts, qrImage, logoImage, rx.qr_code, idx + 1, pages.length);
   });
 
   // Last-page extras: signature meta + pharmacy talão

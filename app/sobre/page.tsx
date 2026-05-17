@@ -12,7 +12,6 @@ import {
   HeartPulse,
   Building2,
   MapPin,
-  Quote,
 } from "lucide-react";
 import PublicShell from "../_public/PublicShell";
 import ImageSlot from "./ImageSlot";
@@ -220,21 +219,6 @@ export default function SobrePage() {
                 </p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== Quote ===== */}
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-3xl px-6 py-20 text-center">
-          <Quote className="mx-auto size-8 text-primary" />
-          <blockquote className="mt-6 text-xl font-medium leading-relaxed tracking-tight text-foreground sm:text-2xl">
-            “Vivo no Huambo. Antes ia a Luanda para uma consulta de seguimento.
-            Agora falo com o meu médico por vídeo e recebo a receita no
-            telemóvel.”
-          </blockquote>
-          <div className="mt-6 text-sm text-muted-foreground">
-            Joaquim Mateus · Paciente, Huambo
           </div>
         </div>
       </section>

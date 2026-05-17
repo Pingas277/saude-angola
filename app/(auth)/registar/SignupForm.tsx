@@ -140,11 +140,14 @@ export default function SignupForm() {
 
       <p className="text-center text-xs leading-relaxed text-muted-foreground">
         Ao criar conta, aceita os{" "}
-        <a href="/" className="font-medium text-primary hover:underline">
+        <a href="/termos" className="font-medium text-primary hover:underline">
           Termos de Serviço
         </a>{" "}
         e a{" "}
-        <a href="/" className="font-medium text-primary hover:underline">
+        <a
+          href="/privacidade"
+          className="font-medium text-primary hover:underline"
+        >
           Política de Privacidade
         </a>
         .

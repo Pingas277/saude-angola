@@ -764,19 +764,19 @@ export default function HomePage() {
           <FooterCol
             title="Empresa"
             links={[
-              { href: "/", label: "Sobre nós" },
+              { href: "/sobre", label: "Sobre nós" },
               { href: "mailto:suporte@saudeangola.ao", label: "Contacto" },
-              { href: "/", label: "Imprensa" },
-              { href: "/", label: "Carreiras" },
+              { href: "/sobre", label: "Imprensa" },
+              { href: "/sobre", label: "Carreiras" },
             ]}
           />
           <FooterCol
             title="Legal"
             links={[
-              { href: "/", label: "Termos de Serviço" },
-              { href: "/", label: "Política de Privacidade" },
-              { href: "/", label: "RGPD" },
-              { href: "/", label: "Cookies" },
+              { href: "/termos", label: "Termos de Serviço" },
+              { href: "/privacidade", label: "Política de Privacidade" },
+              { href: "/privacidade", label: "RGPD" },
+              { href: "/privacidade", label: "Cookies" },
             ]}
           />
         </div>

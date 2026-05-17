@@ -64,7 +64,7 @@ export function videoRoomUrl(consultationId: string): string {
 
 const TRIAGE_MODEL = "claude-haiku-4-5";
 
-const TRIAGE_SYSTEM = `És uma assistente clínica de triagem da plataforma Saúde Angola (telemedicina, pt-PT).
+const TRIAGE_SYSTEM = `És uma assistente clínica de triagem da plataforma ANGOLASAUDE (telemedicina, pt-PT).
 
 OBJETIVO
 A partir da entrada estruturada submetida pelo paciente, decides um nível de urgência e escreves um resumo clínico breve em português europeu, dirigido ao médico que vai atender.

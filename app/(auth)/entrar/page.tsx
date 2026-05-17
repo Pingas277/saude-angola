@@ -2,7 +2,7 @@ import Link from "next/link";
 import AuthShell from "../AuthShell";
 import LoginForm from "./LoginForm";
 
-export const metadata = { title: "Entrar · Saúde Angola" };
+export const metadata = { title: "Entrar · ANGOLASAUDE" };
 
 export default async function EntrarPage({
   searchParams,

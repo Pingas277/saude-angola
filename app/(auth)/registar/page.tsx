@@ -2,7 +2,7 @@ import Link from "next/link";
 import AuthShell from "../AuthShell";
 import SignupForm from "./SignupForm";
 
-export const metadata = { title: "Criar conta · Saúde Angola" };
+export const metadata = { title: "Criar conta · ANGOLASAUDE" };
 
 export default function RegistarPage() {
   return (

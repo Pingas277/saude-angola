@@ -11,7 +11,7 @@ import PageHeading from "../_ui/PageHeading";
 import EmptyState from "../_ui/EmptyState";
 import QueueActions from "./QueueActions";
 
-export const metadata = { title: "Recepção · Saúde Angola" };
+export const metadata = { title: "Recepção · ANGOLASAUDE" };
 
 const STATUS_BADGE: Record<string, string> = {
   scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",

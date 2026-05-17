@@ -8,7 +8,7 @@ import {
 } from "@/lib/triage";
 import PatientSala from "./PatientSala";
 
-export const metadata = { title: "Sala de espera · Saúde Angola" };
+export const metadata = { title: "Sala de espera · ANGOLASAUDE" };
 
 type Row = {
   id: string;

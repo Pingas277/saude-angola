@@ -14,13 +14,13 @@ const SITE_URL =
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Saúde Angola — Marque com qualquer médico, em qualquer clínica",
-    template: "%s · Saúde Angola",
+    default: "ANGOLASAUDE — Marque com qualquer médico, em qualquer clínica",
+    template: "%s · ANGOLASAUDE",
   },
   description:
     "A primeira plataforma que junta médicos e clínicas privadas em Angola num só sítio. Procure por especialidade, escolha o profissional e marque online — sem telefonemas.",
-  applicationName: "Saúde Angola",
-  authors: [{ name: "Saúde Angola" }],
+  applicationName: "ANGOLASAUDE",
+  authors: [{ name: "ANGOLASAUDE" }],
   keywords: [
     "saúde",
     "angola",
@@ -35,14 +35,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_AO",
     url: SITE_URL,
-    title: "Saúde Angola — Marque com qualquer médico, em qualquer clínica",
+    title: "ANGOLASAUDE — Marque com qualquer médico, em qualquer clínica",
     description:
       "A primeira plataforma que junta médicos e clínicas privadas em Angola num só sítio.",
-    siteName: "Saúde Angola",
+    siteName: "ANGOLASAUDE",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Saúde Angola — Marque com qualquer médico, em qualquer clínica",
+    title: "ANGOLASAUDE — Marque com qualquer médico, em qualquer clínica",
     description:
       "A primeira plataforma que junta médicos e clínicas privadas em Angola num só sítio.",
   },

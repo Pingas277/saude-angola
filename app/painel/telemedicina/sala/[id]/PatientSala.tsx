@@ -63,7 +63,7 @@ export default function PatientSala({
           Consulta concluída
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Obrigado por usar a Saúde Angola. As receitas e o registo clínico
+          Obrigado por usar a ANGOLASAUDE. As receitas e o registo clínico
           ficam no seu painel.
         </p>
       </div>

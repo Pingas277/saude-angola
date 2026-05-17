@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatDateTimePT } from "@/lib/labels";
 
-export const metadata = { title: "Pacientes · Saúde Angola" };
+export const metadata = { title: "Pacientes · ANGOLASAUDE" };
 
 type ApptRow = {
   id: string;

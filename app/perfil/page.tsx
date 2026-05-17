@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import PerfilForm from "./PerfilForm";
 
-export const metadata = { title: "Perfil · Saúde Angola" };
+export const metadata = { title: "Perfil · ANGOLASAUDE" };
 
 export default async function PerfilPage() {
   const supabase = await createClient();
@@ -34,7 +34,7 @@ export default async function PerfilPage() {
             <span className="grid h-8 w-8 place-items-center rounded-md bg-primary text-sm font-bold text-white">
               S
             </span>
-            <span className="font-semibold text-foreground">Saúde Angola</span>
+            <span className="font-semibold text-foreground">ANGOLASAUDE</span>
           </Link>
           <Link
             href="/painel"

@@ -13,7 +13,7 @@ import SectionHeading from "../_ui/SectionHeading";
 import PageHeading from "../_ui/PageHeading";
 import EmptyState from "../_ui/EmptyState";
 
-export const metadata = { title: "Painel da Clínica · Saúde Angola" };
+export const metadata = { title: "Painel da Clínica · ANGOLASAUDE" };
 
 const STATUS_BADGE: Record<string, string> = {
   scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
@@ -95,7 +95,7 @@ export default async function ClinicaHomePage() {
         <EmptyState
           icon="🏥"
           title="Sem clínica atribuída"
-          desc="O seu utilizador é administrador, mas ainda não está associado a nenhuma clínica. Contacte o suporte da Saúde Angola."
+          desc="O seu utilizador é administrador, mas ainda não está associado a nenhuma clínica. Contacte o suporte da ANGOLASAUDE."
         />
       </main>
     );

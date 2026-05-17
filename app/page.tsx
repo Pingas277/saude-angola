@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/accordion";
 
 // =============================================================================
-// Saúde Angola · landing page — clinical-minimal
+// ANGOLASAUDE · landing page — clinical-minimal
 // Linear/Vercel-inspired: airy, hairline borders, one emerald accent, fully
 // token-driven so it works in light and dark. No gradients/glows/heavy shadows.
 // =============================================================================
@@ -155,7 +155,7 @@ const TESTIMONIALS = [
 const FAQ = [
   {
     q: "Preciso de instalar alguma aplicação?",
-    a: "Não. A Saúde Angola funciona inteiramente no navegador — Chrome, Safari, Edge — em qualquer telemóvel, tablet ou computador. Funciona em ligações 3G/4G.",
+    a: "Não. A ANGOLASAUDE funciona inteiramente no navegador — Chrome, Safari, Edge — em qualquer telemóvel, tablet ou computador. Funciona em ligações 3G/4G.",
   },
   {
     q: "As receitas digitais são reconhecidas em farmácias?",
@@ -792,7 +792,7 @@ export default function HomePage() {
         <div className="border-t border-border">
           <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <span>
-              © {new Date().getFullYear()} Saúde Angola. Todos os direitos
+              © {new Date().getFullYear()} ANGOLASAUDE. Todos os direitos
               reservados.
             </span>
             <span>Luanda · Angola 🇦🇴</span>

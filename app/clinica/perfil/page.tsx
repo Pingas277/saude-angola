@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ClinicProfileForm from "./ClinicProfileForm";
 
-export const metadata = { title: "Perfil da Clínica · Saúde Angola" };
+export const metadata = { title: "Perfil da Clínica · ANGOLASAUDE" };
 
 export default async function ClinicProfilePage() {
   const supabase = await createClient();

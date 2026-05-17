@@ -8,7 +8,7 @@ import {
   formatDateTimePT,
 } from "@/lib/labels";
 
-export const metadata = { title: "Faturas · Saúde Angola" };
+export const metadata = { title: "Faturas · ANGOLASAUDE" };
 
 type InvoiceRow = {
   id: string;

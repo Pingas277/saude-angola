@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import MarcarRecepcaoFlow from "./MarcarRecepcaoFlow";
 
-export const metadata = { title: "Nova marcação · Saúde Angola" };
+export const metadata = { title: "Nova marcação · ANGOLASAUDE" };
 
 function todayISODate(): string {
   return new Date().toISOString().slice(0, 10);

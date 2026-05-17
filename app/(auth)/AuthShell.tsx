@@ -26,7 +26,7 @@ export default function AuthShell({
       {/* === Brand panel (left) — hidden on mobile === */}
       <aside className="relative hidden border-r border-border bg-muted/40 lg:flex lg:flex-col">
         <div className="flex flex-1 flex-col justify-between px-12 py-14">
-          <Logo href="/" size="lg" subtitle="Saúde digital · Angola" />
+          <Logo href="/" size="lg" subtitle="Saúde para todos" />
 
           <div>
             <h2 className="text-2xl font-semibold leading-tight tracking-tight text-foreground">

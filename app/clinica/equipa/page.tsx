@@ -4,7 +4,7 @@ import { ROLE_LABELS } from "@/lib/labels";
 import AddStaffForm from "./AddStaffForm";
 import StaffRowActions from "./StaffRowActions";
 
-export const metadata = { title: "Equipa · Saúde Angola" };
+export const metadata = { title: "Equipa · ANGOLASAUDE" };
 
 const ROLE_BADGE: Record<string, string> = {
   admin: "bg-foreground text-white",

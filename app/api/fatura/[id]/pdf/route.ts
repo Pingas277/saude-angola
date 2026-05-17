@@ -151,9 +151,9 @@ export async function GET(
 
   const pdf = await PDFDocument.create();
   pdf.setTitle(`Fatura ${inv.id}`);
-  pdf.setAuthor("Saúde Angola");
+  pdf.setAuthor("ANGOLASAUDE");
   pdf.setSubject(isPaid ? "Comprovativo de pagamento" : "Fatura");
-  pdf.setCreator("Saúde Angola");
+  pdf.setCreator("ANGOLASAUDE");
 
   const fonts = await embedPdfFonts(pdf);
   const page = pdf.addPage([A4.w, A4.h]);
@@ -187,7 +187,7 @@ export async function GET(
     color: rgb(1, 1, 1),
   });
   drawText(page, "S", MARGIN + 11, bandTop - 50, fonts, "bold", 22, EMERALD);
-  drawText(page, "SAÚDE ANGOLA", MARGIN + 50, bandTop - 36, fonts, "bold", 16, rgb(1, 1, 1));
+  drawText(page, "ANGOLASAUDE", MARGIN + 50, bandTop - 36, fonts, "bold", 16, rgb(1, 1, 1));
   drawText(
     page,
     isPaid
@@ -277,7 +277,7 @@ export async function GET(
   drawText(page, "EMITIDO POR", MARGIN + 14, cursorY - 16, fonts, "bold", 8, EMERALD_DARK);
   drawText(
     page,
-    clinic?.name ?? "Saúde Angola — Telemedicina",
+    clinic?.name ?? "ANGOLASAUDE — Telemedicina",
     MARGIN + 14,
     cursorY - 32,
     fonts,
@@ -473,7 +473,7 @@ export async function GET(
   // Footer
   drawText(
     page,
-    "Documento gerado automaticamente pela plataforma Saúde Angola.",
+    "Documento gerado automaticamente pela plataforma ANGOLASAUDE.",
     MARGIN,
     MARGIN + 24,
     fonts,

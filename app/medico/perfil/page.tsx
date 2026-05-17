@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import DoctorProfileForm from "./DoctorProfileForm";
 
-export const metadata = { title: "Perfil do Médico · Saúde Angola" };
+export const metadata = { title: "Perfil do Médico · ANGOLASAUDE" };
 
 export default async function MedicoPerfilPage() {
   const supabase = await createClient();

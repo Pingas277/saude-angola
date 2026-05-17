@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatDateTimePT } from "@/lib/labels";
 
-export const metadata = { title: "Receitas · Saúde Angola" };
+export const metadata = { title: "Receitas · ANGOLASAUDE" };
 
 type Medication = {
   name?: string;

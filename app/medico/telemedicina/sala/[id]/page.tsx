@@ -18,7 +18,7 @@ import InvoiceForm from "@/app/medico/consulta/[id]/InvoiceForm";
 import DoctorVideoFrame from "./DoctorVideoFrame";
 import { endConsultationAction } from "../../actions";
 
-export const metadata = { title: "Atendimento por vídeo · Saúde Angola" };
+export const metadata = { title: "Atendimento por vídeo · ANGOLASAUDE" };
 
 type Vitals = Record<string, string | number | null | undefined>;
 type Medication = {

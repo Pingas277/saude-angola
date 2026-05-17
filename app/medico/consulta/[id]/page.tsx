@@ -13,7 +13,7 @@ import PrescriptionForm from "./PrescriptionForm";
 import InvoiceForm from "./InvoiceForm";
 import { updateAppointmentStatusAction } from "./actions";
 
-export const metadata = { title: "Consulta · Saúde Angola" };
+export const metadata = { title: "Consulta · ANGOLASAUDE" };
 
 const STATUS_BADGE: Record<string, string> = {
   scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",

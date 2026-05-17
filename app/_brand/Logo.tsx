@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 type LogoProps = {
   href?: string;
@@ -6,54 +7,70 @@ type LogoProps = {
    *  back-compat; "dark" forces light text (for fixed dark surfaces). */
   variant?: "auto" | "light" | "dark";
   size?: "sm" | "md" | "lg";
+  /** Overrides the default brand tagline ("Saúde para todos"). Role shells
+   *  pass their own label here (e.g. "Médico"). */
   subtitle?: string;
   subtitleColor?: string;
+  /** Hide the wordmark, show only the pulse mark (collapsed contexts). */
+  markOnly?: boolean;
 };
 
 const SIZES = {
-  sm: { square: 26, text: "text-sm", subtitleSize: "text-[10px]" },
-  md: { square: 30, text: "text-[15px]", subtitleSize: "text-[10px]" },
-  lg: { square: 38, text: "text-lg", subtitleSize: "text-xs" },
+  sm: { mark: 22, text: "text-sm", sub: "text-[9px]" },
+  md: { mark: 26, text: "text-[15px]", sub: "text-[10px]" },
+  lg: { mark: 34, text: "text-lg", sub: "text-[11px]" },
 } as const;
+
+const MARK_RATIO = 506 / 335; // intrinsic logo-mark.png aspect
 
 export default function Logo({
   href = "/",
   variant = "auto",
   size = "md",
-  subtitle,
+  subtitle = "Saúde para todos",
   subtitleColor,
+  markOnly = false,
 }: LogoProps) {
   const s = SIZES[size];
+  const h = s.mark;
+  const w = Math.round(h * MARK_RATIO);
   const textColor = variant === "dark" ? "text-white" : "text-foreground";
   const subColor =
     subtitleColor ??
-    (variant === "dark" ? "text-emerald-300" : "text-muted-foreground");
+    (variant === "dark" ? "text-white/70" : "text-muted-foreground");
 
   const Inner = (
     <div className="flex items-center gap-2.5">
-      <span
-        className="grid shrink-0 place-items-center rounded-md bg-primary font-semibold text-primary-foreground"
-        style={{ width: s.square, height: s.square, fontSize: s.square / 1.9 }}
-      >
-        S
-      </span>
-      <div className="flex flex-col leading-none">
-        <span className={`font-semibold tracking-tight ${textColor} ${s.text}`}>
-          Saúde Angola
-        </span>
-        {subtitle && (
+      <Image
+        src="/brand/logo-mark.png"
+        alt="ANGOLASAUDE"
+        width={w}
+        height={h}
+        priority
+        className="shrink-0 object-contain"
+        style={{ height: h, width: w }}
+      />
+      {!markOnly && (
+        <div className="flex flex-col leading-none">
           <span
-            className={`mt-1 font-medium uppercase tracking-[0.14em] ${s.subtitleSize} ${subColor}`}
+            className={`font-bold tracking-[0.06em] ${textColor} ${s.text}`}
           >
-            {subtitle}
+            ANGOLASAUDE
           </span>
-        )}
-      </div>
+          {subtitle && (
+            <span
+              className={`mt-1 font-medium uppercase tracking-[0.16em] ${s.sub} ${subColor}`}
+            >
+              {subtitle}
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 
   return href ? (
-    <Link href={href} className="inline-flex items-center">
+    <Link href={href} className="inline-flex items-center" aria-label="ANGOLASAUDE">
       {Inner}
     </Link>
   ) : (

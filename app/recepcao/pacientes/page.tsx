@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata = { title: "Pacientes · Saúde Angola" };
+export const metadata = { title: "Pacientes · ANGOLASAUDE" };
 
 type Row = {
   id: string;

@@ -6,7 +6,7 @@ import { ImageResponse } from "next/og";
 // add another `opengraph-image.tsx` inside any subroute to override it.
 
 export const runtime = "edge";
-export const alt = "Saúde Angola — Marque com qualquer médico, em qualquer clínica";
+export const alt = "ANGOLASAUDE — Marque com qualquer médico, em qualquer clínica";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -20,17 +20,14 @@ export default async function OG() {
           display: "flex",
           flexDirection: "column",
           background:
-            "linear-gradient(135deg, #ecfdf5 0%, #ffffff 55%, #fef9c3 100%)",
+            "linear-gradient(135deg, #eff6ff 0%, #ffffff 55%, #eef2ff 100%)",
           fontFamily: "system-ui, sans-serif",
           position: "relative",
         }}
       >
-        {/* Angolan flag stripe (red on top, black under) */}
-        <div style={{ display: "flex", height: 14 }}>
-          <div style={{ flex: 1, background: "#CD1126" }} />
-        </div>
-        <div style={{ display: "flex", height: 14 }}>
-          <div style={{ flex: 1, background: "#000000" }} />
+        {/* Thin brand accent bar */}
+        <div style={{ display: "flex", height: 8 }}>
+          <div style={{ flex: 1, background: "#2F74C4" }} />
         </div>
 
         {/* Brand row */}
@@ -38,50 +35,42 @@ export default async function OG() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 16,
-            padding: "48px 64px 0 64px",
+            gap: 14,
+            padding: "52px 64px 0 64px",
           }}
         >
-          <div
-            style={{
-              width: 64,
-              height: 64,
-              background: "#057857",
-              borderRadius: 14,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "white",
-              fontSize: 40,
-              fontWeight: 800,
-              boxShadow: "0 4px 14px rgba(5,120,87,0.3)",
-            }}
-          >
-            S
+          {/* pulse mark */}
+          <div style={{ display: "flex", alignItems: "center", gap: 5, height: 56 }}>
+            <div style={{ width: 11, height: 30, borderRadius: 6, background: "#E08A4B" }} />
+            <div style={{ width: 11, height: 56, borderRadius: 6, background: "#2F74C4" }} />
+            <div style={{ width: 11, height: 38, borderRadius: 6, background: "#E08A4B" }} />
+            <div style={{ width: 11, height: 50, borderRadius: 6, background: "#F0B43C" }} />
+            <div style={{ width: 11, height: 26, borderRadius: 6, background: "#2F74C4" }} />
           </div>
           <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              lineHeight: 1.1,
-            }}
+            style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}
           >
             <span
-              style={{ fontSize: 30, fontWeight: 800, color: "#0f172a" }}
+              style={{
+                fontSize: 30,
+                fontWeight: 800,
+                color: "#0f172a",
+                letterSpacing: 2,
+              }}
             >
-              Saúde Angola
+              ANGOLASAUDE
             </span>
             <span
               style={{
                 fontSize: 16,
                 fontWeight: 700,
-                color: "#057857",
-                letterSpacing: 1,
+                color: "#2F74C4",
+                letterSpacing: 3,
                 textTransform: "uppercase",
                 marginTop: 4,
               }}
             >
-              Saúde digital · Angola
+              Saúde para todos
             </span>
           </div>
         </div>
@@ -107,7 +96,7 @@ export default async function OG() {
             }}
           >
             Marque com{" "}
-            <span style={{ color: "#057857" }}>qualquer médico</span>, em qualquer
+            <span style={{ color: "#2F74C4" }}>qualquer médico</span>, em qualquer
             clínica.
           </div>
 
@@ -161,7 +150,7 @@ function Chip({ children }: { children: React.ReactNode }) {
         display: "flex",
         alignItems: "center",
         background: "white",
-        border: "1px solid #d1fae5",
+        border: "1px solid #dbeafe",
         borderRadius: 999,
         padding: "10px 18px",
         fontWeight: 600,

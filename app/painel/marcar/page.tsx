@@ -6,7 +6,7 @@ import PageHeading from "@/app/_ui/PageHeading";
 import EmptyState from "@/app/_ui/EmptyState";
 import BookingSheet from "./BookingSheet";
 
-export const metadata = { title: "Marcar consulta · Saúde Angola" };
+export const metadata = { title: "Marcar consulta · ANGOLASAUDE" };
 
 type DoctorRow = {
   id: string;

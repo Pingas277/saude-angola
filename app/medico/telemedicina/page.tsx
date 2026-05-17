@@ -11,7 +11,7 @@ import {
 } from "@/lib/triage";
 import { formatDateTimePT } from "@/lib/labels";
 
-export const metadata = { title: "Telemedicina · Saúde Angola" };
+export const metadata = { title: "Telemedicina · ANGOLASAUDE" };
 
 const URGENCY_RANK: Record<Urgency, number> = {
   emergency: 0,

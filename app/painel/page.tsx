@@ -11,7 +11,7 @@ import ActionCard from "../_ui/ActionCard";
 import SectionHeading from "../_ui/SectionHeading";
 import PageHeading from "../_ui/PageHeading";
 
-export const metadata = { title: "Painel · Saúde Angola" };
+export const metadata = { title: "Painel · ANGOLASAUDE" };
 
 export default async function PainelPage({
   searchParams,
@@ -87,7 +87,7 @@ export default async function PainelPage({
     <main className="mx-auto max-w-6xl px-6 py-10">
       {bemvindo === "1" && (
         <Banner kind="success">
-          Conta criada com sucesso. Bem-vindo à Saúde Angola!
+          Conta criada com sucesso. Bem-vindo à ANGOLASAUDE!
         </Banner>
       )}
       {perfilOk === "ok" && (

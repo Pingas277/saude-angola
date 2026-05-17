@@ -176,7 +176,7 @@ function drawWrapped(
 
 // Subtle diagonal anti-fraud watermark.
 function drawWatermark(page: PDFPage, fonts: PdfFonts) {
-  const txt = "SAÚDE ANGOLA";
+  const txt = "ANGOLASAUDE";
   const size = 36;
   for (let row = -1; row < 13; row++) {
     for (let col = -1; col < 6; col++) {
@@ -248,7 +248,7 @@ function drawHeaderBand(
 
   drawText(
     page,
-    "SAÚDE ANGOLA",
+    "ANGOLASAUDE",
     MARGIN + 50,
     bandTop - 36,
     fonts,
@@ -808,9 +808,9 @@ export async function GET(
 
   const pdf = await PDFDocument.create();
   pdf.setTitle(`Receita médica ${rx.qr_code}`);
-  pdf.setAuthor(doctor?.full_name ?? "Saúde Angola");
+  pdf.setAuthor(doctor?.full_name ?? "ANGOLASAUDE");
   pdf.setSubject("Receita médica · Medical Prescription");
-  pdf.setCreator("Saúde Angola");
+  pdf.setCreator("ANGOLASAUDE");
 
   const fonts = await embedPdfFonts(pdf);
 

@@ -13,10 +13,10 @@ import {
   Users,
   Search,
   MapPin,
-  Star,
 } from "lucide-react";
 import Logo from "./_brand/Logo";
 import ThemeToggle from "./_theme/ThemeToggle";
+import DoctorSearch from "./_landing/DoctorSearch";
 import { Reveal, Stagger, StaggerItem } from "./_motion/Reveal";
 import {
   Accordion,
@@ -379,62 +379,7 @@ export default function HomePage() {
           </Reveal>
 
           <Reveal className="mx-auto mt-14 max-w-3xl">
-            <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-              <div className="flex flex-wrap items-center gap-3 border-b border-border p-4">
-                <div className="flex flex-1 items-center gap-3 rounded-lg border border-border px-4 py-2.5">
-                  <Search className="size-4 shrink-0 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    Especialidade, clínica ou médico…
-                  </span>
-                </div>
-                <span className={btnPrimary}>Pesquisar</span>
-              </div>
-
-              <div className="flex flex-wrap gap-2 border-b border-border px-4 py-3">
-                <FilterPill active>Medicina Geral</FilterPill>
-                <FilterPill>Cardiologia</FilterPill>
-                <FilterPill>Pediatria</FilterPill>
-                <FilterPill>Ginecologia</FilterPill>
-                <FilterPill>Dermatologia</FilterPill>
-                <span className="inline-flex items-center px-3 py-1.5 text-xs text-muted-foreground">
-                  + 24 especialidades
-                </span>
-              </div>
-
-              <ul className="divide-y divide-border">
-                <DoctorRow
-                  initials="MS"
-                  name="Dr. Manuel Silva"
-                  specialty="Medicina Geral"
-                  clinic="Clínica Demo"
-                  city="Luanda"
-                  rating="4.9"
-                  price="15.000 Kz"
-                  next="Hoje, 14:30"
-                />
-                <DoctorRow
-                  initials="EC"
-                  name="Dra. Esperança Cardoso"
-                  specialty="Cardiologia"
-                  clinic="Hospital Sagrada Esperança"
-                  city="Luanda"
-                  rating="4.8"
-                  price="35.000 Kz"
-                  next="Amanhã, 10:00"
-                />
-                <DoctorRow
-                  initials="AM"
-                  name="Dr. António Mateus"
-                  specialty="Pediatria"
-                  clinic="Clínica Multiperfil"
-                  city="Benguela"
-                  rating="4.7"
-                  price="20.000 Kz"
-                  next="Quarta, 09:15"
-                  highlighted
-                />
-              </ul>
-            </div>
+            <DoctorSearch />
           </Reveal>
 
           <Reveal
@@ -918,85 +863,5 @@ function FooterCol({
   );
 }
 
-function FilterPill({
-  children,
-  active,
-}: {
-  children: React.ReactNode;
-  active?: boolean;
-}) {
-  return (
-    <span
-      className={
-        "inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium transition-colors " +
-        (active
-          ? "bg-primary text-primary-foreground"
-          : "border border-border text-muted-foreground hover:text-foreground")
-      }
-    >
-      {children}
-    </span>
-  );
-}
-
-function DoctorRow({
-  initials,
-  name,
-  specialty,
-  clinic,
-  city,
-  rating,
-  price,
-  next,
-  highlighted,
-}: {
-  initials: string;
-  name: string;
-  specialty: string;
-  clinic: string;
-  city: string;
-  rating: string;
-  price: string;
-  next: string;
-  highlighted?: boolean;
-}) {
-  return (
-    <li
-      className={
-        "flex flex-wrap items-center gap-4 px-5 py-4 transition-colors " +
-        (highlighted ? "bg-accent/40" : "hover:bg-accent/30")
-      }
-    >
-      <span className="grid size-11 shrink-0 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-        {initials}
-      </span>
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm font-semibold text-foreground">{name}</span>
-          <span className="inline-flex items-center gap-0.5 rounded-full border border-border px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
-            <Star className="size-2.5 fill-current text-primary" />
-            {rating}
-          </span>
-        </div>
-        <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
-          <span>{specialty}</span>
-          <span aria-hidden className="text-border">·</span>
-          <span>{clinic}</span>
-          <span aria-hidden className="text-border">·</span>
-          <span className="inline-flex items-center gap-0.5">
-            <MapPin className="size-3" />
-            {city}
-          </span>
-        </div>
-      </div>
-      <div className="flex flex-col items-end gap-0.5 text-right">
-        <span className="text-sm font-semibold text-foreground">{price}</span>
-        <span className="text-[11px] text-primary">próx.: {next}</span>
-      </div>
-      <span className="inline-flex items-center justify-center gap-1 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-medium text-primary-foreground">
-        Marcar
-        <ArrowRight className="size-3" />
-      </span>
-    </li>
-  );
-}
+// (Static FilterPill / DoctorRow mock removed — the marketplace teaser is
+// now the live <DoctorSearch /> client component in app/_landing/.)

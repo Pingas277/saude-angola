@@ -3,9 +3,12 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import type { ReactNode } from "react";
 
-// Renders a real photo if the file exists under /public, otherwise a clean
-// on-brand placeholder. Drop a file at the given path (e.g.
-// public/sobre/clinica.jpg) and it appears automatically — no code change.
+// Renders a real photo if one exists under /public, otherwise a clean
+// on-brand placeholder. `src` is a base path WITHOUT extension (e.g.
+// "sobre/angola-hero"); any of .jpg/.jpeg/.png/.webp is auto-detected —
+// just drop the file in and it appears, no code change.
+const EXTS = ["jpg", "jpeg", "png", "webp"];
+
 export default function ImageSlot({
   src,
   alt,
@@ -13,17 +16,23 @@ export default function ImageSlot({
   icon,
   className = "",
 }: {
-  src: string; // path relative to /public, e.g. "sobre/clinica.jpg"
+  src: string;
   alt: string;
   caption: string;
   icon?: ReactNode;
   className?: string;
 }) {
-  let hasFile = false;
-  try {
-    hasFile = existsSync(path.join(process.cwd(), "public", src));
-  } catch {
-    hasFile = false;
+  const base = src.replace(/\.(jpg|jpeg|png|webp)$/i, "");
+  let found: string | null = null;
+  for (const ext of EXTS) {
+    try {
+      if (existsSync(path.join(process.cwd(), "public", `${base}.${ext}`))) {
+        found = `/${base}.${ext}`;
+        break;
+      }
+    } catch {
+      /* ignore */
+    }
   }
 
   return (
@@ -33,9 +42,9 @@ export default function ImageSlot({
         className
       }
     >
-      {hasFile ? (
+      {found ? (
         <Image
-          src={"/" + src}
+          src={found}
           alt={alt}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
@@ -43,7 +52,6 @@ export default function ImageSlot({
         />
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-primary/5 to-background">
-          {/* pulse-mark motif */}
           <Image
             src="/brand/logo-mark.png"
             alt=""

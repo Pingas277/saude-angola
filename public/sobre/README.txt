@@ -1,6 +1,6 @@
-Optional Angola landscape photos for /sobre (auto-detected, no code change):
-  public/sobre/angola-hero.jpg  - hero, beside the headline   (~4:3)
-  public/sobre/angola.jpg       - Angola band (already added)  (~4:3)
-  public/sobre/angola-2.jpg     - mission band, wide strip     (~16:7)
+Angola photos for /sobre — any of .jpg/.jpeg/.png/.webp is auto-detected:
+  public/sobre/angola-hero.*  - hero, beside headline (KIDS — Saúde para todos)
+  public/sobre/angola.*       - Angola band (Gabela→Conda landscape)
+  public/sobre/angola-2.*     - mission band, wide (CABO — Luanda bay)
 
-Until a file exists, a clean on-brand placeholder is shown instead.
+All three are live. Replace a file (any extension) to swap a photo.

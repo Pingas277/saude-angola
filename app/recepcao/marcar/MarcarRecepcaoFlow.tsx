@@ -29,12 +29,14 @@ type SelectedPatient = {
 export default function MarcarRecepcaoFlow({
   doctors,
   defaultDate,
+  initialMode = "search",
 }: {
   doctors: Doctor[];
   defaultDate: string;
+  initialMode?: "search" | "walkin";
 }) {
   const [step, setStep] = useState<Step>("patient");
-  const [mode, setMode] = useState<"search" | "walkin">("search");
+  const [mode, setMode] = useState<"search" | "walkin">(initialMode);
   const [selected, setSelected] = useState<SelectedPatient | null>(null);
   const router = useRouter();
 

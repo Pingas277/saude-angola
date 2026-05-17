@@ -124,10 +124,10 @@ export default function SobrePage() {
           </div>
 
           <ImageSlot
-            src="sobre/equipa.jpg"
-            alt="A equipa de saúde ANGOLASAUDE"
-            caption="Cuidar de quem cuida — em qualquer ponto de Angola."
-            icon={<HeartPulse className="size-5" />}
+            src="sobre/angola-hero.jpg"
+            alt="Paisagem de Angola"
+            caption="Saúde para todos — em qualquer ponto de Angola."
+            icon={<MapPin className="size-5" />}
             className="aspect-[4/3] w-full shadow-sm"
           />
         </div>
@@ -182,10 +182,10 @@ export default function SobrePage() {
           </div>
 
           <ImageSlot
-            src="sobre/clinica.jpg"
-            alt="Uma clínica parceira da ANGOLASAUDE"
-            caption="Clínicas parceiras, do papel ao digital."
-            icon={<Building2 className="size-5" />}
+            src="sobre/angola-2.jpg"
+            alt="Paisagem de Angola"
+            caption="Pensado para chegar a todo o país."
+            icon={<MapPin className="size-5" />}
             className="mt-12 aspect-[16/7] w-full shadow-sm"
           />
         </div>

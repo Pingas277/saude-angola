@@ -1,4 +1,6 @@
-Drop optional photos here (auto-detected by /sobre, no code change):
-  public/sobre/equipa.jpg   - team / clinician with patient (landscape ~4:3)
-  public/sobre/clinica.jpg  - a partner clinic interior (landscape ~16:10)
-  public/sobre/angola.jpg   - Angolan landscape/mountains (wide ~21:9)
+Optional Angola landscape photos for /sobre (auto-detected, no code change):
+  public/sobre/angola-hero.jpg  - hero, beside the headline   (~4:3)
+  public/sobre/angola.jpg       - Angola band (already added)  (~4:3)
+  public/sobre/angola-2.jpg     - mission band, wide strip     (~16:7)
+
+Until a file exists, a clean on-brand placeholder is shown instead.

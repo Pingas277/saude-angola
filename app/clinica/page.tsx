@@ -225,7 +225,7 @@ export default async function ClinicaHomePage() {
       />
 
       {/* KPI grid */}
-      <section className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-6">
+      <section className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
         <StatCard tone="emerald" icon={<CalendarDays className="size-5" />} label="Consultas hoje" value={todayList.length} hint={`${monthApptCount ?? 0} este mês`} />
         <StatCard tone="sky" icon={<Users className="size-5" />} label="Pacientes hoje" value={distinctPatients} hint="distintos" />
         <StatCard tone="slate" icon={<UserCog className="size-5" />} label="Equipa" value={staffCount} hint="membros ativos" />

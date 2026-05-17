@@ -34,16 +34,30 @@ export default function StatCard({
   icon?: ReactNode;
   trend?: { value: string; positive?: boolean };
 }) {
+  // Scale the value down as it gets longer so currency strings like
+  // "35 000,00 AOA" never overflow a narrow card.
+  const len = String(value).length;
+  const valueSize =
+    len <= 6
+      ? "text-3xl"
+      : len <= 10
+        ? "text-2xl"
+        : len <= 16
+          ? "text-xl"
+          : "text-lg";
+
   return (
     <div className="rounded-xl border border-border bg-card p-5 transition-colors hover:border-foreground/15">
       <div className="flex items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0 flex-1">
           <div
-            className={`text-[11px] font-medium uppercase tracking-wider ${TONE_LABEL[tone]}`}
+            className={`truncate text-[11px] font-medium uppercase tracking-wider ${TONE_LABEL[tone]}`}
           >
             {label}
           </div>
-          <div className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
+          <div
+            className={`mt-2 break-words font-semibold leading-tight tracking-tight text-foreground tabular-nums ${valueSize}`}
+          >
             {value}
           </div>
           {hint && (

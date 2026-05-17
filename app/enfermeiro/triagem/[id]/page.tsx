@@ -98,27 +98,27 @@ export default async function TriagemPage({
       <div className="mb-4">
         <Link
           href="/enfermeiro"
-          className="text-sm font-medium text-slate-600 hover:text-slate-900"
+          className="text-sm font-medium text-muted-foreground hover:text-foreground"
         >
           ← Voltar à triagem
         </Link>
       </div>
 
-      <header className="rounded-xl border border-slate-200 bg-white p-6">
-        <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <header className="rounded-xl border border-border bg-card p-6">
+        <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Triagem de enfermagem
         </div>
-        <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
+        <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground">
           {pProfile?.full_name ?? "Paciente"}
         </h1>
-        <div className="mt-2 text-sm text-slate-600">
+        <div className="mt-2 text-sm text-muted-foreground">
           {formatDateTimePT(appt.scheduled_at)}
           {doctor?.full_name ? ` · Dr(a). ${doctor.full_name}` : ""}
           {doctor?.specialty ? ` · ${doctor.specialty}` : ""}
         </div>
         {appt.reason && (
-          <p className="mt-3 text-sm text-slate-700">
-            <span className="font-medium text-slate-900">Motivo:</span>{" "}
+          <p className="mt-3 text-sm text-foreground">
+            <span className="font-medium text-foreground">Motivo:</span>{" "}
             {appt.reason}
           </p>
         )}
@@ -126,8 +126,8 @@ export default async function TriagemPage({
 
       <section className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
         <aside className="lg:col-span-1 space-y-6">
-          <div className="rounded-xl border border-slate-200 bg-white p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <div className="rounded-xl border border-border bg-card p-5">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               Ficha do paciente
             </h2>
             <dl className="mt-3 space-y-2 text-sm">
@@ -152,17 +152,17 @@ export default async function TriagemPage({
             </dl>
 
             <div className="mt-5">
-              <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Alergias
               </div>
               {allergies.length === 0 ? (
-                <div className="mt-1 text-sm text-slate-500">—</div>
+                <div className="mt-1 text-sm text-muted-foreground">—</div>
               ) : (
                 <ul className="mt-1 flex flex-wrap gap-1.5">
                   {allergies.map((a) => (
                     <li
                       key={a}
-                      className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700"
+                      className="rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive"
                     >
                       ⚠ {a}
                     </li>
@@ -172,17 +172,17 @@ export default async function TriagemPage({
             </div>
 
             <div className="mt-4">
-              <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 Doenças crónicas
               </div>
               {conditions.length === 0 ? (
-                <div className="mt-1 text-sm text-slate-500">—</div>
+                <div className="mt-1 text-sm text-muted-foreground">—</div>
               ) : (
                 <ul className="mt-1 flex flex-wrap gap-1.5">
                   {conditions.map((c) => (
                     <li
                       key={c}
-                      className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-800"
+                      className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400"
                     >
                       {c}
                     </li>
@@ -193,19 +193,19 @@ export default async function TriagemPage({
           </div>
 
           {records.length > 0 && (
-            <div className="rounded-xl border border-slate-200 bg-white">
-              <div className="border-b border-slate-200 px-4 py-3">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+            <div className="rounded-xl border border-border bg-card">
+              <div className="border-b border-border px-4 py-3">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                   Triagens desta consulta
                 </h3>
               </div>
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-border">
                 {records.map((r) => (
                   <li key={r.id} className="px-4 py-3 text-sm">
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-muted-foreground">
                       {formatDateTimePT(r.recorded_at)}
                     </div>
-                    <div className="mt-1 text-slate-700">
+                    <div className="mt-1 text-foreground">
                       {[
                         r.temperature_c != null && `T ${r.temperature_c}°C`,
                         r.blood_pressure && `PA ${r.blood_pressure}`,
@@ -219,7 +219,7 @@ export default async function TriagemPage({
                         .join(" · ") || "—"}
                     </div>
                     {r.notes && (
-                      <div className="mt-1 text-slate-600">{r.notes}</div>
+                      <div className="mt-1 text-muted-foreground">{r.notes}</div>
                     )}
                   </li>
                 ))}
@@ -229,11 +229,11 @@ export default async function TriagemPage({
         </aside>
 
         <div className="lg:col-span-2">
-          <div className="rounded-xl border border-slate-200 bg-white p-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <div className="rounded-xl border border-border bg-card p-6">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               {latest ? "Nova medição" : "Sinais vitais"}
             </h2>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-muted-foreground">
               {latest
                 ? "Os campos vêm pré-preenchidos com a última medição. Ajuste e guarde uma nova."
                 : "Registe os sinais vitais. O médico verá esta triagem ao abrir a consulta."}
@@ -267,8 +267,8 @@ export default async function TriagemPage({
 function Row({ label, value }: { label: string; value: string | null }) {
   return (
     <div className="flex justify-between gap-3">
-      <dt className="text-slate-500">{label}</dt>
-      <dd className="text-right text-slate-900">{value ?? "—"}</dd>
+      <dt className="text-muted-foreground">{label}</dt>
+      <dd className="text-right text-foreground">{value ?? "—"}</dd>
     </div>
   );
 }

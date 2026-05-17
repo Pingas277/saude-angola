@@ -115,17 +115,17 @@ export default async function TelemedicinaListPage() {
       <RealtimeRefresh />
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Telemedicina
           </h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-muted-foreground">
             Pacientes em espera, ordenados por urgência. Atualiza em tempo real.
           </p>
         </div>
         <form action={refreshAction}>
           <button
             type="submit"
-            className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="rounded-md border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted/40"
           >
             ↻ Atualizar
           </button>
@@ -133,11 +133,11 @@ export default async function TelemedicinaListPage() {
       </div>
 
       <section className="mt-8">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           Em espera ({waitingRows.length})
         </h2>
         {waitingRows.length === 0 ? (
-          <div className="mt-3 rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
+          <div className="mt-3 rounded-xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
             Nenhum paciente está à espera no momento.
           </div>
         ) : (
@@ -156,20 +156,20 @@ export default async function TelemedicinaListPage() {
                 <li
                   key={row.id}
                   className={
-                    "rounded-xl border bg-white p-5 " +
+                    "rounded-xl border bg-card p-5 " +
                     (isEmergency
                       ? "border-red-300 ring-2 ring-red-200"
-                      : "border-slate-200")
+                      : "border-border")
                   }
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-semibold text-slate-900">
+                        <span className="font-semibold text-foreground">
                           {p.name}
                         </span>
                         {p.age !== null && (
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-muted-foreground">
                             · {p.age} anos
                           </span>
                         )}
@@ -180,7 +180,7 @@ export default async function TelemedicinaListPage() {
                             {URGENCY_LABEL_PT[urgency]}
                           </span>
                         )}
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-muted-foreground">
                           à espera há {waitMin} min
                         </span>
                       </div>
@@ -190,7 +190,7 @@ export default async function TelemedicinaListPage() {
                           {p.allergies.map((a) => (
                             <span
                               key={`a-${a}`}
-                              className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-[11px] font-medium text-red-700"
+                              className="rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 text-[11px] font-medium text-destructive"
                               title="Alergia"
                             >
                               ⚠ {a}
@@ -199,7 +199,7 @@ export default async function TelemedicinaListPage() {
                           {p.chronicConditions.map((cc) => (
                             <span
                               key={`c-${cc}`}
-                              className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-800"
+                              className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-600 dark:text-amber-400"
                               title="Doença crónica"
                             >
                               {cc}
@@ -209,7 +209,7 @@ export default async function TelemedicinaListPage() {
                       )}
 
                       {row.ai_triage_summary && (
-                        <p className="mt-2 text-sm text-slate-600">
+                        <p className="mt-2 text-sm text-muted-foreground">
                           {row.ai_triage_summary}
                         </p>
                       )}
@@ -224,11 +224,11 @@ export default async function TelemedicinaListPage() {
       </section>
 
       <section className="mt-10">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           Minhas consultas de vídeo
         </h2>
         {(mine as WaitingRow[] | null)?.length ? (
-          <ul className="mt-3 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <ul className="mt-3 divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
             {(mine as WaitingRow[]).map((row) => {
               const p = pickPatient(row.patient);
               return (
@@ -237,8 +237,8 @@ export default async function TelemedicinaListPage() {
                   className="flex flex-wrap items-center gap-4 px-5 py-4"
                 >
                   <div className="min-w-0 flex-1">
-                    <div className="font-medium text-slate-900">{p.name}</div>
-                    <div className="mt-0.5 truncate text-sm text-slate-600">
+                    <div className="font-medium text-foreground">{p.name}</div>
+                    <div className="mt-0.5 truncate text-sm text-muted-foreground">
                       {CONSULTATION_STATUS_LABELS[row.status] ?? row.status} ·{" "}
                       {formatDateTimePT(row.created_at)}
                     </div>
@@ -246,7 +246,7 @@ export default async function TelemedicinaListPage() {
                   {row.status === "in_progress" && (
                     <a
                       href={`/medico/telemedicina/sala/${row.id}`}
-                      className="rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+                      className="rounded-md bg-primary px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
                     >
                       Voltar à sala →
                     </a>
@@ -256,7 +256,7 @@ export default async function TelemedicinaListPage() {
             })}
           </ul>
         ) : (
-          <div className="mt-3 rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500">
+          <div className="mt-3 rounded-xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
             Sem consultas de vídeo recentes.
           </div>
         )}

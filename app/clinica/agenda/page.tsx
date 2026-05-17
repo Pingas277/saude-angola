@@ -9,12 +9,12 @@ import {
 export const metadata = { title: "Agenda da Clínica · Saúde Angola" };
 
 const STATUS_BADGE: Record<string, string> = {
-  scheduled: "bg-sky-100 text-sky-800",
-  confirmed: "bg-emerald-100 text-emerald-800",
-  in_progress: "bg-amber-100 text-amber-800",
-  completed: "bg-slate-100 text-slate-700",
-  cancelled: "bg-red-100 text-red-700",
-  no_show: "bg-red-100 text-red-700",
+  scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
+  confirmed: "bg-primary/10 text-primary",
+  in_progress: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  completed: "bg-muted text-foreground",
+  cancelled: "bg-destructive/10 text-destructive",
+  no_show: "bg-destructive/10 text-destructive",
 };
 
 type ApptRow = {
@@ -80,10 +80,10 @@ export default async function ClinicAgendaPage() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Agenda da clínica
         </h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-muted-foreground">
           Todas as marcações dos médicos da clínica.
         </p>
       </div>
@@ -108,7 +108,7 @@ function Section({
 }) {
   return (
     <section className="mt-8">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
         {title}
       </h2>
       {children}
@@ -119,13 +119,13 @@ function Section({
 function List({ rows, emptyText }: { rows: ApptRow[]; emptyText: string }) {
   if (!rows.length) {
     return (
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500">
+      <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
         {emptyText}
       </div>
     );
   }
   return (
-    <ul className="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
       {rows.map((a) => {
         const dr = pickDoctor(a.doctor);
         return (
@@ -134,10 +134,10 @@ function List({ rows, emptyText }: { rows: ApptRow[]; emptyText: string }) {
             className="flex flex-wrap items-center gap-4 px-5 py-4"
           >
             <div className="min-w-0 flex-1">
-              <div className="font-medium text-slate-900">
+              <div className="font-medium text-foreground">
                 {formatDateTimePT(a.scheduled_at)}
               </div>
-              <div className="mt-0.5 truncate text-sm text-slate-600">
+              <div className="mt-0.5 truncate text-sm text-muted-foreground">
                 {pickPatientName(a.patient)} · Dr(a). {dr.name}
                 {dr.specialty ? ` (${dr.specialty})` : ""}
                 {a.reason ? ` · ${a.reason}` : ""}
@@ -145,12 +145,12 @@ function List({ rows, emptyText }: { rows: ApptRow[]; emptyText: string }) {
             </div>
             <span
               className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                STATUS_BADGE[a.status] ?? "bg-slate-100 text-slate-700"
+                STATUS_BADGE[a.status] ?? "bg-muted text-foreground"
               }`}
             >
               {APPOINTMENT_STATUS_LABELS[a.status] ?? a.status}
             </span>
-            <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700">
+            <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-foreground">
               {APPOINTMENT_TYPE_LABELS[a.appointment_type] ?? a.appointment_type}
             </span>
           </li>

@@ -27,10 +27,10 @@ function transitionsFor(status: string): Transition[] {
 }
 
 const TONE_CLS: Record<Transition["tone"], string> = {
-  primary: "bg-emerald-600 text-white hover:bg-emerald-700",
-  ghost: "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50",
-  warning: "border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100",
-  danger: "border border-red-300 bg-red-50 text-red-700 hover:bg-red-100",
+  primary: "bg-primary text-white hover:bg-primary/90",
+  ghost: "border border-border bg-card text-foreground hover:bg-muted/40",
+  warning: "border border-amber-300 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/15",
+  danger: "border border-red-300 bg-destructive/10 text-destructive hover:bg-destructive/10",
 };
 
 export default function QueueActions({

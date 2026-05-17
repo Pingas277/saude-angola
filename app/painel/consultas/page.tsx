@@ -10,12 +10,12 @@ import {
 export const metadata = { title: "Consultas · Saúde Angola" };
 
 const STATUS_BADGE: Record<string, string> = {
-  scheduled: "bg-sky-100 text-sky-800",
-  confirmed: "bg-emerald-100 text-emerald-800",
-  in_progress: "bg-amber-100 text-amber-800",
-  completed: "bg-slate-100 text-slate-700",
-  cancelled: "bg-red-100 text-red-700",
-  no_show: "bg-red-100 text-red-700",
+  scheduled: "bg-sky-500/100/10 text-sky-600 dark:text-sky-400",
+  confirmed: "bg-primary/10 text-primary",
+  in_progress: "bg-amber-500/100/15 text-amber-600 dark:text-amber-400",
+  completed: "bg-muted text-foreground",
+  cancelled: "bg-destructive/10 text-destructive",
+  no_show: "bg-destructive/10 text-destructive",
 };
 
 type ApptRow = {
@@ -75,16 +75,16 @@ export default async function ConsultasPage() {
     <main className="mx-auto max-w-6xl px-6 py-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             As minhas consultas
           </h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-muted-foreground">
             Próximas marcações e histórico recente.
           </p>
         </div>
         <Link
           href="/painel/marcar"
-          className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+          className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
         >
           + Marcar consulta
         </Link>
@@ -110,7 +110,7 @@ function Section({
 }) {
   return (
     <section className="mt-8">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
         {title}
       </h2>
       {children}
@@ -121,28 +121,28 @@ function Section({
 function List({ rows, emptyText }: { rows: ApptRow[]; emptyText: string }) {
   if (!rows.length) {
     return (
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500">
+      <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
         {emptyText}
       </div>
     );
   }
   return (
-    <ul className="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
       {rows.map((a) => (
         <li key={a.id} className="flex flex-wrap items-center gap-4 px-5 py-4">
           <div className="min-w-0 flex-1">
-            <div className="font-medium text-slate-900">
+            <div className="font-medium text-foreground">
               {formatDateTimePT(a.scheduled_at)}
             </div>
-            <div className="mt-0.5 truncate text-sm text-slate-600">
+            <div className="mt-0.5 truncate text-sm text-muted-foreground">
               {pickName(a.doctor)} · {pickName(a.clinic)} · {a.duration_minutes} min
               {a.reason ? ` · ${a.reason}` : ""}
             </div>
           </div>
-          <Badge className={STATUS_BADGE[a.status] ?? "bg-slate-100 text-slate-700"}>
+          <Badge className={STATUS_BADGE[a.status] ?? "bg-muted text-foreground"}>
             {APPOINTMENT_STATUS_LABELS[a.status] ?? a.status}
           </Badge>
-          <Badge className="bg-slate-100 text-slate-700">
+          <Badge className="bg-muted text-foreground">
             {APPOINTMENT_TYPE_LABELS[a.appointment_type] ?? a.appointment_type}
           </Badge>
         </li>

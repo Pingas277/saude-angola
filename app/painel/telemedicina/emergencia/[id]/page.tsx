@@ -38,9 +38,9 @@ export default async function EmergenciaPage({
 
   return (
     <main className="mx-auto flex min-h-[80vh] max-w-2xl items-center px-6 py-10">
-      <div className="w-full overflow-hidden rounded-2xl border border-red-200 bg-white shadow-lg">
+      <div className="w-full overflow-hidden rounded-2xl border border-destructive/30 bg-card shadow-lg">
         <div className="flex items-center gap-3 bg-red-700 px-6 py-4 text-white">
-          <span aria-hidden className="grid h-10 w-10 place-items-center rounded-full bg-white/20 text-2xl font-bold">
+          <span aria-hidden className="grid h-10 w-10 place-items-center rounded-full bg-card/20 text-2xl font-bold">
             !
           </span>
           <div>
@@ -54,21 +54,21 @@ export default async function EmergenciaPage({
         </div>
 
         <div className="px-6 py-6 space-y-5">
-          <p className="text-base text-slate-800">
+          <p className="text-base text-foreground">
             Com base na triagem, a urgência foi classificada como{" "}
-            <strong className="text-red-700">emergência</strong>. A telemedicina
+            <strong className="text-destructive">emergência</strong>. A telemedicina
             <strong> não substitui </strong> uma urgência hospitalar em situações
             críticas.
           </p>
 
-          <ul className="space-y-2 rounded-lg bg-red-50 p-4 text-sm text-red-900">
+          <ul className="space-y-2 rounded-lg bg-destructive/10 p-4 text-sm text-red-900">
             <li>• Se está com dor no peito intensa, dificuldade grande em respirar, hemorragia abundante ou perda de consciência:</li>
             <li className="font-bold">→ Ligue 112 imediatamente.</li>
             <li>• Ou desloque-se à urgência mais próxima.</li>
           </ul>
 
           {c.ai_triage_summary && (
-            <p className="rounded-md bg-slate-50 px-3 py-2 text-xs text-slate-600">
+            <p className="rounded-md bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
               {c.ai_triage_summary}
             </p>
           )}
@@ -76,19 +76,19 @@ export default async function EmergenciaPage({
           <div className="flex flex-col gap-3 sm:flex-row">
             <a
               href="tel:112"
-              className="flex-1 rounded-md bg-red-600 px-4 py-3 text-center text-base font-bold text-white shadow-sm hover:bg-red-700"
+              className="flex-1 rounded-md bg-destructive px-4 py-3 text-center text-base font-bold text-white shadow-sm hover:bg-destructive/90"
             >
               📞 Ligar 112
             </a>
             <Link
               href={`/painel/telemedicina/sala/${c.id}?aceito=1`}
-              className="flex-1 rounded-md border border-slate-300 bg-white px-4 py-3 text-center text-sm font-medium text-slate-700 hover:bg-slate-50"
+              className="flex-1 rounded-md border border-border bg-card px-4 py-3 text-center text-sm font-medium text-foreground hover:bg-muted/40"
             >
               Continuar com telemedicina mesmo assim
             </Link>
           </div>
 
-          <p className="text-center text-xs text-slate-500">
+          <p className="text-center text-xs text-muted-foreground">
             Se continuar, um médico vai atender por vídeo, mas isso pode demorar
             mais do que uma chamada para o 112.
           </p>

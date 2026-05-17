@@ -76,10 +76,10 @@ export default async function SalaPage({
     <main className="mx-auto max-w-4xl px-6 py-10">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Sala de telemedicina
           </h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-muted-foreground">
             {CONSULTATION_STATUS_LABELS[c.status] ?? c.status}
             {c.ai_urgency ? ` · Urgência ${URGENCY_LABEL_PT[c.ai_urgency]}` : ""}
           </p>
@@ -94,7 +94,7 @@ export default async function SalaPage({
       </div>
 
       {c.ai_triage_summary && (
-        <p className="mt-3 rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-600">
+        <p className="mt-3 rounded-md bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
           {c.ai_triage_summary}
         </p>
       )}

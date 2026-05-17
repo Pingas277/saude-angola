@@ -81,10 +81,10 @@ export default async function ClinicaFaturasPage({
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Faturas da clínica
         </h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-muted-foreground">
           {total} fatura(s) — {formatAOA(totalPaid)} pagas, {formatAOA(totalPending)} pendentes.
         </p>
       </div>
@@ -96,13 +96,13 @@ export default async function ClinicaFaturasPage({
       </nav>
 
       {list.length === 0 ? (
-        <div className="mt-6 rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
+        <div className="mt-6 rounded-xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
           Sem faturas neste filtro.
         </div>
       ) : (
-        <div className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card">
           <table className="w-full text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-border bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Paciente</th>
                 <th className="px-4 py-3">Valor</th>
@@ -113,33 +113,33 @@ export default async function ClinicaFaturasPage({
                 <th className="px-4 py-3"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {list.map((inv) => (
-                <tr key={inv.id} className="hover:bg-slate-50/50">
-                  <td className="px-4 py-3 font-medium text-slate-900">
+                <tr key={inv.id} className="hover:bg-muted/40/50">
+                  <td className="px-4 py-3 font-medium text-foreground">
                     {pickPatientName(inv.patient)}
                   </td>
-                  <td className="px-4 py-3 font-semibold text-slate-900">
+                  <td className="px-4 py-3 font-semibold text-foreground">
                     {formatAOA(Number(inv.amount))}
                   </td>
                   <td className="px-4 py-3">
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-                        INVOICE_STATUS_BADGE[inv.status] ?? "bg-slate-100 text-slate-700"
+                        INVOICE_STATUS_BADGE[inv.status] ?? "bg-muted text-foreground"
                       }`}
                     >
                       {INVOICE_STATUS_LABELS[inv.status] ?? inv.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-slate-600">
+                  <td className="px-4 py-3 text-muted-foreground">
                     {inv.payment_method
                       ? PAYMENT_METHOD_LABELS[inv.payment_method] ?? inv.payment_method
                       : "—"}
                   </td>
-                  <td className="px-4 py-3 text-xs text-slate-500">
+                  <td className="px-4 py-3 text-xs text-muted-foreground">
                     {formatDateTimePT(inv.created_at)}
                   </td>
-                  <td className="px-4 py-3 text-xs text-slate-500">
+                  <td className="px-4 py-3 text-xs text-muted-foreground">
                     {inv.paid_at ? formatDateTimePT(inv.paid_at) : "—"}
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -148,7 +148,7 @@ export default async function ClinicaFaturasPage({
                         href={`/api/fatura/${inv.id}/pdf`}
                         target="_blank"
                         rel="noopener"
-                        className="text-xs font-medium text-emerald-700 hover:text-emerald-800"
+                        className="text-xs font-medium text-primary hover:text-primary"
                       >
                         PDF →
                       </a>
@@ -182,8 +182,8 @@ function FilterLink({
       className={
         "rounded-md px-3 py-1.5 text-sm font-medium transition " +
         (active
-          ? "bg-slate-900 text-white"
-          : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50")
+          ? "bg-foreground text-white"
+          : "border border-border bg-card text-foreground hover:bg-muted/40")
       }
     >
       {label}

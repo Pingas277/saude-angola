@@ -27,18 +27,18 @@ export default async function PerfilPage() {
     .maybeSingle();
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+    <main className="min-h-screen bg-muted/40">
+      <header className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
           <Link href="/painel" className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-md bg-emerald-600 text-sm font-bold text-white">
+            <span className="grid h-8 w-8 place-items-center rounded-md bg-primary text-sm font-bold text-white">
               S
             </span>
-            <span className="font-semibold text-slate-900">Saúde Angola</span>
+            <span className="font-semibold text-foreground">Saúde Angola</span>
           </Link>
           <Link
             href="/painel"
-            className="text-sm font-medium text-slate-600 hover:text-slate-900"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground"
           >
             ← Voltar ao painel
           </Link>
@@ -46,10 +46,10 @@ export default async function PerfilPage() {
       </header>
 
       <div className="mx-auto max-w-4xl px-6 py-10">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           O meu perfil
         </h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-muted-foreground">
           Mantenha a sua informação clínica atualizada para um melhor atendimento.
         </p>
 

@@ -50,10 +50,10 @@ export default async function FaturasPage() {
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           As minhas faturas
         </h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-muted-foreground">
           Pagamentos pendentes e histórico de comprovativos.
         </p>
       </div>
@@ -78,7 +78,7 @@ function Section({
 }) {
   return (
     <section className="mt-8">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
         {title}
       </h2>
       {children}
@@ -97,20 +97,20 @@ function List({
 }) {
   if (!rows.length) {
     return (
-      <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500">
+      <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
         {emptyText}
       </div>
     );
   }
   return (
-    <ul className="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
       {rows.map((inv) => (
         <li key={inv.id} className="flex flex-wrap items-center gap-4 px-5 py-4">
           <div className="min-w-0 flex-1">
-            <div className="font-semibold text-slate-900">
+            <div className="font-semibold text-foreground">
               {formatAOA(Number(inv.amount))}
             </div>
-            <div className="mt-0.5 text-sm text-slate-600">
+            <div className="mt-0.5 text-sm text-muted-foreground">
               {inv.payment_reference ?? "Consulta"} ·{" "}
               {inv.paid_at
                 ? `Paga em ${formatDateTimePT(inv.paid_at)}`
@@ -122,7 +122,7 @@ function List({
           </div>
           <span
             className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-              INVOICE_STATUS_BADGE[inv.status] ?? "bg-slate-100 text-slate-700"
+              INVOICE_STATUS_BADGE[inv.status] ?? "bg-muted text-foreground"
             }`}
           >
             {INVOICE_STATUS_LABELS[inv.status] ?? inv.status}
@@ -130,14 +130,14 @@ function List({
           <div className="flex items-center gap-2">
             <Link
               href={`/painel/faturas/${inv.id}`}
-              className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              className="rounded-md border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted/40"
             >
               Ver
             </Link>
             {showPay && (
               <Link
                 href={`/painel/faturas/${inv.id}`}
-                className="rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+                className="rounded-md bg-primary px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
               >
                 Pagar →
               </Link>
@@ -147,7 +147,7 @@ function List({
                 href={`/api/fatura/${inv.id}/pdf`}
                 target="_blank"
                 rel="noopener"
-                className="rounded-md border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-100"
+                className="rounded-md border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/10"
               >
                 PDF
               </a>

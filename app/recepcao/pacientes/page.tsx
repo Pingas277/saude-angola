@@ -62,17 +62,17 @@ export default async function PacientesPage({
     <main className="mx-auto max-w-6xl px-6 py-8">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Pacientes
           </h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-muted-foreground">
             {q ? `Resultados para "${q}"` : "Todos os pacientes registados"}
             {" · "}{list.length} encontrado{list.length === 1 ? "" : "s"}
           </p>
         </div>
         <Link
           href="/recepcao/marcar"
-          className="rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-700"
+          className="rounded-md bg-primary px-3 py-1.5 text-sm font-semibold text-white hover:bg-primary/90"
         >
           + Novo paciente / marcar
         </Link>
@@ -84,24 +84,24 @@ export default async function PacientesPage({
           name="q"
           defaultValue={q}
           placeholder="Pesquisar por nome, email ou telefone (mín. 2 caracteres)"
-          className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+          className="flex-1 rounded-md border border-border bg-card px-3 py-2 text-sm shadow-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/30"
         />
         <button
           type="submit"
-          className="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+          className="rounded-md bg-foreground px-4 py-2 text-sm font-semibold text-background hover:bg-foreground/90"
         >
           Procurar
         </button>
       </form>
 
       {list.length === 0 ? (
-        <div className="mt-6 rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500">
+        <div className="mt-6 rounded-xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
           Sem resultados.
         </div>
       ) : (
-        <div className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card">
           <table className="w-full text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-border bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Nome</th>
                 <th className="px-4 py-3">Idade</th>
@@ -110,33 +110,33 @@ export default async function PacientesPage({
                 <th className="px-4 py-3"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {list.map((p) => {
                 const pat = p.patients?.[0];
                 const age = ageFromDob(pat?.date_of_birth ?? null);
                 return (
-                  <tr key={p.id} className="hover:bg-slate-50/60">
-                    <td className="px-4 py-3 font-medium text-slate-900">
+                  <tr key={p.id} className="hover:bg-muted/40">
+                    <td className="px-4 py-3 font-medium text-foreground">
                       {p.full_name ?? "—"}
                       {!pat && (
-                        <span className="ml-2 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-800">
+                        <span className="ml-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-600 dark:text-amber-400">
                           sem ficha
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-slate-600">
+                    <td className="px-4 py-3 text-muted-foreground">
                       {age !== null ? `${age} anos` : "—"}
                     </td>
-                    <td className="px-4 py-3 text-slate-600">
+                    <td className="px-4 py-3 text-muted-foreground">
                       {pat?.id_number ?? "—"}
                     </td>
-                    <td className="px-4 py-3 text-slate-600">
+                    <td className="px-4 py-3 text-muted-foreground">
                       {p.phone ?? p.email ?? "—"}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <Link
                         href="/recepcao/marcar"
-                        className="text-xs font-medium text-emerald-700 hover:text-emerald-800"
+                        className="text-xs font-medium text-primary hover:text-primary"
                       >
                         Marcar consulta →
                       </Link>

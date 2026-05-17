@@ -25,20 +25,20 @@ export default async function MedicoPerfilPage() {
       <div className="mb-4">
         <Link
           href="/medico"
-          className="text-sm font-medium text-slate-600 hover:text-slate-900"
+          className="text-sm font-medium text-muted-foreground hover:text-foreground"
         >
           ← Voltar
         </Link>
       </div>
 
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+      <h1 className="text-2xl font-bold tracking-tight text-foreground">
         O meu perfil profissional
       </h1>
-      <p className="mt-1 text-sm text-slate-600">
+      <p className="mt-1 text-sm text-muted-foreground">
         Estes dados aparecem nas receitas e nas faturas que emite.
       </p>
 
-      <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6">
+      <div className="mt-8 rounded-xl border border-border bg-card p-6">
         <DoctorProfileForm
           initial={{
             full_name: profile?.full_name ?? "",

@@ -59,15 +59,15 @@ export default async function ReceitasPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+      <h1 className="text-2xl font-bold tracking-tight text-foreground">
         As minhas receitas
       </h1>
-      <p className="mt-1 text-sm text-slate-600">
+      <p className="mt-1 text-sm text-muted-foreground">
         Receitas médicas emitidas pelos seus médicos.
       </p>
 
       {!list.length ? (
-        <div className="mt-8 rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
+        <div className="mt-8 rounded-xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
           Ainda não tem receitas. Após uma consulta, as receitas emitidas aparecem aqui.
         </div>
       ) : (
@@ -77,14 +77,14 @@ export default async function ReceitasPage() {
             return (
               <li
                 key={rx.id}
-                className="rounded-xl border border-slate-200 bg-white p-5"
+                className="rounded-xl border border-border bg-card p-5"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <div className="font-semibold text-slate-900">
+                    <div className="font-semibold text-foreground">
                       Emitida em {formatDateTimePT(rx.issued_at)}
                     </div>
-                    <div className="text-sm text-slate-600">
+                    <div className="text-sm text-muted-foreground">
                       Por {pickName(rx.doctor)}
                       {rx.expires_at
                         ? ` · Válida até ${formatDateTimePT(rx.expires_at)}`
@@ -96,28 +96,28 @@ export default async function ReceitasPage() {
                       href={`/api/receita/${rx.id}/pdf`}
                       target="_blank"
                       rel="noopener"
-                      className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-emerald-700"
+                      className="inline-flex items-center justify-center rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-primary/90"
                     >
                       Descarregar PDF
                     </a>
-                    <code className="rounded-md bg-slate-100 px-2 py-1 text-[10px] text-slate-600">
+                    <code className="rounded-md bg-muted px-2 py-1 text-[10px] text-muted-foreground">
                       {rx.qr_code}
                     </code>
                   </div>
                 </div>
 
-                <ul className="mt-4 divide-y divide-slate-100 rounded-lg border border-slate-200">
+                <ul className="mt-4 divide-y divide-border rounded-lg border border-border">
                   {meds.length === 0 ? (
-                    <li className="px-3 py-2 text-sm text-slate-500">
+                    <li className="px-3 py-2 text-sm text-muted-foreground">
                       Sem medicação registada.
                     </li>
                   ) : (
                     meds.map((m, i) => (
                       <li key={i} className="px-3 py-2 text-sm">
-                        <div className="font-medium text-slate-900">
+                        <div className="font-medium text-foreground">
                           {m.name ?? "—"} {m.dosage ? `· ${m.dosage}` : ""}
                         </div>
-                        <div className="text-slate-600">
+                        <div className="text-muted-foreground">
                           {[m.frequency, m.duration, m.instructions]
                             .filter(Boolean)
                             .join(" · ")}
@@ -128,7 +128,7 @@ export default async function ReceitasPage() {
                 </ul>
 
                 {rx.notes && (
-                  <p className="mt-3 text-sm text-slate-600">Notas: {rx.notes}</p>
+                  <p className="mt-3 text-sm text-muted-foreground">Notas: {rx.notes}</p>
                 )}
               </li>
             );

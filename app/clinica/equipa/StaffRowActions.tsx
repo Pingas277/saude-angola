@@ -38,7 +38,7 @@ export default function StaffRowActions({
             router.refresh();
           });
         }}
-        className="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs text-slate-700 disabled:opacity-60"
+        className="rounded-md border border-border bg-card px-2 py-1 text-xs text-foreground disabled:opacity-60"
       >
         {ROLE_OPTIONS.map((r) => (
           <option key={r} value={r}>
@@ -58,7 +58,7 @@ export default function StaffRowActions({
             router.refresh();
           });
         }}
-        className="rounded-md border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 hover:bg-red-50 disabled:opacity-60"
+        className="rounded-md border border-destructive/30 bg-card px-3 py-1 text-xs font-medium text-destructive hover:bg-destructive/10 disabled:opacity-60"
       >
         Remover
       </button>

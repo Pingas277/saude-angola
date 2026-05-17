@@ -63,7 +63,7 @@ export default function DoctorProfileForm({ initial }: { initial: Initial }) {
       {state?.error && (
         <div
           role="alert"
-          className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+          className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
         >
           {state.error}
         </div>
@@ -73,7 +73,7 @@ export default function DoctorProfileForm({ initial }: { initial: Initial }) {
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? "A guardar…" : "Guardar perfil"}
         </button>
@@ -83,7 +83,7 @@ export default function DoctorProfileForm({ initial }: { initial: Initial }) {
 }
 
 const inputClass =
-  "block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20";
+  "block w-full rounded-md border border-border bg-card px-3 py-2 text-sm shadow-sm outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30";
 
 function Field({
   label,
@@ -98,11 +98,11 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-slate-700">
-        {label} {required && <span className="text-red-600">*</span>}
+      <label className="mb-1 block text-sm font-medium text-foreground">
+        {label} {required && <span className="text-destructive">*</span>}
       </label>
       {children}
-      {hint && <p className="mt-1 text-xs text-slate-500">{hint}</p>}
+      {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
     </div>
   );
 }

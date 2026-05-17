@@ -37,31 +37,31 @@ export default async function ExamesPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+      <h1 className="text-2xl font-bold tracking-tight text-foreground">
         Os meus exames
       </h1>
-      <p className="mt-1 text-sm text-slate-600">
+      <p className="mt-1 text-sm text-muted-foreground">
         Resultados laboratoriais carregados pela sua clínica.
       </p>
 
       {!list.length ? (
-        <div className="mt-8 rounded-xl border border-dashed border-slate-300 bg-white p-10 text-center text-sm text-slate-500">
+        <div className="mt-8 rounded-xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
           Ainda não tem exames registados.
         </div>
       ) : (
-        <ul className="mt-8 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <ul className="mt-8 divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
           {list.map((r) => (
             <li key={r.id} className="flex flex-wrap items-center gap-4 px-5 py-4">
               <div className="min-w-0 flex-1">
-                <div className="font-medium text-slate-900">
+                <div className="font-medium text-foreground">
                   {r.test_name ?? "Resultado"}
                 </div>
-                <div className="mt-0.5 text-sm text-slate-600">
+                <div className="mt-0.5 text-sm text-muted-foreground">
                   {r.lab_name}
                   {r.result_date ? ` · ${formatDatePT(r.result_date)}` : ""}
                 </div>
                 {r.result_summary && (
-                  <p className="mt-1 text-sm text-slate-700">{r.result_summary}</p>
+                  <p className="mt-1 text-sm text-foreground">{r.result_summary}</p>
                 )}
               </div>
               {r.file_url && (
@@ -69,7 +69,7 @@ export default async function ExamesPage() {
                   href={r.file_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                  className="rounded-md border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted/40"
                 >
                   Ver ficheiro
                 </a>

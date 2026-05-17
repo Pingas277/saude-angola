@@ -34,25 +34,25 @@ export default async function TriagemPage() {
       <div className="mb-4">
         <Link
           href="/painel/telemedicina"
-          className="text-sm font-medium text-slate-600 hover:text-slate-900"
+          className="text-sm font-medium text-muted-foreground hover:text-foreground"
         >
           ← Voltar
         </Link>
       </div>
 
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+      <h1 className="text-2xl font-bold tracking-tight text-foreground">
         Triagem inicial
       </h1>
-      <p className="mt-1 text-sm text-slate-600">
+      <p className="mt-1 text-sm text-muted-foreground">
         Algumas perguntas rápidas para o médico já saber o que se passa quando
         atender a chamada.
       </p>
 
-      <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6">
+      <div className="mt-8 rounded-xl border border-border bg-card p-6">
         <TriageForm />
       </div>
 
-      <p className="mt-4 text-center text-xs text-slate-500">
+      <p className="mt-4 text-center text-xs text-muted-foreground">
         Em caso de emergência grave (acidente, paragem cardíaca, hemorragia
         massiva), ligue 112 imediatamente.
       </p>

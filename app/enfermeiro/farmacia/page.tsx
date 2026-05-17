@@ -80,9 +80,9 @@ export default async function FarmaciaPage() {
           desc="Adicione o primeiro item ao stock da clínica."
         />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-xl border border-border bg-card">
           <table className="w-full text-sm">
-            <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <thead className="border-b border-border bg-muted/40 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Medicamento</th>
                 <th className="px-4 py-3">Stock</th>
@@ -91,18 +91,18 @@ export default async function FarmaciaPage() {
                 <th className="px-4 py-3 text-right">Ajustar</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {items.map((i) => {
                 const low = i.quantity <= i.minimum_stock;
                 const expSoon = isExpiringSoon(i.expiry_date);
                 return (
-                  <tr key={i.id} className={low ? "bg-amber-50/40" : ""}>
+                  <tr key={i.id} className={low ? "bg-amber-500/10" : ""}>
                     <td className="px-4 py-3">
-                      <div className="font-medium text-slate-900">
+                      <div className="font-medium text-foreground">
                         {i.medication_name}
                       </div>
                       {i.generic_name && (
-                        <div className="text-xs text-slate-500">
+                        <div className="text-xs text-muted-foreground">
                           {i.generic_name}
                         </div>
                       )}
@@ -112,13 +112,13 @@ export default async function FarmaciaPage() {
                         className={
                           "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold " +
                           (low
-                            ? "bg-amber-100 text-amber-800"
-                            : "bg-emerald-100 text-emerald-800")
+                            ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+                            : "bg-primary/10 text-primary")
                         }
                       >
                         {i.quantity} un.
                       </span>
-                      <div className="mt-1 text-xs text-slate-500">
+                      <div className="mt-1 text-xs text-muted-foreground">
                         mín. {i.minimum_stock}
                         {low ? " · repor" : ""}
                       </div>
@@ -128,18 +128,18 @@ export default async function FarmaciaPage() {
                         <span
                           className={
                             expSoon
-                              ? "font-medium text-red-700"
-                              : "text-slate-600"
+                              ? "font-medium text-destructive"
+                              : "text-muted-foreground"
                           }
                         >
                           {formatDatePT(i.expiry_date)}
                           {expSoon ? " ⚠" : ""}
                         </span>
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-muted-foreground">—</span>
                       )}
                     </td>
-                    <td className="hidden px-4 py-3 text-slate-600 md:table-cell">
+                    <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
                       {i.batch_number ?? "—"}
                     </td>
                     <td className="px-4 py-3">
@@ -175,7 +175,7 @@ function AdjustBtn({
       <input type="hidden" name="delta" value={delta} />
       <button
         type="submit"
-        className="rounded-md border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+        className="rounded-md border border-border bg-card px-2.5 py-1 text-xs font-semibold text-foreground transition hover:bg-muted/40"
       >
         {label}
       </button>

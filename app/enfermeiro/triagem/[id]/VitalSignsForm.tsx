@@ -108,13 +108,13 @@ export default function VitalSignsForm({
       {state?.error && (
         <div
           role="alert"
-          className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+          className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
         >
           {state.error}
         </div>
       )}
       {state?.ok && (
-        <div className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+        <div className="rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-primary">
           Sinais vitais registados. O médico verá esta triagem na consulta.
         </div>
       )}
@@ -123,7 +123,7 @@ export default function VitalSignsForm({
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex items-center justify-center rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? "A guardar…" : "Guardar triagem"}
         </button>
@@ -133,7 +133,7 @@ export default function VitalSignsForm({
 }
 
 const inputClass =
-  "block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none placeholder:text-slate-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20";
+  "block w-full rounded-md border border-border bg-card px-3 py-2 text-sm shadow-sm outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30";
 
 function Field({
   label,
@@ -144,7 +144,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-1 block text-xs font-medium text-slate-700">
+      <label className="mb-1 block text-xs font-medium text-foreground">
         {label}
       </label>
       {children}

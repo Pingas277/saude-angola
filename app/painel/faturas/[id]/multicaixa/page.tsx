@@ -44,13 +44,13 @@ export default async function MulticaixaPage({
       <div className="mb-4">
         <Link
           href={`/painel/faturas/${inv.id}`}
-          className="text-sm font-medium text-slate-600 hover:text-slate-900"
+          className="text-sm font-medium text-muted-foreground hover:text-foreground"
         >
           ← Cancelar
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
         <header className="bg-gradient-to-r from-red-600 to-red-700 px-5 py-4">
           <div className="text-[10px] font-bold uppercase tracking-widest text-red-100">
             Multicaixa Express
@@ -61,13 +61,13 @@ export default async function MulticaixaPage({
         </header>
 
         <div className="px-5 py-5">
-          <div className="text-xs uppercase tracking-wide text-slate-500">
+          <div className="text-xs uppercase tracking-wide text-muted-foreground">
             Valor a pagar
           </div>
-          <div className="mt-1 text-3xl font-bold tracking-tight text-slate-900">
+          <div className="mt-1 text-3xl font-bold tracking-tight text-foreground">
             {amount}
           </div>
-          <div className="mt-0.5 text-xs text-slate-500">
+          <div className="mt-0.5 text-xs text-muted-foreground">
             Fatura emitida em {formatDateTimePT(inv.created_at)}
           </div>
 
@@ -76,7 +76,7 @@ export default async function MulticaixaPage({
           </div>
         </div>
 
-        <footer className="border-t border-slate-100 bg-slate-50 px-5 py-3 text-[10px] uppercase tracking-wide text-slate-400">
+        <footer className="border-t border-border bg-muted/40 px-5 py-3 text-[10px] uppercase tracking-wide text-muted-foreground">
           Ambiente de teste · pagamento simulado
         </footer>
       </div>

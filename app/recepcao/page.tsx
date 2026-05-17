@@ -14,12 +14,12 @@ import QueueActions from "./QueueActions";
 export const metadata = { title: "Recepção · Saúde Angola" };
 
 const STATUS_BADGE: Record<string, string> = {
-  scheduled: "bg-sky-100 text-sky-800",
-  confirmed: "bg-emerald-100 text-emerald-800",
-  in_progress: "bg-amber-100 text-amber-800",
-  completed: "bg-slate-100 text-slate-700",
-  cancelled: "bg-red-100 text-red-700",
-  no_show: "bg-red-100 text-red-700",
+  scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
+  confirmed: "bg-primary/10 text-primary",
+  in_progress: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  completed: "bg-muted text-foreground",
+  cancelled: "bg-destructive/10 text-destructive",
+  no_show: "bg-destructive/10 text-destructive",
 };
 
 type ApptRow = {
@@ -135,7 +135,7 @@ export default async function RecepcaoHomePage() {
         action={
           <Link
             href="/recepcao/marcar"
-            className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90"
           >
             + Nova marcação
           </Link>
@@ -217,7 +217,7 @@ function List({
     return <EmptyState icon={emptyIcon ?? "—"} title={emptyText} />;
   }
   return (
-    <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
       {rows.map((a) => {
         const p = pickPatient(a.patient);
         const dr = pickDoctor(a.doctor);
@@ -226,15 +226,15 @@ function List({
             key={a.id}
             className="flex flex-wrap items-center gap-4 px-5 py-4"
           >
-            <div className="w-16 shrink-0 text-sm font-bold text-slate-900">
+            <div className="w-16 shrink-0 text-sm font-bold text-foreground">
               {new Date(a.scheduled_at).toLocaleTimeString("pt-PT", {
                 hour: "2-digit",
                 minute: "2-digit",
               })}
             </div>
             <div className="min-w-0 flex-1">
-              <div className="font-medium text-slate-900">{p.name}</div>
-              <div className="mt-0.5 truncate text-sm text-slate-600">
+              <div className="font-medium text-foreground">{p.name}</div>
+              <div className="mt-0.5 truncate text-sm text-muted-foreground">
                 Dr(a). {dr.name}
                 {dr.specialty ? ` · ${dr.specialty}` : ""}
                 {p.phone ? ` · ${p.phone}` : ""}
@@ -243,12 +243,12 @@ function List({
             </div>
             <span
               className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                STATUS_BADGE[a.status] ?? "bg-slate-100 text-slate-700"
+                STATUS_BADGE[a.status] ?? "bg-muted text-foreground"
               }`}
             >
               {APPOINTMENT_STATUS_LABELS[a.status] ?? a.status}
             </span>
-            <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700">
+            <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-foreground">
               {APPOINTMENT_TYPE_LABELS[a.appointment_type] ?? a.appointment_type}
             </span>
             {showActions && <QueueActions appointmentId={a.id} status={a.status} />}

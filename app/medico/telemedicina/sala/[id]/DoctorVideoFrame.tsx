@@ -14,7 +14,7 @@ export default function DoctorVideoFrame({
   });
   const embedUrl = `${videoUrl}#${params.toString()}`;
   return (
-    <div className="aspect-video w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-900">
+    <div className="aspect-video w-full overflow-hidden rounded-xl border border-border bg-foreground">
       <iframe
         src={embedUrl}
         allow="camera; microphone; fullscreen; display-capture; autoplay"

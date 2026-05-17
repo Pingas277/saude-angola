@@ -16,12 +16,12 @@ import EmptyState from "../_ui/EmptyState";
 export const metadata = { title: "Painel da Clínica · Saúde Angola" };
 
 const STATUS_BADGE: Record<string, string> = {
-  scheduled: "bg-sky-100 text-sky-800",
-  confirmed: "bg-emerald-100 text-emerald-800",
-  in_progress: "bg-amber-100 text-amber-800",
-  completed: "bg-slate-100 text-slate-700",
-  cancelled: "bg-red-100 text-red-700",
-  no_show: "bg-red-100 text-red-700",
+  scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
+  confirmed: "bg-primary/10 text-primary",
+  in_progress: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  completed: "bg-muted text-foreground",
+  cancelled: "bg-destructive/10 text-destructive",
+  no_show: "bg-destructive/10 text-destructive",
 };
 
 type ApptRow = {
@@ -223,35 +223,35 @@ export default async function ClinicaHomePage() {
             desc="Quando os médicos da clínica receberem marcações, aparecem aqui."
           />
         ) : (
-          <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
             {todayList.map((a) => (
               <li
                 key={a.id}
                 className="flex flex-wrap items-center gap-4 px-5 py-4"
               >
-                <div className="w-20 shrink-0 text-sm font-bold text-slate-900">
+                <div className="w-20 shrink-0 text-sm font-bold text-foreground">
                   {new Date(a.scheduled_at).toLocaleTimeString("pt-PT", {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="font-medium text-slate-900">
+                  <div className="font-medium text-foreground">
                     {pickPatientName(a.patient)}
                   </div>
-                  <div className="mt-0.5 truncate text-sm text-slate-600">
+                  <div className="mt-0.5 truncate text-sm text-muted-foreground">
                     Dr(a). {pickName(a.doctor)}
                     {a.reason ? ` · ${a.reason}` : ""}
                   </div>
                 </div>
                 <Badge
                   className={
-                    STATUS_BADGE[a.status] ?? "bg-slate-100 text-slate-700"
+                    STATUS_BADGE[a.status] ?? "bg-muted text-foreground"
                   }
                 >
                   {APPOINTMENT_STATUS_LABELS[a.status] ?? a.status}
                 </Badge>
-                <Badge className="bg-slate-100 text-slate-700">
+                <Badge className="bg-muted text-foreground">
                   {APPOINTMENT_TYPE_LABELS[a.appointment_type] ?? a.appointment_type}
                 </Badge>
               </li>
@@ -273,7 +273,7 @@ export default async function ClinicaHomePage() {
               desc="As faturas dos médicos aparecem aqui assim que forem emitidas."
             />
           ) : (
-            <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
+            <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
               {(latestInvoices as Array<{
                 id: string;
                 amount: number | string;
@@ -292,10 +292,10 @@ export default async function ClinicaHomePage() {
                     className="flex flex-wrap items-center gap-3 px-5 py-3 text-sm"
                   >
                     <div className="min-w-0 flex-1">
-                      <div className="font-semibold text-slate-900">
+                      <div className="font-semibold text-foreground">
                         {formatAOA(Number(inv.amount))}
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-muted-foreground">
                         {pf?.full_name ?? "Paciente"} ·{" "}
                         {formatDateTimePT(inv.paid_at ?? inv.created_at)}
                       </div>
@@ -303,10 +303,10 @@ export default async function ClinicaHomePage() {
                     <Badge
                       className={
                         inv.status === "paid"
-                          ? "bg-emerald-100 text-emerald-800"
+                          ? "bg-primary/10 text-primary"
                           : inv.status === "overdue"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-amber-100 text-amber-800"
+                          ? "bg-destructive/10 text-destructive"
+                          : "bg-amber-500/15 text-amber-600 dark:text-amber-400"
                       }
                     >
                       {inv.status === "paid"

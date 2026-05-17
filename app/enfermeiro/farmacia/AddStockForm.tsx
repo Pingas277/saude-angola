@@ -22,7 +22,7 @@ export default function AddStockForm() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex items-center justify-center rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700"
+        className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90"
       >
         + Adicionar medicamento
       </button>
@@ -33,7 +33,7 @@ export default function AddStockForm() {
     <form
       ref={formRef}
       action={formAction}
-      className="rounded-xl border border-slate-200 bg-white p-5"
+      className="rounded-xl border border-border bg-card p-5"
     >
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <Field label="Medicamento" wide>
@@ -62,7 +62,7 @@ export default function AddStockForm() {
       {state?.error && (
         <div
           role="alert"
-          className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+          className="mt-3 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
         >
           {state.error}
         </div>
@@ -72,14 +72,14 @@ export default function AddStockForm() {
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          className="rounded-md border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted/40"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 disabled:opacity-60"
+          className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 disabled:opacity-60"
         >
           {isPending ? "A guardar…" : "Guardar"}
         </button>
@@ -89,7 +89,7 @@ export default function AddStockForm() {
 }
 
 const inputClass =
-  "block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none placeholder:text-slate-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20";
+  "block w-full rounded-md border border-border bg-card px-3 py-2 text-sm shadow-sm outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30";
 
 function Field({
   label,
@@ -102,7 +102,7 @@ function Field({
 }) {
   return (
     <div className={wide ? "col-span-2 sm:col-span-1" : ""}>
-      <label className="mb-1 block text-xs font-medium text-slate-700">
+      <label className="mb-1 block text-xs font-medium text-foreground">
         {label}
       </label>
       {children}

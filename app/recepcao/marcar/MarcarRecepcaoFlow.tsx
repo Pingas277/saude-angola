@@ -40,11 +40,11 @@ export default function MarcarRecepcaoFlow({
 
   if (step === "done" && selected) {
     return (
-      <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
-        <h2 className="text-lg font-semibold text-emerald-900">
+      <div className="rounded-xl border border-primary/30 bg-primary/10 p-6">
+        <h2 className="text-lg font-semibold text-primary">
           Marcação criada com sucesso
         </h2>
-        <p className="mt-1 text-sm text-emerald-800">
+        <p className="mt-1 text-sm text-primary">
           Consulta marcada para {selected.display_name}.
         </p>
         <div className="mt-4 flex gap-2">
@@ -56,14 +56,14 @@ export default function MarcarRecepcaoFlow({
               setMode("search");
               router.refresh();
             }}
-            className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+            className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
           >
             Marcar outra
           </button>
           <button
             type="button"
             onClick={() => router.push("/recepcao")}
-            className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:bg-muted/40"
           >
             Voltar à fila
           </button>
@@ -75,11 +75,11 @@ export default function MarcarRecepcaoFlow({
   if (step === "book" && selected) {
     return (
       <div className="space-y-4">
-        <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm">
-          <span className="font-medium text-emerald-900">Paciente: </span>
-          <span className="text-emerald-800">{selected.display_name}</span>
+        <div className="rounded-md border border-primary/30 bg-primary/10 px-4 py-3 text-sm">
+          <span className="font-medium text-primary">Paciente: </span>
+          <span className="text-primary">{selected.display_name}</span>
           {selected.phone ? (
-            <span className="text-emerald-700"> · {selected.phone}</span>
+            <span className="text-primary"> · {selected.phone}</span>
           ) : null}
           <button
             type="button"
@@ -87,7 +87,7 @@ export default function MarcarRecepcaoFlow({
               setSelected(null);
               setStep("patient");
             }}
-            className="ml-3 text-xs font-medium text-emerald-700 underline hover:text-emerald-900"
+            className="ml-3 text-xs font-medium text-primary underline hover:text-primary"
           >
             Trocar
           </button>
@@ -104,15 +104,15 @@ export default function MarcarRecepcaoFlow({
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2 rounded-lg border border-slate-200 bg-slate-50 p-1">
+      <div className="flex gap-2 rounded-lg border border-border bg-muted/40 p-1">
         <button
           type="button"
           onClick={() => setMode("search")}
           className={
             "flex-1 rounded-md px-3 py-2 text-sm font-medium transition " +
             (mode === "search"
-              ? "bg-white text-slate-900 shadow-sm"
-              : "text-slate-600 hover:text-slate-900")
+              ? "bg-card text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground")
           }
         >
           Paciente existente
@@ -123,8 +123,8 @@ export default function MarcarRecepcaoFlow({
           className={
             "flex-1 rounded-md px-3 py-2 text-sm font-medium transition " +
             (mode === "walkin"
-              ? "bg-white text-slate-900 shadow-sm"
-              : "text-slate-600 hover:text-slate-900")
+              ? "bg-card text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground")
           }
         >
           Novo paciente (walk-in)
@@ -169,41 +169,41 @@ function SearchPanel({ onPick }: { onPick: (p: SearchResult) => void }) {
           required
           minLength={2}
           placeholder="Pesquisar por nome, email ou telefone"
-          className="flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+          className="flex-1 rounded-md border border-border bg-card px-3 py-2 text-sm shadow-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/30"
         />
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? "A procurar…" : "Procurar"}
         </button>
       </form>
 
       {state?.error && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+        <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {state.error}
         </div>
       )}
 
       {state?.results && state.results.length === 0 && (
-        <div className="rounded-md border border-dashed border-slate-300 bg-white p-4 text-sm text-slate-500">
+        <div className="rounded-md border border-dashed border-border bg-card p-4 text-sm text-muted-foreground">
           Nenhum paciente encontrado para “{state.query}”. Use a aba “Novo paciente” se for um walk-in.
         </div>
       )}
 
       {state?.results && state.results.length > 0 && (
-        <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
           {state.results.map((p) => (
             <li
               key={p.profile_id}
               className="flex flex-wrap items-center gap-3 px-4 py-3 text-sm"
             >
               <div className="min-w-0 flex-1">
-                <div className="font-medium text-slate-900">
+                <div className="font-medium text-foreground">
                   {p.full_name ?? "—"}
                 </div>
-                <div className="mt-0.5 text-xs text-slate-500">
+                <div className="mt-0.5 text-xs text-muted-foreground">
                   {[p.email, p.phone].filter(Boolean).join(" · ") || "—"}
                   {!p.patient_id && " · sem ficha clínica"}
                 </div>
@@ -213,7 +213,7 @@ function SearchPanel({ onPick }: { onPick: (p: SearchResult) => void }) {
                 disabled={!p.patient_id}
                 onClick={() => onPick(p)}
                 title={p.patient_id ? "" : "Paciente ainda não preencheu o perfil clínico"}
-                className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Selecionar
               </button>
@@ -285,7 +285,7 @@ function WalkInPanel({
       </div>
 
       {state?.error && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+        <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {state.error}
         </div>
       )}
@@ -294,13 +294,13 @@ function WalkInPanel({
         <button
           type="submit"
           disabled={isPending}
-          className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? "A registar…" : "Registar paciente"}
         </button>
       </div>
 
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-muted-foreground">
         Cria uma ficha clínica para o paciente. Ele pode mais tarde reclamar a
         conta para aceder ao painel — para já, é gerido apenas pela recepção.
       </p>
@@ -371,11 +371,11 @@ function BookForm({
 
       <Field label="Tipo de consulta" required>
         <div className="flex gap-3">
-          <label className="flex flex-1 cursor-pointer items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm has-checked:border-emerald-500 has-checked:bg-emerald-50">
+          <label className="flex flex-1 cursor-pointer items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm has-checked:border-emerald-500 has-checked:bg-primary/10">
             <input type="radio" name="appointment_type" value="in_person" defaultChecked />
             Presencial
           </label>
-          <label className="flex flex-1 cursor-pointer items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm has-checked:border-emerald-500 has-checked:bg-emerald-50">
+          <label className="flex flex-1 cursor-pointer items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm has-checked:border-emerald-500 has-checked:bg-primary/10">
             <input type="radio" name="appointment_type" value="telemedicine" />
             Telemedicina
           </label>
@@ -392,7 +392,7 @@ function BookForm({
       </Field>
 
       {state?.error && (
-        <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+        <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {state.error}
         </div>
       )}
@@ -401,7 +401,7 @@ function BookForm({
         <button
           type="submit"
           disabled={isPending || doctors.length === 0}
-          className="rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isPending ? "A marcar…" : "Confirmar marcação"}
         </button>
@@ -411,7 +411,7 @@ function BookForm({
 }
 
 const inputClass =
-  "block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20";
+  "block w-full rounded-md border border-border bg-card px-3 py-2 text-sm shadow-sm outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30";
 
 function Field({
   label,
@@ -424,8 +424,8 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-slate-700">
-        {label} {required && <span className="text-red-600">*</span>}
+      <label className="mb-1 block text-sm font-medium text-foreground">
+        {label} {required && <span className="text-destructive">*</span>}
       </label>
       {children}
     </div>

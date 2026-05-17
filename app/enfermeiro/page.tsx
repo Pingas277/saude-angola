@@ -10,12 +10,12 @@ import EmptyState from "../_ui/EmptyState";
 export const metadata = { title: "Enfermagem · Saúde Angola" };
 
 const STATUS_BADGE: Record<string, string> = {
-  scheduled: "bg-sky-100 text-sky-800",
-  confirmed: "bg-emerald-100 text-emerald-800",
-  in_progress: "bg-amber-100 text-amber-800",
-  completed: "bg-slate-100 text-slate-700",
-  cancelled: "bg-red-100 text-red-700",
-  no_show: "bg-red-100 text-red-700",
+  scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
+  confirmed: "bg-primary/10 text-primary",
+  in_progress: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  completed: "bg-muted text-foreground",
+  cancelled: "bg-destructive/10 text-destructive",
+  no_show: "bg-destructive/10 text-destructive",
 };
 
 type ApptRow = {
@@ -159,7 +159,7 @@ export default async function EnfermeiroHomePage() {
         action={
           <Link
             href="/enfermeiro/farmacia"
-            className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+            className="inline-flex items-center justify-center rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-foreground shadow-sm transition hover:bg-muted/40"
           >
             Gerir farmácia
           </Link>
@@ -174,14 +174,14 @@ export default async function EnfermeiroHomePage() {
       </section>
 
       {lowStockItems.length > 0 && (
-        <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-4">
+        <div className="mt-6 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="text-sm font-semibold text-amber-900">
+            <div className="text-sm font-semibold text-amber-700 dark:text-amber-300">
               ⚠ {lowStockItems.length} {lowStockItems.length === 1 ? "medicamento" : "medicamentos"} com stock baixo
             </div>
             <Link
               href="/enfermeiro/farmacia"
-              className="text-sm font-medium text-amber-800 hover:text-amber-900"
+              className="text-sm font-medium text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:text-amber-300"
             >
               Repor stock →
             </Link>
@@ -190,7 +190,7 @@ export default async function EnfermeiroHomePage() {
             {lowStockItems.slice(0, 8).map((s) => (
               <span
                 key={s.id}
-                className="rounded-full border border-amber-300 bg-white px-2 py-0.5 text-xs font-medium text-amber-800"
+                className="rounded-full border border-amber-300 bg-card px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400"
               >
                 {s.medication_name} · {s.quantity}
               </span>
@@ -207,28 +207,28 @@ export default async function EnfermeiroHomePage() {
         {awaiting.length === 0 ? (
           <EmptyState icon="🪑" title="Nenhum paciente aguarda triagem." />
         ) : (
-          <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
             {awaiting.map((a) => {
               const p = pickPatient(a.patient);
               const dr = pickDoctor(a.doctor);
               return (
                 <li key={a.id} className="flex flex-wrap items-center gap-4 px-5 py-4">
-                  <div className="w-16 shrink-0 text-sm font-bold text-slate-900">
+                  <div className="w-16 shrink-0 text-sm font-bold text-foreground">
                     {new Date(a.scheduled_at).toLocaleTimeString("pt-PT", {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="font-medium text-slate-900">
+                    <div className="font-medium text-foreground">
                       {p.name}
                       {p.age !== null && (
-                        <span className="ml-2 text-sm font-normal text-slate-500">
+                        <span className="ml-2 text-sm font-normal text-muted-foreground">
                           {p.age} anos
                         </span>
                       )}
                     </div>
-                    <div className="mt-0.5 truncate text-sm text-slate-600">
+                    <div className="mt-0.5 truncate text-sm text-muted-foreground">
                       Dr(a). {dr.name}
                       {dr.specialty ? ` · ${dr.specialty}` : ""}
                       {a.reason ? ` · ${a.reason}` : ""}
@@ -238,7 +238,7 @@ export default async function EnfermeiroHomePage() {
                         {p.allergies.slice(0, 4).map((al) => (
                           <span
                             key={al}
-                            className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-[11px] font-medium text-red-700"
+                            className="rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 text-[11px] font-medium text-destructive"
                           >
                             ⚠ {al}
                           </span>
@@ -248,7 +248,7 @@ export default async function EnfermeiroHomePage() {
                   </div>
                   <Link
                     href={`/enfermeiro/triagem/${a.id}`}
-                    className="rounded-md bg-sky-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700"
+                    className="rounded-md bg-primary px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90"
                   >
                     Registar sinais vitais
                   </Link>
@@ -264,33 +264,33 @@ export default async function EnfermeiroHomePage() {
         {triaged.length === 0 ? (
           <EmptyState icon="✅" title="Ainda sem triagens concluídas." />
         ) : (
-          <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
             {triaged.map((a) => {
               const p = pickPatient(a.patient);
               return (
                 <li key={a.id} className="flex flex-wrap items-center gap-4 px-5 py-4">
-                  <div className="w-16 shrink-0 text-sm font-bold text-slate-900">
+                  <div className="w-16 shrink-0 text-sm font-bold text-foreground">
                     {new Date(a.scheduled_at).toLocaleTimeString("pt-PT", {
                       hour: "2-digit",
                       minute: "2-digit",
                     })}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="font-medium text-slate-900">{p.name}</div>
-                    <div className="mt-0.5 text-sm text-slate-600">
+                    <div className="font-medium text-foreground">{p.name}</div>
+                    <div className="mt-0.5 text-sm text-muted-foreground">
                       {APPOINTMENT_STATUS_LABELS[a.status] ?? a.status}
                     </div>
                   </div>
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      STATUS_BADGE[a.status] ?? "bg-slate-100 text-slate-700"
+                      STATUS_BADGE[a.status] ?? "bg-muted text-foreground"
                     }`}
                   >
                     {APPOINTMENT_STATUS_LABELS[a.status] ?? a.status}
                   </span>
                   <Link
                     href={`/enfermeiro/triagem/${a.id}`}
-                    className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                    className="rounded-md border border-border bg-card px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted/40"
                   >
                     Ver / actualizar
                   </Link>
@@ -302,7 +302,7 @@ export default async function EnfermeiroHomePage() {
       </section>
 
       {inConsultation.length > 0 && (
-        <p className="mt-6 text-sm text-slate-500">
+        <p className="mt-6 text-sm text-muted-foreground">
           {inConsultation.length} {inConsultation.length === 1 ? "paciente" : "pacientes"} em consulta neste momento.
         </p>
       )}

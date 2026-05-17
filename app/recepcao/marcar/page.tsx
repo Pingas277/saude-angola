@@ -47,26 +47,26 @@ export default async function MarcarRecepcaoPage() {
       <div className="mb-4">
         <Link
           href="/recepcao"
-          className="text-sm font-medium text-slate-600 hover:text-slate-900"
+          className="text-sm font-medium text-muted-foreground hover:text-foreground"
         >
           ← Voltar à fila
         </Link>
       </div>
 
-      <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+      <h1 className="text-2xl font-bold tracking-tight text-foreground">
         Nova marcação
       </h1>
-      <p className="mt-1 text-sm text-slate-600">
+      <p className="mt-1 text-sm text-muted-foreground">
         Procure um paciente já registado ou registe um novo walk-in.
       </p>
 
       {doctors.length === 0 ? (
-        <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">
+        <div className="mt-8 rounded-xl border border-amber-500/30 bg-amber-500/10 p-5 text-sm text-amber-700 dark:text-amber-300">
           A clínica ainda não tem médicos. Peça ao administrador para os
           adicionar em /clinica/equipa antes de marcar consultas.
         </div>
       ) : (
-        <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6">
+        <div className="mt-8 rounded-xl border border-border bg-card p-6">
           <MarcarRecepcaoFlow doctors={doctors} defaultDate={todayISODate()} />
         </div>
       )}

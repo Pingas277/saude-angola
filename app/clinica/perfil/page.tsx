@@ -27,10 +27,10 @@ export default async function ClinicProfilePage() {
   return (
     <main className="mx-auto max-w-4xl px-6 py-10">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Perfil da clínica
         </h1>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-muted-foreground">
           Estes dados aparecem nas receitas e nas faturas emitidas pelos seus
           médicos.
         </p>

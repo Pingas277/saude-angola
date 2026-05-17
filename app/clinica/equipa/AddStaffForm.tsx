@@ -19,7 +19,7 @@ export default function AddStaffForm() {
     <form ref={formRef} action={formAction} className="space-y-4">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_180px_auto]">
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-700">
+          <label className="mb-1 block text-xs font-medium text-foreground">
             Email do utilizador
           </label>
           <input
@@ -31,7 +31,7 @@ export default function AddStaffForm() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium text-slate-700">
+          <label className="mb-1 block text-xs font-medium text-foreground">
             Função
           </label>
           <select
@@ -50,7 +50,7 @@ export default function AddStaffForm() {
           <button
             type="submit"
             disabled={isPending}
-            className="h-[38px] w-full rounded-md bg-emerald-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+            className="h-[38px] w-full rounded-md bg-primary px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {isPending ? "A adicionar…" : "Adicionar"}
           </button>
@@ -60,18 +60,18 @@ export default function AddStaffForm() {
       {state?.error && (
         <div
           role="alert"
-          className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+          className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
         >
           {state.error}
         </div>
       )}
       {state?.ok && state.added && (
-        <div className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+        <div className="rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-primary">
           {state.added.name} adicionado(a) como {ROLE_LABELS[state.added.role] ?? state.added.role}.
         </div>
       )}
 
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-muted-foreground">
         O utilizador deve já ter conta em /registar. Se não tiver, peça-lhe para
         se registar primeiro.
       </p>
@@ -80,4 +80,4 @@ export default function AddStaffForm() {
 }
 
 const inputClass =
-  "block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20";
+  "block w-full rounded-md border border-border bg-card px-3 py-2 text-sm shadow-sm outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30";

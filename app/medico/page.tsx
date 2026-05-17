@@ -14,12 +14,12 @@ import EmptyState from "../_ui/EmptyState";
 export const metadata = { title: "Painel do Médico · Saúde Angola" };
 
 const STATUS_BADGE: Record<string, string> = {
-  scheduled: "bg-sky-100 text-sky-800",
-  confirmed: "bg-emerald-100 text-emerald-800",
-  in_progress: "bg-amber-100 text-amber-800",
-  completed: "bg-slate-100 text-slate-700",
-  cancelled: "bg-red-100 text-red-700",
-  no_show: "bg-red-100 text-red-700",
+  scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
+  confirmed: "bg-primary/10 text-primary",
+  in_progress: "bg-amber-500/15 text-amber-600 dark:text-amber-400",
+  completed: "bg-muted text-foreground",
+  cancelled: "bg-destructive/10 text-destructive",
+  no_show: "bg-destructive/10 text-destructive",
 };
 
 type ApptRow = {
@@ -168,8 +168,8 @@ export default async function MedicoHomePage() {
         className={
           "mt-8 overflow-hidden rounded-2xl border " +
           ((teleWaitingCount ?? 0) > 0
-            ? "border-red-200 bg-gradient-to-br from-red-50 via-white to-amber-50"
-            : "border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-emerald-50/50")
+            ? "border-destructive/30 bg-destructive/10"
+            : "border-primary/30 bg-primary/5")
         }
       >
         <div className="flex flex-wrap items-center justify-between gap-4 p-6">
@@ -178,8 +178,8 @@ export default async function MedicoHomePage() {
               className={
                 "grid h-12 w-12 place-items-center rounded-xl text-2xl " +
                 ((teleWaitingCount ?? 0) > 0
-                  ? "bg-red-600 text-white"
-                  : "bg-emerald-600 text-white")
+                  ? "bg-destructive text-white"
+                  : "bg-primary text-white")
               }
             >
               {(teleWaitingCount ?? 0) > 0 ? "🚨" : "🎥"}
@@ -189,18 +189,18 @@ export default async function MedicoHomePage() {
                 className={
                   "text-xs font-bold uppercase tracking-wider " +
                   ((teleWaitingCount ?? 0) > 0
-                    ? "text-red-700"
-                    : "text-emerald-700")
+                    ? "text-destructive"
+                    : "text-primary")
                 }
               >
                 Telemedicina
               </div>
-              <h2 className="mt-1 text-lg font-bold text-slate-900">
+              <h2 className="mt-1 text-lg font-bold text-foreground">
                 {(teleWaitingCount ?? 0) > 0
                   ? `${teleWaitingCount} paciente${(teleWaitingCount ?? 0) === 1 ? "" : "s"} à espera`
                   : "Sem pacientes em espera"}
               </h2>
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-muted-foreground">
                 {(teleWaitingCount ?? 0) > 0
                   ? "Atendimento por vídeo pendente."
                   : "Será notificado quando alguém entrar na fila."}
@@ -212,8 +212,8 @@ export default async function MedicoHomePage() {
             className={
               "inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold shadow-sm transition " +
               ((teleWaitingCount ?? 0) > 0
-                ? "bg-red-600 text-white hover:bg-red-700"
-                : "bg-emerald-600 text-white hover:bg-emerald-700")
+                ? "bg-destructive text-white hover:bg-destructive/90"
+                : "bg-primary text-white hover:bg-primary/90")
             }
           >
             Abrir lista →
@@ -234,41 +234,41 @@ export default async function MedicoHomePage() {
             desc="Quando algum paciente marcar consulta consigo, aparece aqui."
           />
         ) : (
-          <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
             {todayList.map((a) => {
               const patient = pickPatient(a.patient);
               return (
                 <li key={a.id}>
                   <Link
                     href={`/medico/consulta/${a.id}`}
-                    className="flex flex-wrap items-center gap-4 px-5 py-4 transition hover:bg-emerald-50/40"
+                    className="flex flex-wrap items-center gap-4 px-5 py-4 transition hover:bg-primary/10/40"
                   >
-                    <div className="w-20 shrink-0 text-sm font-bold text-slate-900">
+                    <div className="w-20 shrink-0 text-sm font-bold text-foreground">
                       {new Date(a.scheduled_at).toLocaleTimeString("pt-PT", {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="font-medium text-slate-900">
+                      <div className="font-medium text-foreground">
                         {patient.name}
                       </div>
-                      <div className="mt-0.5 truncate text-sm text-slate-600">
+                      <div className="mt-0.5 truncate text-sm text-muted-foreground">
                         {a.duration_minutes} min
                         {a.reason ? ` · ${a.reason}` : ""}
                       </div>
                     </div>
                     <Badge
                       className={
-                        STATUS_BADGE[a.status] ?? "bg-slate-100 text-slate-700"
+                        STATUS_BADGE[a.status] ?? "bg-muted text-foreground"
                       }
                     >
                       {APPOINTMENT_STATUS_LABELS[a.status] ?? a.status}
                     </Badge>
-                    <Badge className="bg-slate-100 text-slate-700">
+                    <Badge className="bg-muted text-foreground">
                       {APPOINTMENT_TYPE_LABELS[a.appointment_type] ?? a.appointment_type}
                     </Badge>
-                    <span aria-hidden className="text-slate-400 group-hover:translate-x-0.5">
+                    <span aria-hidden className="text-muted-foreground group-hover:translate-x-0.5">
                       →
                     </span>
                   </Link>

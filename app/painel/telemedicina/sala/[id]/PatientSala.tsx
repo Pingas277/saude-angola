@@ -58,11 +58,11 @@ export default function PatientSala({
 
   if (status === "completed") {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
-        <h2 className="text-lg font-semibold text-slate-900">
+      <div className="rounded-xl border border-border bg-card p-8 text-center">
+        <h2 className="text-lg font-semibold text-foreground">
           Consulta concluída
         </h2>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-muted-foreground">
           Obrigado por usar a Saúde Angola. As receitas e o registo clínico
           ficam no seu painel.
         </p>
@@ -71,8 +71,8 @@ export default function PatientSala({
   }
   if (status === "cancelled") {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
-        <h2 className="text-lg font-semibold text-slate-900">
+      <div className="rounded-xl border border-border bg-card p-8 text-center">
+        <h2 className="text-lg font-semibold text-foreground">
           Consulta cancelada
         </h2>
       </div>
@@ -89,19 +89,19 @@ export default function PatientSala({
     const embedUrl = `${videoRoomUrl}#${params.toString()}`;
     return (
       <div className="space-y-4">
-        <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+        <div className="rounded-md border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">
           {doctorName
             ? `Dr. ${doctorName} entrou na sala. A chamada começou.`
             : "O médico entrou na sala. A chamada começou."}
         </div>
-        <div className="aspect-video w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-900">
+        <div className="aspect-video w-full overflow-hidden rounded-xl border border-border bg-foreground">
           <iframe
             src={embedUrl}
             allow="camera; microphone; fullscreen; display-capture; autoplay"
             className="h-full w-full"
           />
         </div>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-muted-foreground">
           Se o vídeo não carregar, autorize o acesso à câmara e ao microfone no
           seu navegador.
         </p>
@@ -112,15 +112,15 @@ export default function PatientSala({
   // waiting / scheduled
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-slate-200 bg-white p-8 text-center">
-        <div className="mx-auto h-12 w-12 animate-pulse rounded-full bg-emerald-100" />
-        <h2 className="mt-4 text-lg font-semibold text-slate-900">
+      <div className="rounded-xl border border-border bg-card p-8 text-center">
+        <div className="mx-auto h-12 w-12 animate-pulse rounded-full bg-primary/10" />
+        <h2 className="mt-4 text-lg font-semibold text-foreground">
           À espera de um médico…
         </h2>
-        <p className="mt-1 text-sm text-slate-600">
+        <p className="mt-1 text-sm text-muted-foreground">
           O próximo médico disponível vai atender. Não feche esta página.
         </p>
-        <p className="mt-3 text-xs text-slate-400">
+        <p className="mt-3 text-xs text-muted-foreground">
           A página atualiza-se automaticamente quando o médico atender.
           {elapsed > 0 ? ` (${elapsed}s à espera)` : ""}
         </p>
@@ -130,7 +130,7 @@ export default function PatientSala({
         <input type="hidden" name="consultation_id" value={consultationId} />
         <button
           type="submit"
-          className="w-full rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          className="w-full rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:bg-muted/40"
         >
           Cancelar pedido
         </button>

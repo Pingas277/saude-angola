@@ -125,7 +125,7 @@ export default async function MarcarPage({
         subtitle="Procure por especialidade, clínica ou nome. Marque online, sem telefonemas."
       />
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-2xl border border-border bg-card p-5 shadow-sm">
         <form
           method="GET"
           action={baseHref}
@@ -136,26 +136,26 @@ export default async function MarcarPage({
           )}
           {province && <input type="hidden" name="provincia" value={province} />}
 
-          <div className="flex flex-1 items-center gap-3 rounded-full border border-slate-200 bg-slate-50/60 px-4 py-2.5 focus-within:border-emerald-500 focus-within:bg-white">
-            <Search className="h-4 w-4 shrink-0 text-slate-400" />
+          <div className="flex flex-1 items-center gap-3 rounded-full border border-border bg-muted/40 px-4 py-2.5 focus-within:border-ring focus-within:bg-card">
+            <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
             <input
               type="search"
               name="q"
               defaultValue={q}
               placeholder="Especialidade, clínica ou nome do médico…"
-              className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             />
           </div>
           <button
             type="submit"
-            className="rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90"
           >
             Pesquisar
           </button>
           {(q || specialty || province) && (
             <Link
               href={baseHref}
-              className="text-xs font-medium text-slate-500 hover:text-slate-900"
+              className="text-xs font-medium text-muted-foreground hover:text-foreground"
             >
               Limpar filtros
             </Link>
@@ -195,8 +195,8 @@ export default async function MarcarPage({
       </section>
 
       <div className="mt-6 flex flex-wrap items-baseline justify-between gap-2">
-        <p className="text-sm text-slate-600">
-          <strong className="text-slate-900">{filtered.length}</strong>{" "}
+        <p className="text-sm text-muted-foreground">
+          <strong className="text-foreground">{filtered.length}</strong>{" "}
           {filtered.length === 1 ? "médico" : "médicos"}
           {q ? ` para "${q}"` : ""}
           {specialty ? ` · ${specialty}` : ""}
@@ -228,48 +228,48 @@ export default async function MarcarPage({
             return (
               <li
                 key={d.id}
-                className="group flex flex-wrap items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 transition hover:border-emerald-300 hover:shadow-md"
+                className="group flex flex-wrap items-center gap-4 rounded-2xl border border-border bg-card p-5 transition hover:border-primary/40 hover:shadow-md"
               >
-                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-gradient-to-br from-emerald-600 to-emerald-700 text-base font-bold text-white shadow-sm">
+                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-primary text-base font-bold text-white shadow-sm">
                   {initials(d.full_name)}
                 </span>
 
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-base font-bold text-slate-900">
+                    <span className="text-base font-bold text-foreground">
                       Dr(a). {d.full_name ?? "—"}
                     </span>
                     {d.medical_license && (
-                      <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200">
+                      <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary ring-1 ring-primary/20">
                         Verificado
                       </span>
                     )}
-                    <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-1.5 py-0.5 text-[11px] font-bold text-amber-700">
+                    <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/100/10 px-1.5 py-0.5 text-[11px] font-bold text-amber-600 dark:text-amber-400">
                       <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
                       Novo
                     </span>
                   </div>
 
-                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-600">
+                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
                     {d.specialty ? (
                       <span className="inline-flex items-center gap-1">
-                        <Stethoscope className="h-3.5 w-3.5 text-emerald-600" />
+                        <Stethoscope className="h-3.5 w-3.5 text-primary" />
                         {d.specialty}
                       </span>
                     ) : (
-                      <span className="italic text-slate-400">
+                      <span className="italic text-muted-foreground">
                         Especialidade não indicada
                       </span>
                     )}
                     {c?.name && (
                       <>
-                        <span aria-hidden className="text-slate-300">·</span>
+                        <span aria-hidden className="text-border">·</span>
                         <span>{c.name}</span>
                       </>
                     )}
                     {c?.province && (
                       <>
-                        <span aria-hidden className="text-slate-300">·</span>
+                        <span aria-hidden className="text-border">·</span>
                         <span className="inline-flex items-center gap-1">
                           <MapPin className="h-3.5 w-3.5" />
                           {c.province}
@@ -304,7 +304,7 @@ function FacetRow({
 }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
         {label}
       </span>
       <div className="flex flex-wrap gap-1.5">{children}</div>
@@ -327,8 +327,8 @@ function FacetPill({
       className={
         "inline-flex items-center rounded-full px-3 py-1 text-xs font-medium transition " +
         (active
-          ? "bg-emerald-600 text-white shadow-sm"
-          : "border border-slate-200 bg-white text-slate-700 hover:border-emerald-300 hover:bg-emerald-50/40")
+          ? "bg-primary text-white shadow-sm"
+          : "border border-border bg-card text-foreground hover:border-primary/40 hover:bg-primary/10/40")
       }
     >
       {children}

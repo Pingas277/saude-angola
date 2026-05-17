@@ -101,7 +101,7 @@ export default async function PainelPage({
         action={
           <Link
             href="/painel/marcar"
-            className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90"
           >
             + Marcar consulta
           </Link>
@@ -144,29 +144,29 @@ export default async function PainelPage({
       </section>
 
       {/* === Telemedicina hero card === */}
-      <section className="mt-8 overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-emerald-50/50">
+      <section className="mt-8 overflow-hidden rounded-2xl border border-primary/30 bg-primary/5">
         <div className="grid gap-6 p-6 sm:p-8 md:grid-cols-[2fr_1fr] md:items-center">
           <div>
-            <div className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+            <div className="text-xs font-bold uppercase tracking-wider text-primary">
               Telemedicina · disponível agora
             </div>
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-900">
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-foreground">
               Falar agora com um médico por vídeo
             </h2>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-600">
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
               Triagem rápida, atendimento por vídeo e receita digital em
               minutos. Sem deslocações, sem filas.
             </p>
             <div className="mt-4 flex flex-wrap gap-3">
               <Link
                 href="/painel/telemedicina"
-                className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-emerald-600/20 transition hover:bg-emerald-700"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-sm transition hover:bg-primary/90"
               >
                 Iniciar consulta →
               </Link>
               <Link
                 href="/painel/marcar"
-                className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                className="inline-flex items-center justify-center rounded-md border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-muted/40"
               >
                 Marcar para mais tarde
               </Link>
@@ -218,11 +218,11 @@ export default async function PainelPage({
 
 function Mini({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-emerald-100 bg-white px-3 py-2.5">
-      <div className="text-[10px] font-medium uppercase tracking-wider text-emerald-700">
+    <div className="rounded-lg border border-primary/20 bg-card px-3 py-2.5">
+      <div className="text-[10px] font-medium uppercase tracking-wider text-primary">
         {label}
       </div>
-      <div className="mt-0.5 text-sm font-bold text-slate-900">{value}</div>
+      <div className="mt-0.5 text-sm font-bold text-foreground">{value}</div>
     </div>
   );
 }
@@ -236,8 +236,8 @@ function Banner({
 }) {
   const cls =
     kind === "success"
-      ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-      : "border-sky-200 bg-sky-50 text-sky-800";
+      ? "border-primary/30 bg-primary/10 text-primary"
+      : "border-sky-500/30 bg-sky-500/100/10 text-sky-600 dark:text-sky-400";
   return (
     <div className={`mb-6 rounded-md border px-4 py-3 text-sm ${cls}`}>
       {children}

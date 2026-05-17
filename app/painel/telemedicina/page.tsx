@@ -54,17 +54,17 @@ export default async function TelemedicinaHomePage() {
     <main className="mx-auto max-w-4xl px-6 py-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Telemedicina
           </h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <p className="mt-1 text-sm text-muted-foreground">
             Fale com um médico por vídeo, sem sair de casa.
           </p>
         </div>
         {!active && (
           <Link
             href="/painel/telemedicina/triagem"
-            className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
           >
             Iniciar nova consulta →
           </Link>
@@ -72,28 +72,28 @@ export default async function TelemedicinaHomePage() {
       </div>
 
       {active && (
-        <div className="mt-8 rounded-xl border border-emerald-200 bg-emerald-50 p-6">
-          <div className="text-xs font-semibold uppercase tracking-wide text-emerald-800">
+        <div className="mt-8 rounded-xl border border-primary/30 bg-primary/10 p-6">
+          <div className="text-xs font-semibold uppercase tracking-wide text-primary">
             {active.status === "waiting"
               ? "Está à espera de um médico"
               : active.status === "in_progress"
               ? "Consulta em curso"
               : "Consulta marcada"}
           </div>
-          <h2 className="mt-1 text-lg font-bold text-slate-900">
+          <h2 className="mt-1 text-lg font-bold text-foreground">
             {active.ai_urgency
               ? `Urgência: ${URGENCY_LABEL_PT[active.ai_urgency]}`
               : "Consulta de telemedicina"}
           </h2>
           {active.ai_triage_summary && (
-            <p className="mt-2 text-sm text-slate-700">
+            <p className="mt-2 text-sm text-foreground">
               {active.ai_triage_summary}
             </p>
           )}
           <div className="mt-4">
             <Link
               href={`/painel/telemedicina/sala/${active.id}`}
-              className="inline-flex items-center justify-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-700"
+              className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
             >
               Voltar à sala de espera →
             </Link>
@@ -102,26 +102,26 @@ export default async function TelemedicinaHomePage() {
       )}
 
       <section className="mt-10">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           Consultas anteriores
         </h2>
         {list.filter((c) => !ACTIVE.includes(c.status)).length === 0 ? (
-          <div className="mt-3 rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500">
+          <div className="mt-3 rounded-xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
             Sem consultas de telemedicina anteriores.
           </div>
         ) : (
-          <ul className="mt-3 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <ul className="mt-3 divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
             {list
               .filter((c) => !ACTIVE.includes(c.status))
               .map((c) => (
                 <li key={c.id} className="flex flex-wrap items-center gap-3 px-5 py-4">
                   <div className="min-w-0 flex-1">
-                    <div className="font-medium text-slate-900">
+                    <div className="font-medium text-foreground">
                       {formatDateTimePT(
                         c.ended_at ?? c.started_at ?? c.created_at
                       )}
                     </div>
-                    <div className="mt-0.5 truncate text-sm text-slate-600">
+                    <div className="mt-0.5 truncate text-sm text-muted-foreground">
                       {CONSULTATION_STATUS_LABELS[c.status] ?? c.status}
                       {c.ai_triage_summary ? ` · ${c.ai_triage_summary}` : ""}
                     </div>

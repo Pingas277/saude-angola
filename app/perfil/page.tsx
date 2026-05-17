@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import Logo from "../_brand/Logo";
 import PerfilForm from "./PerfilForm";
 
 export const metadata = { title: "Perfil · ANGOLASAUDE" };
@@ -30,12 +31,7 @@ export default async function PerfilPage() {
     <main className="min-h-screen bg-muted/40">
       <header className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-4">
-          <Link href="/painel" className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-md bg-primary text-sm font-bold text-white">
-              S
-            </span>
-            <span className="font-semibold text-foreground">ANGOLASAUDE</span>
-          </Link>
+          <Logo href="/painel" size="md" subtitle="Perfil" />
           <Link
             href="/painel"
             className="text-sm font-medium text-muted-foreground hover:text-foreground"

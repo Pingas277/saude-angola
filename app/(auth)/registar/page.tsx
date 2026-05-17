@@ -7,8 +7,9 @@ export const metadata = { title: "Criar conta · ANGOLASAUDE" };
 export default function RegistarPage() {
   return (
     <AuthShell
+      eyebrow="Comece grátis"
       title="Criar conta"
-      subtitle="Registe-se como paciente para aceder à plataforma."
+      subtitle="Grátis para pacientes — demora menos de um minuto."
       footer={
         <>
           Já tem conta?{" "}

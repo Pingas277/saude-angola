@@ -1,22 +1,40 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Check } from "lucide-react";
+import { Video, FileText, CreditCard, ShieldCheck } from "lucide-react";
 import Logo from "../_brand/Logo";
 import ThemeToggle from "../_theme/ThemeToggle";
 
-const TRUST = [
-  "Triagem assistida por IA",
-  "Receitas com QR válidas em farmácias",
-  "Pagamentos via Multicaixa Express",
-  "Histórico clínico sempre disponível",
+const FEATURES = [
+  {
+    icon: Video,
+    title: "Telemedicina por vídeo",
+    desc: "Fale com um médico licenciado em minutos.",
+  },
+  {
+    icon: FileText,
+    title: "Receitas digitais com QR",
+    desc: "Válidas em farmácias parceiras.",
+  },
+  {
+    icon: CreditCard,
+    title: "Multicaixa Express",
+    desc: "Pague e receba o comprovativo na hora.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Dados protegidos",
+    desc: "Conformidade RGPD, acesso só seu.",
+  },
 ];
 
 export default function AuthShell({
+  eyebrow,
   title,
   subtitle,
   children,
   footer,
 }: {
+  eyebrow?: string;
   title: string;
   subtitle: string;
   children: React.ReactNode;
@@ -29,37 +47,63 @@ export default function AuthShell({
         <div className="flex flex-1 flex-col justify-between px-12 py-14">
           <Logo href="/" size="lg" subtitle="Saúde para todos" />
 
-          <div>
-            <h2 className="text-2xl font-semibold leading-tight tracking-tight text-foreground">
-              A plataforma de saúde feita{" "}
-              <span className="text-primary">para Angola</span>.
+          <div className="max-w-md">
+            <div className="text-xs font-medium uppercase tracking-wider text-primary">
+              Plataforma de saúde · Angola
+            </div>
+            <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-foreground">
+              Toda a sua saúde,{" "}
+              <span className="text-primary">num só sítio</span>.
             </h2>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-              Telemedicina, gestão clínica e receitas digitais numa só app —
-              acessível de Luanda ao Cunene.
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              Marque com qualquer médico, consulte por vídeo e guarde o seu
+              histórico clínico — de Luanda ao Cunene.
             </p>
 
-            <ul className="mt-8 space-y-3">
-              {TRUST.map((t) => (
-                <li key={t} className="flex items-start gap-3 text-sm">
-                  <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full border border-border text-primary">
-                    <Check className="size-3" />
+            <ul className="mt-8 space-y-4">
+              {FEATURES.map((f) => (
+                <li key={f.title} className="flex items-start gap-3">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-border bg-background text-primary">
+                    <f.icon className="size-4" />
                   </span>
-                  <span className="text-foreground">{t}</span>
+                  <div>
+                    <div className="text-sm font-medium text-foreground">
+                      {f.title}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {f.desc}
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Image
-              src="/brand/angola-flag.png"
-              alt="Bandeira de Angola"
-              width={21}
-              height={14}
-              className="rounded-[2px] ring-1 ring-border"
-            />
-            <span>Feito em Angola · com orgulho</span>
+          <div className="flex items-center justify-between gap-4 border-t border-border pt-6">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Image
+                src="/brand/angola-flag.png"
+                alt="Bandeira de Angola"
+                width={21}
+                height={14}
+                className="rounded-[2px] ring-1 ring-border"
+              />
+              <span>Feito em Angola</span>
+            </div>
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <span>
+                <strong className="font-semibold text-foreground">
+                  ≈ 3 min
+                </strong>{" "}
+                até atendimento
+              </span>
+              <span>
+                <strong className="font-semibold text-foreground">
+                  18/18
+                </strong>{" "}
+                províncias
+              </span>
+            </div>
           </div>
         </div>
       </aside>
@@ -71,23 +115,28 @@ export default function AuthShell({
         </div>
 
         <div className="w-full max-w-md">
-          <div className="mb-8 flex justify-center lg:hidden">
+          <div className="mb-10 flex justify-center lg:hidden">
             <Logo href="/" size="md" />
           </div>
 
-          <div className="rounded-xl border border-border bg-card p-8 sm:border-0 sm:bg-transparent sm:p-0">
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+          <div>
+            {eyebrow && (
+              <div className="text-xs font-medium uppercase tracking-wider text-primary">
+                {eyebrow}
+              </div>
+            )}
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
               {title}
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
-            <div className="mt-7">{children}</div>
+            <div className="mt-8">{children}</div>
           </div>
 
-          <p className="mt-6 text-center text-sm text-muted-foreground">
+          <div className="mt-8 border-t border-border pt-6 text-center text-sm text-muted-foreground">
             {footer}
-          </p>
+          </div>
 
-          <div className="mt-8 flex justify-center">
+          <div className="mt-6 flex justify-center">
             <Link
               href="/"
               className="text-xs text-muted-foreground transition-colors hover:text-foreground"

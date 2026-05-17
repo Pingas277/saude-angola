@@ -14,8 +14,9 @@ export default async function EntrarPage({
 
   return (
     <AuthShell
+      eyebrow="Bem-vindo de volta"
       title="Entrar"
-      subtitle="Aceda à sua conta para continuar."
+      subtitle="Aceda à sua conta para continuar o seu acompanhamento."
       footer={
         <>
           Ainda não tem conta?{" "}

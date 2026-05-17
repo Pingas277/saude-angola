@@ -1,100 +1,153 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import {
+  User,
+  Mail,
+  Phone,
+  Lock,
+  ArrowRight,
+  Loader2,
+  AlertCircle,
+  Check,
+  X,
+} from "lucide-react";
 import { signupAction, type AuthState } from "../actions";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import AuthField from "../_components/AuthField";
+import PasswordStrength from "../_components/PasswordStrength";
 
 export default function SignupForm() {
   const [state, formAction, isPending] = useActionState<AuthState, FormData>(
     signupAction,
     null
   );
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+
+  const matchState =
+    confirm.length === 0
+      ? null
+      : confirm === password
+        ? "ok"
+        : "mismatch";
 
   return (
     <form action={formAction} className="space-y-4">
-      <div className="space-y-1.5">
-        <Label htmlFor="full_name">Nome completo</Label>
-        <Input
-          id="full_name"
-          name="full_name"
-          type="text"
-          autoComplete="name"
+      <AuthField
+        id="full_name"
+        name="full_name"
+        label="Nome completo"
+        icon={User}
+        autoComplete="name"
+        required
+        placeholder="Ex.: Maria João"
+      />
+
+      <AuthField
+        id="email"
+        name="email"
+        label="Email"
+        icon={Mail}
+        type="email"
+        autoComplete="email"
+        required
+        placeholder="seu@email.com"
+      />
+
+      <AuthField
+        id="phone"
+        name="phone"
+        label="Telemóvel"
+        icon={Phone}
+        type="tel"
+        autoComplete="tel"
+        optional
+        placeholder="+244 9XX XXX XXX"
+      />
+
+      <div>
+        <AuthField
+          id="password"
+          name="password"
+          label="Palavra-passe"
+          icon={Lock}
+          type="password"
+          autoComplete="new-password"
           required
-          placeholder="Ex.: Maria João"
+          minLength={8}
+          placeholder="Mínimo 8 caracteres"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
+        <div className="mt-2">
+          <PasswordStrength value={password} />
+        </div>
       </div>
 
-      <div className="space-y-1.5">
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          autoComplete="email"
+      <div>
+        <AuthField
+          id="confirm"
+          name="confirm"
+          label="Confirmar palavra-passe"
+          icon={Lock}
+          type="password"
+          autoComplete="new-password"
           required
-          placeholder="seu@email.com"
+          minLength={8}
+          placeholder="Repita a palavra-passe"
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
         />
-      </div>
-
-      <div className="space-y-1.5">
-        <Label htmlFor="phone">
-          Telemóvel{" "}
-          <span className="font-normal text-muted-foreground">(opcional)</span>
-        </Label>
-        <Input
-          id="phone"
-          name="phone"
-          type="tel"
-          autoComplete="tel"
-          placeholder="+244 9XX XXX XXX"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="space-y-1.5">
-          <Label htmlFor="password">Palavra-passe</Label>
-          <Input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            required
-            minLength={8}
-            placeholder="Mínimo 8 caracteres"
-          />
-        </div>
-
-        <div className="space-y-1.5">
-          <Label htmlFor="confirm">Confirmar</Label>
-          <Input
-            id="confirm"
-            name="confirm"
-            type="password"
-            autoComplete="new-password"
-            required
-            minLength={8}
-            placeholder="Repita"
-          />
-        </div>
+        {matchState === "ok" && (
+          <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-primary">
+            <Check className="size-3.5" /> As palavras-passe coincidem
+          </p>
+        )}
+        {matchState === "mismatch" && (
+          <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-destructive">
+            <X className="size-3.5" /> As palavras-passe não coincidem
+          </p>
+        )}
       </div>
 
       {state?.error && (
         <div
           role="alert"
-          className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+          className="flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-sm text-destructive"
         >
-          {state.error}
+          <AlertCircle className="mt-0.5 size-4 shrink-0" />
+          <span>{state.error}</span>
         </div>
       )}
 
-      <Button type="submit" disabled={isPending} className="w-full" size="lg">
-        {isPending ? "A criar conta…" : "Criar conta"}
-      </Button>
+      <button
+        type="submit"
+        disabled={isPending}
+        className="group inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-70"
+      >
+        {isPending ? (
+          <>
+            <Loader2 className="size-4 animate-spin" />
+            A criar conta…
+          </>
+        ) : (
+          <>
+            Criar conta grátis
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+          </>
+        )}
+      </button>
 
-      <p className="text-center text-xs text-muted-foreground">
-        Ao criar conta, aceita os Termos de Serviço e a Política de Privacidade.
+      <p className="text-center text-xs leading-relaxed text-muted-foreground">
+        Ao criar conta, aceita os{" "}
+        <a href="/" className="font-medium text-primary hover:underline">
+          Termos de Serviço
+        </a>{" "}
+        e a{" "}
+        <a href="/" className="font-medium text-primary hover:underline">
+          Política de Privacidade
+        </a>
+        .
       </p>
     </form>
   );

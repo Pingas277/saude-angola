@@ -1,7 +1,19 @@
 import { NextResponse } from "next/server";
-import { PDFPage, PDFDocument, degrees, rgb } from "pdf-lib";
+import { PDFImage, PDFPage, PDFDocument, degrees, rgb } from "pdf-lib";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { createClient } from "@/lib/supabase/server";
 import { embedPdfFonts, type PdfFonts } from "@/lib/pdf-fonts";
+
+let logoBytesCache: Buffer | null = null;
+function loadLogoBytes(): Buffer {
+  if (!logoBytesCache) {
+    logoBytesCache = readFileSync(
+      path.join(process.cwd(), "public", "brand", "logo-mark.png")
+    );
+  }
+  return logoBytesCache;
+}
 
 type Doctor = {
   full_name: string | null;
@@ -63,6 +75,13 @@ function fmtDateTimePT(d: string): string {
     minute: "2-digit",
   });
 }
+function fmtDatePT(d: string): string {
+  return new Date(d).toLocaleDateString("pt-PT", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
 function fmtAOA(amount: number): string {
   return new Intl.NumberFormat("pt-PT", {
     style: "currency",
@@ -75,9 +94,11 @@ const A4 = { w: 595.28, h: 841.89 };
 const MARGIN = 48;
 const HEADER_BAND_H = 96;
 
-const EMERALD = rgb(0.06, 0.43, 0.34);
-const EMERALD_DARK = rgb(0.04, 0.32, 0.25);
-const EMERALD_50 = rgb(0.94, 0.98, 0.95);
+const EMERALD = rgb(0.184, 0.455, 0.769); // ANGOLASAUDE brand blue ≈ #2F74C4
+const EMERALD_DARK = rgb(0.13, 0.33, 0.58);
+const EMERALD_50 = rgb(0.945, 0.965, 0.99);
+const WHITE = rgb(1, 1, 1);
+const BAND_SUB = rgb(0.86, 0.92, 0.99); // light text on the blue band
 const SLATE_900 = rgb(0.06, 0.09, 0.16);
 const SLATE_800 = rgb(0.12, 0.16, 0.23);
 const SLATE_700 = rgb(0.2, 0.25, 0.33);
@@ -86,8 +107,6 @@ const SLATE_300 = rgb(0.74, 0.78, 0.82);
 const SLATE_200 = rgb(0.86, 0.88, 0.91);
 const SLATE_100 = rgb(0.94, 0.95, 0.96);
 const SLATE_50 = rgb(0.97, 0.98, 0.99);
-const ANGOLA_RED = rgb(0.8, 0.067, 0.149);
-const ANGOLA_BLACK = rgb(0, 0, 0);
 
 const PAYMENT_METHOD_LABELS: Record<string, string> = {
   multicaixa_express: "Multicaixa Express",
@@ -107,6 +126,61 @@ function drawText(
   color = SLATE_900
 ) {
   page.drawText(text, { x, y, font: fonts[weight], size, color });
+}
+
+// Official-looking rubber stamp: two rings + angled label + sub line.
+function drawStamp(
+  page: PDFPage,
+  fonts: PdfFonts,
+  opts: {
+    label: string;
+    sub: string;
+    cx: number;
+    cy: number;
+    color: ReturnType<typeof rgb>;
+  }
+) {
+  const { label, sub, cx, cy, color } = opts;
+  const op = 0.85;
+  page.drawEllipse({
+    x: cx,
+    y: cy,
+    xScale: 60,
+    yScale: 40,
+    borderColor: color,
+    borderWidth: 3,
+    borderOpacity: op,
+  });
+  page.drawEllipse({
+    x: cx,
+    y: cy,
+    xScale: 52,
+    yScale: 33,
+    borderColor: color,
+    borderWidth: 1,
+    borderOpacity: op,
+  });
+  const size = label.length > 6 ? 17 : 22;
+  const lw = fonts.bold.widthOfTextAtSize(label, size);
+  page.drawText(label, {
+    x: cx - lw / 2,
+    y: cy - size / 2 + 5,
+    font: fonts.bold,
+    size,
+    color,
+    opacity: op,
+    rotate: degrees(-12),
+  });
+  const sw = fonts.regular.widthOfTextAtSize(sub, 7);
+  page.drawText(sub, {
+    x: cx - sw / 2,
+    y: cy - 17,
+    font: fonts.regular,
+    size: 7,
+    color,
+    opacity: op,
+    rotate: degrees(-12),
+  });
 }
 
 export async function GET(
@@ -156,107 +230,88 @@ export async function GET(
   pdf.setCreator("ANGOLASAUDE");
 
   const fonts = await embedPdfFonts(pdf);
+  const logoImage = await pdf.embedPng(loadLogoBytes());
   const page = pdf.addPage([A4.w, A4.h]);
 
-  // ===== Angolan flag accent + emerald header =====
-  page.drawRectangle({ x: 0, y: A4.h - 5, width: A4.w, height: 5, color: ANGOLA_RED });
-  page.drawRectangle({ x: 0, y: A4.h - 10, width: A4.w, height: 5, color: ANGOLA_BLACK });
+  // ===== Brand header band =====
+  page.drawRectangle({ x: 0, y: A4.h - 4, width: A4.w, height: 4, color: EMERALD_DARK });
   page.drawRectangle({
     x: 0,
-    y: A4.h - 10 - HEADER_BAND_H,
+    y: A4.h - 4 - HEADER_BAND_H,
     width: A4.w,
     height: HEADER_BAND_H,
     color: EMERALD,
   });
-  page.drawRectangle({
-    x: 0,
-    y: A4.h - 14 - HEADER_BAND_H,
-    width: A4.w,
-    height: 4,
-    color: EMERALD_DARK,
-  });
 
-  const bandTop = A4.h - 10;
+  const cy = A4.h - 4 - HEADER_BAND_H / 2; // vertical centre of the band
 
-  // Brand
+  // Brand mark — logo on a white plate, vertically centred
+  const plate = 56;
+  const logoRatio = logoImage.width / logoImage.height;
+  const logoH = 30;
+  const logoW = logoH * logoRatio;
   page.drawRectangle({
     x: MARGIN,
-    y: bandTop - 60,
-    width: 36,
-    height: 36,
-    color: rgb(1, 1, 1),
+    y: cy - plate / 2,
+    width: plate,
+    height: plate,
+    color: WHITE,
   });
-  drawText(page, "S", MARGIN + 11, bandTop - 50, fonts, "bold", 22, EMERALD);
-  drawText(page, "ANGOLASAUDE", MARGIN + 50, bandTop - 36, fonts, "bold", 16, rgb(1, 1, 1));
+  page.drawImage(logoImage, {
+    x: MARGIN + (plate - logoW) / 2,
+    y: cy - logoH / 2,
+    width: logoW,
+    height: logoH,
+  });
+
+  const tx = MARGIN + plate + 16;
+  drawText(page, "ANGOLASAUDE", tx, cy + 8, fonts, "bold", 17, WHITE);
   drawText(
     page,
     isPaid
       ? "Comprovativo de Pagamento  ·  Receipt"
       : "Fatura  ·  Invoice",
-    MARGIN + 50,
-    bandTop - 54,
+    tx,
+    cy - 9,
     fonts,
     "regular",
     10,
-    rgb(0.86, 0.94, 0.9)
+    BAND_SUB
   );
   drawText(
     page,
     "Documento contabilístico oficial",
-    MARGIN + 50,
-    bandTop - 68,
+    tx,
+    cy - 23,
     fonts,
     "italic",
-    9,
-    rgb(0.86, 0.94, 0.9)
+    8.5,
+    BAND_SUB
   );
 
-  // Reference block top-right
-  drawText(page, "REFERÊNCIA", A4.w - MARGIN - 170, bandTop - 36, fonts, "bold", 8, rgb(0.86, 0.94, 0.9));
+  // Reference block top-right, vertically centred against the plate
+  const refX = A4.w - MARGIN - 170;
+  drawText(page, "REFERÊNCIA", refX, cy + 8, fonts, "bold", 8, BAND_SUB);
   drawText(
     page,
     inv.payment_reference ?? inv.id.slice(0, 8).toUpperCase(),
-    A4.w - MARGIN - 170,
-    bandTop - 52,
+    refX,
+    cy - 9,
     fonts,
     "bold",
     11,
-    rgb(1, 1, 1)
+    WHITE
   );
   drawText(
     page,
     `Emitida ${fmtDateTimePT(inv.created_at)}`,
-    A4.w - MARGIN - 170,
-    bandTop - 68,
+    refX,
+    cy - 23,
     fonts,
     "regular",
     8,
-    rgb(0.86, 0.94, 0.9)
+    BAND_SUB
   );
-
-  // PAID stamp
-  if (isPaid) {
-    page.drawRectangle({
-      x: A4.w - MARGIN - 150,
-      y: A4.h - 220,
-      width: 130,
-      height: 56,
-      borderColor: EMERALD,
-      borderWidth: 2.5,
-      color: rgb(1, 1, 1),
-    });
-    drawText(page, "PAGA", A4.w - MARGIN - 122, A4.h - 192, fonts, "bold", 28, EMERALD);
-    drawText(
-      page,
-      "Pagamento confirmado",
-      A4.w - MARGIN - 142,
-      A4.h - 210,
-      fonts,
-      "regular",
-      7,
-      EMERALD
-    );
-  }
 
   // ===== Two-column identity =====
   let cursorY = A4.h - HEADER_BAND_H - 50;
@@ -492,18 +547,15 @@ export async function GET(
     SLATE_500
   );
 
-  // Subtle watermark
-  if (!isPaid) {
-    page.drawText("PENDENTE", {
-      x: A4.w / 2 - 80,
-      y: A4.h / 2 - 12,
-      font: fonts.bold,
-      size: 28,
-      color: SLATE_200,
-      rotate: degrees(-18),
-      opacity: 0.6,
-    });
-  }
+  // Official rubber stamp on the right of the payment block (whitespace —
+  // never over the line items / text).
+  drawStamp(page, fonts, {
+    label: isPaid ? "PAGO" : "PENDENTE",
+    sub: isPaid && inv.paid_at ? fmtDatePT(inv.paid_at) : "ANGOLASAUDE",
+    cx: A4.w - MARGIN - 72,
+    cy: payY - 46,
+    color: isPaid ? EMERALD : SLATE_500,
+  });
 
   const bytes = await pdf.save();
   return new NextResponse(Buffer.from(bytes), {

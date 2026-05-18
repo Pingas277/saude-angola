@@ -15,7 +15,7 @@ export default async function RecepcaoLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role, clinic:clinics(name)")
+    .select("full_name, role, avatar_url, clinic:clinics(name)")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -30,6 +30,7 @@ export default async function RecepcaoLayout({
       role="receptionist"
       userName={profile?.full_name ?? user.email ?? "Recepção"}
       userMeta={clinic?.name ?? undefined}
+      avatarUrl={profile?.avatar_url}
     >
       {children}
     </AppShell>

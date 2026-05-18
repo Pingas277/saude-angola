@@ -15,7 +15,7 @@ export default async function ClinicaLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role, clinic:clinics(name, subscription_plan)")
+    .select("full_name, role, avatar_url, clinic:clinics(name, subscription_plan)")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -33,6 +33,7 @@ export default async function ClinicaLayout({
       role="admin"
       userName={profile?.full_name ?? user.email ?? "Administração"}
       userMeta={meta}
+      avatarUrl={profile?.avatar_url}
     >
       {children}
     </AppShell>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Logo from "../_brand/Logo";
+import AvatarUpload from "../_app/AvatarUpload";
 import PerfilForm from "./PerfilForm";
 
 export const metadata = { title: "Perfil · ANGOLASAUDE" };
@@ -15,7 +16,7 @@ export default async function PerfilPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, phone")
+    .select("full_name, phone, avatar_url")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -49,7 +50,23 @@ export default async function PerfilPage() {
           Mantenha a sua informação clínica atualizada para um melhor atendimento.
         </p>
 
-        <div className="mt-8">
+        <div className="mt-8 rounded-2xl border border-border bg-card p-6">
+          <h2 className="text-sm font-semibold text-foreground">
+            Foto de perfil
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Aparece no menu lateral em toda a plataforma.
+          </p>
+          <div className="mt-5">
+            <AvatarUpload
+              userId={user.id}
+              name={profile?.full_name ?? user.email ?? "Paciente"}
+              initialUrl={profile?.avatar_url ?? null}
+            />
+          </div>
+        </div>
+
+        <div className="mt-6">
           <PerfilForm
             initial={{
               full_name: profile?.full_name ?? "",

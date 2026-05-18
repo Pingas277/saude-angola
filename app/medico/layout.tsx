@@ -15,7 +15,7 @@ export default async function MedicoLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role, specialty, clinic:clinics(name)")
+    .select("full_name, role, specialty, avatar_url, clinic:clinics(name)")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -31,6 +31,7 @@ export default async function MedicoLayout({
       role="doctor"
       userName={`Dr. ${profile?.full_name ?? user.email}`}
       userMeta={meta || undefined}
+      avatarUrl={profile?.avatar_url}
     >
       {children}
     </AppShell>

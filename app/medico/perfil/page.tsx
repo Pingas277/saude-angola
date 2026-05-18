@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { ArrowLeft, User, FileText, BadgeCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import MedicoHeader from "../_components/MedicoHeader";
+import AvatarUpload from "../../_app/AvatarUpload";
 import DoctorProfileForm from "./DoctorProfileForm";
 
 export const metadata = { title: "Perfil do Médico · ANGOLASAUDE" };
@@ -16,7 +17,7 @@ export default async function MedicoPerfilPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, phone, medical_license, specialty, role")
+    .select("full_name, phone, medical_license, specialty, role, avatar_url")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -48,6 +49,13 @@ export default async function MedicoPerfilPage() {
             Mantenha a cédula e a especialidade atualizadas — aparecem nos
             documentos clínicos.
           </p>
+          <div className="mt-6 border-b border-border pb-6">
+            <AvatarUpload
+              userId={user.id}
+              name={profile?.full_name ?? user.email ?? "Médico"}
+              initialUrl={profile?.avatar_url ?? null}
+            />
+          </div>
           <div className="mt-6">
             <DoctorProfileForm
               initial={{

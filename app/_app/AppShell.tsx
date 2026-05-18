@@ -19,11 +19,13 @@ export default function AppShell({
   role,
   userName,
   userMeta,
+  avatarUrl,
   children,
 }: {
   role: RoleKey;
   userName: string;
   userMeta?: string;
+  avatarUrl?: string | null;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -57,7 +59,7 @@ export default function AppShell({
             />
           ))}
         </nav>
-        <SidebarFooter userName={userName} userMeta={userMeta} />
+        <SidebarFooter userName={userName} userMeta={userMeta} avatarUrl={avatarUrl} />
       </aside>
 
       {/* === Content column === */}
@@ -89,7 +91,7 @@ export default function AppShell({
                     />
                   ))}
                 </nav>
-                <SidebarFooter userName={userName} userMeta={userMeta} />
+                <SidebarFooter userName={userName} userMeta={userMeta} avatarUrl={avatarUrl} />
               </SheetContent>
             </Sheet>
           </div>
@@ -132,15 +134,26 @@ function NavLink({
 function SidebarFooter({
   userName,
   userMeta,
+  avatarUrl,
 }: {
   userName: string;
   userMeta?: string;
+  avatarUrl?: string | null;
 }) {
   return (
     <div className="border-t border-border p-3">
       <div className="flex items-center gap-3 rounded-lg px-2 py-2">
-        <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-          {initials(userName)}
+        <span className="grid size-8 shrink-0 place-items-center overflow-hidden rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+          {avatarUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={avatarUrl}
+              alt={userName}
+              className="size-full object-cover"
+            />
+          ) : (
+            initials(userName)
+          )}
         </span>
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-medium text-foreground">

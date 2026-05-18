@@ -42,20 +42,29 @@ export default function AuthShell({
 }) {
   return (
     <main className="grid min-h-screen grid-cols-1 bg-background lg:grid-cols-[1.05fr_1fr]">
-      {/* === Brand panel (left) — hidden on mobile === */}
-      <aside className="relative hidden border-r border-border bg-muted/40 lg:flex lg:flex-col">
-        <div className="flex flex-1 flex-col justify-between px-12 py-14">
-          <Logo href="/" size="lg" subtitle="Saúde para todos" />
+      {/* === Brand panel (left) — photo-forward, hidden on mobile === */}
+      <aside className="relative hidden overflow-hidden lg:flex lg:flex-col">
+        <Image
+          src="/sobre/angola-2.jpg"
+          alt="Angola"
+          fill
+          priority
+          sizes="55vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/60 to-primary/40" />
+        <div className="relative flex flex-1 flex-col justify-between px-12 py-14">
+          <Logo href="/" size="lg" variant="dark" subtitle="Saúde para todos" />
 
           <div className="max-w-md">
-            <div className="text-xs font-medium uppercase tracking-wider text-primary">
+            <div className="text-xs font-medium uppercase tracking-wider text-white/80">
               Plataforma de saúde · Angola
             </div>
-            <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-foreground">
+            <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">
               Toda a sua saúde,{" "}
-              <span className="text-primary">num só sítio</span>.
+              <span className="text-white/70">num só sítio</span>.
             </h2>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-3 text-sm leading-relaxed text-white/75">
               Marque com qualquer médico, consulte por vídeo e guarde o seu
               histórico clínico — de Luanda ao Cunene.
             </p>
@@ -63,44 +72,38 @@ export default function AuthShell({
             <ul className="mt-8 space-y-4">
               {FEATURES.map((f) => (
                 <li key={f.title} className="flex items-start gap-3">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-border bg-background text-primary">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-white/20 bg-white/10 text-white backdrop-blur">
                     <f.icon className="size-4" />
                   </span>
                   <div>
-                    <div className="text-sm font-medium text-foreground">
+                    <div className="text-sm font-medium text-white">
                       {f.title}
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      {f.desc}
-                    </div>
+                    <div className="text-xs text-white/70">{f.desc}</div>
                   </div>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="flex items-center justify-between gap-4 border-t border-border pt-6">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center justify-between gap-4 border-t border-white/15 pt-6">
+            <div className="flex items-center gap-2 text-xs text-white/75">
               <Image
                 src="/brand/angola-flag.png"
                 alt="Bandeira de Angola"
                 width={21}
                 height={14}
-                className="rounded-[2px] ring-1 ring-border"
+                className="rounded-[2px] ring-1 ring-white/20"
               />
               <span>Feito em Angola</span>
             </div>
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-4 text-xs text-white/75">
               <span>
-                <strong className="font-semibold text-foreground">
-                  ≈ 3 min
-                </strong>{" "}
+                <strong className="font-semibold text-white">≈ 3 min</strong>{" "}
                 até atendimento
               </span>
               <span>
-                <strong className="font-semibold text-foreground">
-                  18/18
-                </strong>{" "}
+                <strong className="font-semibold text-white">18/18</strong>{" "}
                 províncias
               </span>
             </div>

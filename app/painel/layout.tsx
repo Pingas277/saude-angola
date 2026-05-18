@@ -15,7 +15,7 @@ export default async function PainelLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role")
+    .select("full_name, role, avatar_url")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -23,6 +23,7 @@ export default async function PainelLayout({
     <AppShell
       role="patient"
       userName={profile?.full_name ?? user.email ?? "Paciente"}
+      avatarUrl={profile?.avatar_url}
     >
       {children}
     </AppShell>

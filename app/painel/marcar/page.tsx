@@ -120,7 +120,7 @@ export default async function MarcarPage({
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
       <PageHeading
-        eyebrow="Marketplace de saúde"
+        eyebrow="Médicos e clínicas"
         title="Encontre o seu médico"
         subtitle="Procure por especialidade, clínica ou nome. Marque online, sem telefonemas."
       />

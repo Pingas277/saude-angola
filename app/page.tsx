@@ -34,7 +34,7 @@ import {
 const FEATURES = [
   {
     icon: Search,
-    title: "Marketplace de médicos",
+    title: "Rede de médicos",
     desc: "Procure por especialidade, clínica ou nome. Veja preço, disponibilidade e marque online — em qualquer cidade de Angola.",
   },
   {
@@ -233,7 +233,7 @@ export default function HomePage() {
                 aria-hidden
                 className="inline-block size-1.5 rounded-full bg-primary"
               />
-              Marketplace de saúde · Angola
+              Plataforma de saúde · Angola
             </span>
           </StaggerItem>
 
@@ -348,7 +348,7 @@ export default function HomePage() {
       <section className="border-b border-border bg-muted/30">
         <Reveal className="mx-auto max-w-6xl px-6 py-10 text-center">
           <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Disponível em todas as 18 províncias de Angola
+            Disponível em todas as 21 províncias de Angola
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground">
             {REGIONS.map((r) => (
@@ -360,16 +360,16 @@ export default function HomePage() {
                 {r}
               </span>
             ))}
-            <span className="text-muted-foreground/60">+ 11 outras</span>
+            <span className="text-muted-foreground/60">+ 14 outras</span>
           </div>
         </Reveal>
       </section>
 
-      {/* === Marketplace / Discovery === */}
+      {/* === Encontrar médico / Discovery === */}
       <section id="marcar" className="border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-24">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <SectionEyebrow>Marketplace de saúde</SectionEyebrow>
+            <SectionEyebrow>Médicos e clínicas</SectionEyebrow>
             <SectionTitle>Encontre o seu médico.</SectionTitle>
             <SectionLede>
               Pesquise por especialidade, clínica ou nome. Compare
@@ -392,7 +392,7 @@ export default function HomePage() {
             </span>
             <span className="inline-flex items-center gap-2">
               <MapPin className="size-4 text-primary" />
-              Em todas as 18 províncias
+              Em todas as 21 províncias
             </span>
             <span className="inline-flex items-center gap-2">
               <CreditCard className="size-4 text-primary" />
@@ -484,7 +484,7 @@ export default function HomePage() {
             />
             <Stat
               icon={<ShieldCheck className="size-5" />}
-              value="18 / 18"
+              value="21 / 21"
               label="Províncias com cobertura"
             />
           </div>
@@ -863,5 +863,5 @@ function FooterCol({
   );
 }
 
-// (Static FilterPill / DoctorRow mock removed — the marketplace teaser is
+// (Static FilterPill / DoctorRow mock removed — the live search teaser is
 // now the live <DoctorSearch /> client component in app/_landing/.)

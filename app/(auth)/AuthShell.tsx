@@ -103,7 +103,7 @@ export default function AuthShell({
                 até atendimento
               </span>
               <span>
-                <strong className="font-semibold text-white">18/18</strong>{" "}
+                <strong className="font-semibold text-white">21/21</strong>{" "}
                 províncias
               </span>
             </div>

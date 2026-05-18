@@ -25,7 +25,7 @@ export const metadata = {
 
 const IMPACT = [
   { value: "500+", label: "Clínicas privadas em Angola" },
-  { value: "18 / 18", label: "Províncias no nosso alcance" },
+  { value: "21 / 21", label: "Províncias no nosso alcance" },
   { value: "≈ 3 min", label: "Até falar com um médico" },
   { value: "5", label: "Perfis: paciente, médico, enfermagem, recepção, admin" },
 ];
@@ -44,7 +44,7 @@ const VALUES = [
   {
     icon: Building2,
     title: "Feito em Angola",
-    desc: "Pensado para a realidade angolana — do Multicaixa Express às 18 províncias.",
+    desc: "Pensado para a realidade angolana — do Multicaixa Express às 21 províncias.",
   },
 ];
 
@@ -58,7 +58,7 @@ const HISTORY: Milestone[] = [
   {
     marker: "A plataforma",
     title: "Construímos a ANGOLASAUDE",
-    desc: "Marketplace de médicos, telemedicina por vídeo, receitas digitais com QR, faturação Multicaixa e um sistema de gestão clínica completo — cinco perfis num só produto.",
+    desc: "Rede de médicos, telemedicina por vídeo, receitas digitais com QR, faturação Multicaixa e um sistema de gestão clínica completo — cinco perfis num só produto.",
     icon: <Layers className="size-4" />,
   },
   {
@@ -70,7 +70,7 @@ const HISTORY: Milestone[] = [
   {
     marker: "O caminho",
     title: "Cobertura em todo o país",
-    desc: "Levar a plataforma às 18 províncias, alargar a rede de clínicas e de farmácias parceiras, e continuar a simplificar o acesso à saúde.",
+    desc: "Levar a plataforma às 21 províncias, alargar a rede de clínicas e de farmácias parceiras, e continuar a simplificar o acesso à saúde.",
     icon: <MapPinned className="size-4" />,
     upcoming: true,
   },
@@ -97,7 +97,7 @@ export default function SobrePage() {
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85">
               A ANGOLASAUDE liga pacientes, médicos e clínicas privadas num só
-              sítio — do marketplace de consultas à telemedicina e à gestão
+              sítio — da marcação de consultas à telemedicina e à gestão
               clínica.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">

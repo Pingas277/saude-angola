@@ -7,6 +7,9 @@ import type { ReactNode } from "react";
 // on-brand placeholder. `src` is a base path WITHOUT extension (e.g.
 // "sobre/angola-hero"); any of .jpg/.jpeg/.png/.webp is auto-detected —
 // just drop the file in and it appears, no code change.
+//
+// Pass `overlay` to make it photo-forward: the image is dimmed with a
+// scrim and the overlay content is rendered on top (used for the hero).
 const EXTS = ["jpg", "jpeg", "png", "webp"];
 
 export default function ImageSlot({
@@ -14,12 +17,14 @@ export default function ImageSlot({
   alt,
   caption,
   icon,
+  overlay,
   className = "",
 }: {
   src: string;
   alt: string;
   caption: string;
   icon?: ReactNode;
+  overlay?: ReactNode;
   className?: string;
 }) {
   const base = src.replace(/\.(jpg|jpeg|png|webp)$/i, "");
@@ -33,6 +38,29 @@ export default function ImageSlot({
     } catch {
       /* ignore */
     }
+  }
+
+  if (overlay) {
+    return (
+      <div
+        className={"relative overflow-hidden " + className}
+      >
+        {found ? (
+          <Image
+            src={found}
+            alt={alt}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-background" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/45 to-black/25" />
+        <div className="relative">{overlay}</div>
+      </div>
+    );
   }
 
   return (

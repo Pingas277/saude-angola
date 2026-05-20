@@ -18,6 +18,9 @@ import {
   APPOINTMENT_TYPE_LABELS,
 } from "@/lib/labels";
 import StatCard from "../_ui/StatCard";
+import ConsultasBarChart, {
+  type ConsultaPoint,
+} from "../_ui/charts/ConsultasBarChart";
 import MedicoHeader from "./_components/MedicoHeader";
 
 export const metadata = { title: "Painel do Médico · ANGOLASAUDE" };
@@ -89,12 +92,21 @@ export default async function MedicoHomePage() {
   const baseSelect =
     "id, scheduled_at, duration_minutes, status, appointment_type, reason, patient:patients(id, profile:profiles(full_name))";
 
+  // 14-day window for trend chart
+  const start14 = (() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - 13);
+    return d;
+  })();
+
   const [
     { data: today },
     { count: upcomingCount },
     { count: rxCount },
     { count: recordCount },
     { count: teleWaitingCount },
+    { data: appts14 },
   ] = await Promise.all([
     supabase
       .from("appointments")
@@ -122,7 +134,32 @@ export default async function MedicoHomePage() {
       .select("id", { count: "exact", head: true })
       .eq("status", "waiting")
       .is("doctor_id", null),
+    supabase
+      .from("appointments")
+      .select("scheduled_at, status")
+      .eq("doctor_id", user.id)
+      .gte("scheduled_at", start14.toISOString()),
   ]);
+
+  // 14-day series for the chart
+  const buckets = new Map<string, number>();
+  for (const a of (appts14 as { scheduled_at: string; status: string }[] | null) ?? []) {
+    if (["cancelled", "no_show"].includes(a.status)) continue;
+    const k = new Date(a.scheduled_at).toISOString().slice(0, 10);
+    buckets.set(k, (buckets.get(k) ?? 0) + 1);
+  }
+  const consultas14: ConsultaPoint[] = [];
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(start14);
+    d.setDate(start14.getDate() + i);
+    const k = d.toISOString().slice(0, 10);
+    consultas14.push({
+      date: k,
+      label: d.toLocaleDateString("pt-PT", { day: "2-digit" }),
+      total: buckets.get(k) ?? 0,
+    });
+  }
+  const totalLast14 = consultas14.reduce((s, p) => s + p.total, 0);
 
   const todayList = (today as ApptRow[] | null) ?? [];
   const pending = todayList.filter(
@@ -216,6 +253,33 @@ export default async function MedicoHomePage() {
             Abrir lista
             <ArrowRight className="size-4" />
           </Link>
+        </div>
+      </section>
+
+      {/* 14-day consultas trend */}
+      <section className="mt-6 rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="text-xs font-medium uppercase tracking-wider text-primary">
+              Consultas · últimos 14 dias
+            </div>
+            <h2 className="mt-1 text-lg font-semibold text-foreground">
+              {totalLast14}{" "}
+              <span className="text-xs font-medium text-muted-foreground">
+                no total
+              </span>
+            </h2>
+          </div>
+          <Link
+            href="/medico/agenda"
+            className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+          >
+            Agenda
+            <ArrowRight className="size-3" />
+          </Link>
+        </div>
+        <div className="mt-4">
+          <ConsultasBarChart data={consultas14} />
         </div>
       </section>
 

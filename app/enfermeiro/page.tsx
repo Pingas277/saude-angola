@@ -3,6 +3,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { APPOINTMENT_STATUS_LABELS } from "@/lib/labels";
 import StatCard from "../_ui/StatCard";
+import ConsultasBarChart, {
+  type ConsultaPoint,
+} from "../_ui/charts/ConsultasBarChart";
 import SectionHeading from "../_ui/SectionHeading";
 import PageHeading from "../_ui/PageHeading";
 import EmptyState from "../_ui/EmptyState";
@@ -119,19 +122,52 @@ export default async function EnfermeiroHomePage() {
   const list = (rows as ApptRow[] | null) ?? [];
   const apptIds = list.map((a) => a.id);
 
-  const [{ data: vitals }, { data: lowStock }] = await Promise.all([
-    apptIds.length
-      ? supabase
-          .from("vital_signs")
-          .select("appointment_id")
-          .in("appointment_id", apptIds)
-      : Promise.resolve({ data: [] as { appointment_id: string }[] }),
-    supabase
-      .from("pharmacy_stock")
-      .select("id, medication_name, quantity, minimum_stock")
-      .eq("clinic_id", clinicId)
-      .order("quantity", { ascending: true }),
-  ]);
+  // 7-day window for the triagem trend chart
+  const start7 = (() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - 6);
+    return d;
+  })();
+
+  const [{ data: vitals }, { data: lowStock }, { data: vitals7 }] =
+    await Promise.all([
+      apptIds.length
+        ? supabase
+            .from("vital_signs")
+            .select("appointment_id")
+            .in("appointment_id", apptIds)
+        : Promise.resolve({ data: [] as { appointment_id: string }[] }),
+      supabase
+        .from("pharmacy_stock")
+        .select("id, medication_name, quantity, minimum_stock")
+        .eq("clinic_id", clinicId)
+        .order("quantity", { ascending: true }),
+      supabase
+        .from("vital_signs")
+        .select("recorded_at")
+        .eq("clinic_id", clinicId)
+        .gte("recorded_at", start7.toISOString()),
+    ]);
+
+  // 7-day triagem trend
+  const triagemBuckets = new Map<string, number>();
+  for (const v of (vitals7 as { recorded_at: string }[] | null) ?? []) {
+    const k = new Date(v.recorded_at).toISOString().slice(0, 10);
+    triagemBuckets.set(k, (triagemBuckets.get(k) ?? 0) + 1);
+  }
+  const triagem7Series: ConsultaPoint[] = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start7);
+    d.setDate(start7.getDate() + i);
+    const k = d.toISOString().slice(0, 10);
+    triagem7Series.push({
+      date: k,
+      label: d.toLocaleDateString("pt-PT", { weekday: "short" }),
+      total: triagemBuckets.get(k) ?? 0,
+    });
+  }
+  const triagem7Total = triagem7Series.reduce((s, p) => s + p.total, 0);
 
   const triagedIds = new Set(
     (vitals as { appointment_id: string }[] | null)?.map((v) => v.appointment_id) ?? []
@@ -198,6 +234,26 @@ export default async function EnfermeiroHomePage() {
           </div>
         </div>
       )}
+
+      {/* 7-day triagem trend */}
+      <section className="mt-6 rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="text-xs font-medium uppercase tracking-wider text-primary">
+              Triagens · últimos 7 dias
+            </div>
+            <h2 className="mt-1 text-lg font-semibold text-foreground">
+              {triagem7Total}{" "}
+              <span className="text-xs font-medium text-muted-foreground">
+                registos
+              </span>
+            </h2>
+          </div>
+        </div>
+        <div className="mt-4">
+          <ConsultasBarChart data={triagem7Series} />
+        </div>
+      </section>
 
       <section className="mt-10">
         <SectionHeading

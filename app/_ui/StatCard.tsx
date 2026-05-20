@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import AnimatedNumber from "./AnimatedNumber";
 
 type Tone = "emerald" | "amber" | "slate" | "sky" | "red";
 
@@ -58,7 +59,7 @@ export default function StatCard({
           <div
             className={`mt-2 break-words font-semibold leading-tight tracking-tight text-foreground tabular-nums ${valueSize}`}
           >
-            {value}
+            {typeof value === "number" ? <AnimatedNumber value={value} /> : value}
           </div>
           {hint && (
             <div className="mt-1 text-xs text-muted-foreground">{hint}</div>

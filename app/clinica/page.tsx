@@ -24,13 +24,13 @@ import StatCard from "../_ui/StatCard";
 import AdminHeader from "./_components/AdminHeader";
 import RevenueAreaChart, {
   type RevenuePoint,
-} from "./_components/RevenueAreaChart";
+} from "../_ui/charts/RevenueAreaChart";
 import ConsultasBarChart, {
   type ConsultaPoint,
-} from "./_components/ConsultasBarChart";
+} from "../_ui/charts/ConsultasBarChart";
 import RoleDonutChart, {
   type RoleSlice,
-} from "./_components/RoleDonutChart";
+} from "../_ui/charts/RoleDonutChart";
 
 export const metadata = { title: "Painel da Clínica · ANGOLASAUDE" };
 

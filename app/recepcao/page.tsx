@@ -17,6 +17,9 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { APPOINTMENT_TYPE_LABELS } from "@/lib/labels";
 import StatCard from "../_ui/StatCard";
+import ConsultasBarChart, {
+  type ConsultaPoint,
+} from "../_ui/charts/ConsultasBarChart";
 import RecepHeader from "./_components/RecepHeader";
 import QueueActions from "./QueueActions";
 
@@ -116,15 +119,50 @@ export default async function RecepcaoHomePage() {
     : profile?.clinic;
   const nowIso = new Date().toISOString();
 
-  const { data: rows } = await supabase
-    .from("appointments")
-    .select(
-      "id, scheduled_at, duration_minutes, status, appointment_type, reason, patient:patients(id, profile:profiles(full_name, phone)), doctor:profiles!appointments_doctor_id_fkey(full_name, specialty)"
-    )
-    .eq("clinic_id", clinicId)
-    .gte("scheduled_at", startOfTodayISO())
-    .lte("scheduled_at", endOfTodayISO())
-    .order("scheduled_at", { ascending: true });
+  // 7-day flow window starts here for the chart
+  const start7 = (() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - 6);
+    return d;
+  })();
+
+  const [{ data: rows }, { data: flow7 }] = await Promise.all([
+    supabase
+      .from("appointments")
+      .select(
+        "id, scheduled_at, duration_minutes, status, appointment_type, reason, patient:patients(id, profile:profiles(full_name, phone)), doctor:profiles!appointments_doctor_id_fkey(full_name, specialty)"
+      )
+      .eq("clinic_id", clinicId)
+      .gte("scheduled_at", startOfTodayISO())
+      .lte("scheduled_at", endOfTodayISO())
+      .order("scheduled_at", { ascending: true }),
+    supabase
+      .from("appointments")
+      .select("scheduled_at, status")
+      .eq("clinic_id", clinicId)
+      .gte("scheduled_at", start7.toISOString()),
+  ]);
+
+  // 7-day flow series
+  const flowBuckets = new Map<string, number>();
+  for (const a of (flow7 as { scheduled_at: string; status: string }[] | null) ?? []) {
+    if (["cancelled", "no_show"].includes(a.status)) continue;
+    const k = new Date(a.scheduled_at).toISOString().slice(0, 10);
+    flowBuckets.set(k, (flowBuckets.get(k) ?? 0) + 1);
+  }
+  const flow7Series: ConsultaPoint[] = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start7);
+    d.setDate(start7.getDate() + i);
+    const k = d.toISOString().slice(0, 10);
+    flow7Series.push({
+      date: k,
+      label: d.toLocaleDateString("pt-PT", { weekday: "short" }),
+      total: flowBuckets.get(k) ?? 0,
+    });
+  }
+  const flow7Total = flow7Series.reduce((s, p) => s + p.total, 0);
 
   const list = (rows as ApptRow[] | null) ?? [];
 
@@ -180,8 +218,28 @@ export default async function RecepcaoHomePage() {
         <StatCard tone="sky" icon={<Timer className="size-5" />} label="Próxima" value={nextArrival ? hhmm(nextArrival.scheduled_at) : "—"} hint={nextArrival ? pickPatient(nextArrival.patient).name : "sem chegadas"} />
       </section>
 
+      {/* 7-day flow */}
+      <section className="mt-6 rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="text-xs font-medium uppercase tracking-wider text-primary">
+              Fluxo da fila · últimos 7 dias
+            </div>
+            <h2 className="mt-1 text-lg font-semibold text-foreground">
+              {flow7Total}{" "}
+              <span className="text-xs font-medium text-muted-foreground">
+                consultas
+              </span>
+            </h2>
+          </div>
+        </div>
+        <div className="mt-4">
+          <ConsultasBarChart data={flow7Series} />
+        </div>
+      </section>
+
       {/* Queue board */}
-      <section className="mt-8 grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
+      <section className="mt-6 grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
         <Column
           title="A chegar"
           icon={<Clock3 className="size-4" />}

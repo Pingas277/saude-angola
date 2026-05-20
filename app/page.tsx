@@ -413,13 +413,13 @@ export default function HomePage() {
             <Reveal className="order-2 lg:order-1">
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border shadow-sm">
                 <Image
-                  src="/sobre/angola.jpg"
-                  alt="Angola"
+                  src="/landing/medico.jpg"
+                  alt="Médico com estetoscópio"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-tr from-primary/30 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-primary/40 via-transparent to-transparent" />
                 <div className="absolute bottom-5 left-5 right-5">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-foreground backdrop-blur">
                     <Building2 className="size-3.5 text-primary" />

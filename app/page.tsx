@@ -20,6 +20,7 @@ import Logo from "./_brand/Logo";
 import ThemeToggle from "./_theme/ThemeToggle";
 import DoctorSearch from "./_landing/DoctorSearch";
 import AnimatedNumber from "./_ui/AnimatedNumber";
+import PhoneMockup from "./_ui/PhoneMockup";
 import { Reveal, Stagger, StaggerItem } from "./_motion/Reveal";
 import {
   Accordion,
@@ -199,60 +200,67 @@ export default function HomePage() {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/55 to-primary/40" />
-        <div className="relative mx-auto max-w-5xl px-6 py-24 sm:py-32">
-          <Stagger>
-            <StaggerItem>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/85 backdrop-blur">
-                <span className="size-1.5 rounded-full bg-primary" />
-                Saúde digital · Angola
-              </span>
-            </StaggerItem>
-            <StaggerItem>
-              <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl">
-                Marque consultas.
-                <br />
-                Fale com médicos.
-                <br />
-                <span className="text-white/70">Tudo no telemóvel.</span>
-              </h1>
-            </StaggerItem>
-            <StaggerItem>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
-                A Lunga liga pacientes, médicos e clínicas privadas em
-                Angola. Sem filas. Sem telefonemas.
-              </p>
-            </StaggerItem>
-            <StaggerItem>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="/registar" className={btnPrimary}>
-                  Criar conta grátis
-                  <ArrowRight className="size-4" />
-                </Link>
-                <a
-                  href="mailto:suporte@saudeangola.ao?subject=Quero%20saber%20mais%20(cl%C3%ADnica)"
-                  className={btnOnDark}
-                >
-                  Sou uma clínica
-                </a>
-              </div>
-            </StaggerItem>
-            <StaggerItem>
-              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-white/80">
-                <span className="inline-flex items-center gap-2">
-                  <Check className="size-4 text-primary-foreground/90" />
-                  Grátis para pacientes
+        <div className="relative mx-auto max-w-6xl px-6 py-24 sm:py-28 lg:py-32">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+            <Stagger>
+              <StaggerItem>
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/85 backdrop-blur">
+                  <span className="size-1.5 rounded-full bg-primary" />
+                  Saúde digital · Angola
                 </span>
-                <span className="inline-flex items-center gap-2">
-                  <Check className="size-4 text-primary-foreground/90" />
-                  21 províncias
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <Check className="size-4 text-primary-foreground/90" />
-                  Receita válida nas farmácias
-                </span>
-              </div>
-            </StaggerItem>
-          </Stagger>
+              </StaggerItem>
+              <StaggerItem>
+                <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl">
+                  Marque consultas.
+                  <br />
+                  Fale com médicos.
+                  <br />
+                  <span className="text-white/70">Tudo no telemóvel.</span>
+                </h1>
+              </StaggerItem>
+              <StaggerItem>
+                <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
+                  A Lunga liga pacientes, médicos e clínicas privadas em
+                  Angola. Sem filas. Sem telefonemas.
+                </p>
+              </StaggerItem>
+              <StaggerItem>
+                <div className="mt-9 flex flex-wrap gap-3">
+                  <Link href="/registar" className={btnPrimary}>
+                    Criar conta grátis
+                    <ArrowRight className="size-4" />
+                  </Link>
+                  <a
+                    href="mailto:suporte@saudeangola.ao?subject=Quero%20saber%20mais%20(cl%C3%ADnica)"
+                    className={btnOnDark}
+                  >
+                    Sou uma clínica
+                  </a>
+                </div>
+              </StaggerItem>
+              <StaggerItem>
+                <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-white/80">
+                  <span className="inline-flex items-center gap-2">
+                    <Check className="size-4 text-primary-foreground/90" />
+                    Grátis para pacientes
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <Check className="size-4 text-primary-foreground/90" />
+                    21 províncias
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <Check className="size-4 text-primary-foreground/90" />
+                    Receita válida nas farmácias
+                  </span>
+                </div>
+              </StaggerItem>
+            </Stagger>
+
+            {/* Phone mockup — shows what the app actually looks like */}
+            <Reveal className="hidden lg:flex lg:justify-center">
+              <PhoneMockup />
+            </Reveal>
+          </div>
         </div>
       </section>
 

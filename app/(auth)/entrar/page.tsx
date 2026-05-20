@@ -1,8 +1,29 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import AuthShell from "../AuthShell";
-import LoginForm from "./LoginForm";
+import LoginForm, { type LastUser } from "./LoginForm";
 
 export const metadata = { title: "Entrar · Lunga" };
+
+async function readLastUser(): Promise<LastUser | null> {
+  const c = await cookies();
+  const raw = c.get("lunga_last_user")?.value;
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    if (typeof parsed?.email === "string") {
+      return {
+        email: parsed.email,
+        name: typeof parsed.name === "string" ? parsed.name : null,
+        avatarUrl:
+          typeof parsed.avatarUrl === "string" ? parsed.avatarUrl : null,
+      };
+    }
+  } catch {
+    /* ignore malformed */
+  }
+  return null;
+}
 
 export default async function EntrarPage({
   searchParams,
@@ -11,22 +32,33 @@ export default async function EntrarPage({
 }) {
   const { redirect } = await searchParams;
   const redirectTo = redirect && redirect.startsWith("/") ? redirect : "/painel";
+  const lastUser = await readLastUser();
+
+  const firstName = lastUser?.name?.split(" ")[0] ?? null;
 
   return (
     <AuthShell
-      eyebrow="Bem-vindo de volta"
-      title="Entrar"
-      subtitle="Aceda à sua conta para continuar o seu acompanhamento."
+      eyebrow={lastUser ? "Bem-vindo" : "Bem-vindo de volta"}
+      title={lastUser && firstName ? `Olá, ${firstName}` : "Entrar"}
+      subtitle={
+        lastUser
+          ? "Coloque a sua palavra-passe para continuar."
+          : "Aceda à sua conta para continuar."
+      }
+      compact={!!lastUser}
       footer={
         <>
           Ainda não tem conta?{" "}
-          <Link href="/registar" className="font-medium text-primary hover:underline">
+          <Link
+            href="/registar"
+            className="font-medium text-primary hover:underline"
+          >
             Criar conta
           </Link>
         </>
       }
     >
-      <LoginForm redirectTo={redirectTo} />
+      <LoginForm redirectTo={redirectTo} lastUser={lastUser} />
     </AuthShell>
   );
 }

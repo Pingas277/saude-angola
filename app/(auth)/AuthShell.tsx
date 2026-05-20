@@ -33,12 +33,17 @@ export default function AuthShell({
   subtitle,
   children,
   footer,
+  compact = false,
 }: {
   eyebrow?: string;
   title: string;
   subtitle: string;
   children: React.ReactNode;
   footer: React.ReactNode;
+  /** When true (remembered user on /entrar): hide brand-panel feature
+   *  list, drop the form-side title/subtitle — the form itself shows
+   *  the welcome. Keeps /entrar very lean. */
+  compact?: boolean;
 }) {
   return (
     <main className="grid min-h-screen grid-cols-1 bg-background lg:grid-cols-[1.05fr_1fr]">
@@ -69,21 +74,23 @@ export default function AuthShell({
               histórico clínico — de Luanda ao Cunene.
             </p>
 
-            <ul className="mt-8 space-y-4">
-              {FEATURES.map((f) => (
-                <li key={f.title} className="flex items-start gap-3">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-white/20 bg-white/10 text-white backdrop-blur">
-                    <f.icon className="size-4" />
-                  </span>
-                  <div>
-                    <div className="text-sm font-medium text-white">
-                      {f.title}
+            {!compact && (
+              <ul className="mt-8 space-y-4">
+                {FEATURES.map((f) => (
+                  <li key={f.title} className="flex items-start gap-3">
+                    <span className="grid size-9 shrink-0 place-items-center rounded-lg border border-white/20 bg-white/10 text-white backdrop-blur">
+                      <f.icon className="size-4" />
+                    </span>
+                    <div>
+                      <div className="text-sm font-medium text-white">
+                        {f.title}
+                      </div>
+                      <div className="text-xs text-white/70">{f.desc}</div>
                     </div>
-                    <div className="text-xs text-white/70">{f.desc}</div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className="flex items-center justify-between gap-4 border-t border-white/15 pt-6">
@@ -123,16 +130,20 @@ export default function AuthShell({
           </div>
 
           <div>
-            {eyebrow && (
-              <div className="text-xs font-medium uppercase tracking-wider text-primary">
-                {eyebrow}
-              </div>
+            {!compact && (
+              <>
+                {eyebrow && (
+                  <div className="text-xs font-medium uppercase tracking-wider text-primary">
+                    {eyebrow}
+                  </div>
+                )}
+                <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
+                  {title}
+                </h1>
+                <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
+              </>
             )}
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
-              {title}
-            </h1>
-            <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
-            <div className="mt-8">{children}</div>
+            <div className={compact ? "" : "mt-8"}>{children}</div>
           </div>
 
           <div className="mt-8 border-t border-border pt-6 text-center text-sm text-muted-foreground">

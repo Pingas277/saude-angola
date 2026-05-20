@@ -12,6 +12,10 @@ import {
   Rocket,
   MapPinned,
   Mail,
+  Smartphone,
+  Users,
+  HandHeart,
+  Award,
 } from "lucide-react";
 import PublicShell from "../_public/PublicShell";
 import ImageSlot from "./ImageSlot";
@@ -182,6 +186,68 @@ export default function SobrePage() {
                 </p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== O nosso compromisso ===== */}
+      <section className="relative overflow-hidden border-b border-border">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-50/60 via-background to-emerald-50/60 dark:from-sky-500/5 dark:to-emerald-500/5"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-32 top-1/2 size-96 -translate-y-1/2 rounded-full bg-gradient-to-br from-sky-300/20 to-emerald-300/20 blur-3xl"
+        />
+        <div className="relative mx-auto max-w-5xl px-6 py-20">
+          <div className="mx-auto max-w-2xl text-center">
+            <div className="text-xs font-medium uppercase tracking-wider text-primary">
+              O que prometemos
+            </div>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+              O nosso compromisso consigo.
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Quatro promessas que orientam tudo o que construímos.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-5 sm:grid-cols-2">
+            <CommitCard
+              gradient="from-sky-500 to-blue-600"
+              icon={<Smartphone className="size-5" />}
+              title="Sempre acessível"
+              desc="Funciona em qualquer telemóvel — Android ou iPhone — e em redes 3G. Saúde no bolso, mesmo na província."
+            />
+            <CommitCard
+              gradient="from-emerald-500 to-teal-600"
+              icon={<ShieldCheck className="size-5" />}
+              title="Privacidade primeiro"
+              desc="Cada utilizador acede apenas aos seus dados. Conformidade RGPD desde o primeiro dia."
+            />
+            <CommitCard
+              gradient="from-rose-500 to-pink-600"
+              icon={<HandHeart className="size-5" />}
+              title="Sem barreiras"
+              desc="Os pacientes nunca pagam para usar a Lunga. Marcar, falar com médico e ver receitas é grátis."
+            />
+            <CommitCard
+              gradient="from-amber-500 to-orange-600"
+              icon={<Users className="size-5" />}
+              title="Feito com quem cuida"
+              desc="Construído com médicos, enfermeiros e clínicas angolanas — para a realidade angolana, não a copiar de fora."
+            />
+          </div>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-2 rounded-2xl border border-border bg-card px-5 py-4 text-sm text-muted-foreground shadow-sm">
+            <Award className="size-4 text-primary" />
+            <span>
+              <strong className="font-semibold text-foreground">
+                Conformidade RGPD
+              </strong>{" "}
+              · Encriptação ponta-a-ponta · Dados em servidores europeus
+            </span>
           </div>
         </div>
       </section>
@@ -361,5 +427,33 @@ export default function SobrePage() {
         </div>
       </section>
     </PublicShell>
+  );
+}
+
+function CommitCard({
+  gradient,
+  icon,
+  title,
+  desc,
+}: {
+  gradient: string;
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div className="group relative overflow-hidden rounded-2xl border border-border bg-card p-7 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+      <span
+        className={`grid size-11 place-items-center rounded-xl bg-gradient-to-br ${gradient} text-white shadow-md shadow-black/5`}
+      >
+        {icon}
+      </span>
+      <h3 className="mt-5 text-base font-semibold tracking-tight text-foreground">
+        {title}
+      </h3>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+        {desc}
+      </p>
+    </div>
   );
 }

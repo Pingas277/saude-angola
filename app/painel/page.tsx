@@ -28,6 +28,7 @@ import {
   formatDatePT,
 } from "@/lib/labels";
 import GradientStatCard from "../_ui/GradientStatCard";
+import HealthPassport from "../_ui/HealthPassport";
 
 export const metadata = { title: "Painel · Lunga" };
 
@@ -79,7 +80,7 @@ export default async function PainelPage({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role")
+    .select("full_name, role, avatar_url")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -90,7 +91,9 @@ export default async function PainelPage({
 
   const { data: patient } = await supabase
     .from("patients")
-    .select("id")
+    .select(
+      "id, id_number, date_of_birth, blood_type, gender, allergies"
+    )
     .eq("profile_id", user.id)
     .maybeSingle();
 
@@ -216,8 +219,30 @@ export default async function PainelPage({
         </Link>
       </header>
 
+      {/* Health passport */}
+      <section className="mt-8">
+        <HealthPassport
+          userId={user.id}
+          profile={{
+            full_name: profile?.full_name ?? null,
+            avatar_url: profile?.avatar_url ?? null,
+          }}
+          patient={
+            patient
+              ? {
+                  id_number: patient.id_number ?? null,
+                  date_of_birth: patient.date_of_birth ?? null,
+                  blood_type: patient.blood_type ?? null,
+                  gender: patient.gender ?? null,
+                  allergies: (patient.allergies as string[] | null) ?? null,
+                }
+              : null
+          }
+        />
+      </section>
+
       {/* Spotlight + telemedicina */}
-      <section className="mt-8 grid gap-5 lg:grid-cols-3">
+      <section className="mt-6 grid gap-5 lg:grid-cols-3">
         <div className="lg:col-span-2">
           {na ? (
             <div className="flex h-full flex-col rounded-2xl border border-border bg-card p-6">

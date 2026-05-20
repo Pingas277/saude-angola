@@ -160,6 +160,7 @@ export default async function ClinicaHomePage() {
     { data: latestInvoices },
     { data: revenue30 },
     { data: appts14 },
+    { data: doctorsLast30 },
   ] = await Promise.all([
     supabase
       .from("appointments")
@@ -209,6 +210,14 @@ export default async function ClinicaHomePage() {
       .select("scheduled_at, status")
       .eq("clinic_id", clinicId)
       .gte("scheduled_at", start14),
+    supabase
+      .from("appointments")
+      .select(
+        "doctor_id, status, doctor:profiles!appointments_doctor_id_fkey(full_name, specialty)"
+      )
+      .eq("clinic_id", clinicId)
+      .gte("scheduled_at", start30)
+      .not("status", "in", "(cancelled,no_show)"),
   ]);
 
   // ---- Aggregations ----
@@ -282,6 +291,33 @@ export default async function ClinicaHomePage() {
   const roleSlices: RoleSlice[] = Object.entries(staffByRole).map(
     ([role, value]) => ({ name: ROLE_LABELS[role] ?? role, value })
   );
+
+  // Top doctors (last 30 days)
+  type DocAgg = { id: string; name: string; specialty: string | null; count: number };
+  const docMap = new Map<string, DocAgg>();
+  for (const a of (doctorsLast30 as Array<{
+    doctor_id: string;
+    doctor:
+      | { full_name: string | null; specialty: string | null }
+      | { full_name: string | null; specialty: string | null }[]
+      | null;
+  }> | null) ?? []) {
+    if (!a.doctor_id) continue;
+    const dr = Array.isArray(a.doctor) ? a.doctor[0] : a.doctor;
+    const ex = docMap.get(a.doctor_id);
+    if (ex) ex.count++;
+    else
+      docMap.set(a.doctor_id, {
+        id: a.doctor_id,
+        name: dr?.full_name ?? "—",
+        specialty: dr?.specialty ?? null,
+        count: 1,
+      });
+  }
+  const topDoctors = [...docMap.values()]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+  const topMax = topDoctors[0]?.count ?? 0;
 
   const firstName = profile?.full_name?.split(" ")[0] ?? "administrador";
 
@@ -514,6 +550,67 @@ export default async function ClinicaHomePage() {
             </ul>
           )}
         </div>
+      </section>
+
+      {/* Top doctors (30d) */}
+      <section className="mt-5 rounded-2xl border border-border bg-card p-5 shadow-sm">
+        <div className="flex items-start justify-between">
+          <div>
+            <div className="text-xs font-medium uppercase tracking-wider text-primary">
+              Médicos
+            </div>
+            <h2 className="mt-1 text-lg font-semibold text-foreground">
+              Top médicos · últimos 30 dias
+            </h2>
+          </div>
+          <Link
+            href="/clinica/agenda"
+            className="text-xs font-medium text-primary hover:underline"
+          >
+            Ver agenda
+          </Link>
+        </div>
+        {topDoctors.length === 0 ? (
+          <div className="mt-6 rounded-xl border border-dashed border-border bg-muted/30 px-4 py-8 text-center text-sm text-muted-foreground">
+            Ainda sem consultas neste período.
+          </div>
+        ) : (
+          <ul className="mt-4 space-y-3">
+            {topDoctors.map((d, i) => {
+              const pct = topMax > 0 ? Math.round((d.count / topMax) * 100) : 0;
+              return (
+                <li key={d.id} className="flex items-center gap-3">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+                    {i + 1}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                      <span className="truncate text-sm font-semibold text-foreground">
+                        Dr(a). {d.name}
+                      </span>
+                      <span className="text-xs font-medium tabular-nums text-muted-foreground">
+                        {d.count} consultas
+                      </span>
+                    </div>
+                    <div className="mt-1.5 flex items-center gap-3">
+                      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-sky-500 to-emerald-500"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                      {d.specialty && (
+                        <span className="shrink-0 text-[11px] text-muted-foreground">
+                          {d.specialty}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </section>
 
       {/* Today timeline */}

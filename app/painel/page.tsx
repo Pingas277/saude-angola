@@ -14,6 +14,11 @@ import {
   ArrowRight,
   MapPin,
   CheckCircle2,
+  HeartPulse,
+  Thermometer,
+  Activity as ActivityIcon,
+  Wind,
+  Scale,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -106,6 +111,7 @@ export default async function PainelPage({
     { data: recent },
     { data: lastRx },
     { data: lastLab },
+    { data: lastVitals },
   ] = await Promise.all([
     supabase
       .from("appointments")
@@ -147,7 +153,27 @@ export default async function PainelPage({
       .order("result_date", { ascending: false, nullsFirst: false })
       .limit(1)
       .maybeSingle(),
+    supabase
+      .from("vital_signs")
+      .select(
+        "temperature_c, blood_pressure, pulse_bpm, oxygen_saturation, weight_kg, recorded_at"
+      )
+      .eq("patient_id", pid)
+      .order("recorded_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
   ]);
+
+  const v = lastVitals as
+    | {
+        temperature_c: number | null;
+        blood_pressure: string | null;
+        pulse_bpm: number | null;
+        oxygen_saturation: number | null;
+        weight_kg: number | null;
+        recorded_at: string;
+      }
+    | null;
 
   const firstName = profile?.full_name?.split(" ")[0] ?? "paciente";
   const na = nextAppt as ApptJoin | null;
@@ -359,6 +385,72 @@ export default async function PainelPage({
         />
       </section>
 
+      {/* Vitals (latest triagem) */}
+      {v && (
+        <section className="mt-6 rounded-2xl border border-border bg-card p-5 shadow-sm">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-3">
+              <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-rose-400 to-pink-600 text-white shadow-sm">
+                <HeartPulse className="size-5" />
+              </span>
+              <div>
+                <div className="text-xs font-medium uppercase tracking-wider text-primary">
+                  Saúde
+                </div>
+                <h2 className="mt-0.5 text-lg font-semibold text-foreground">
+                  Sinais vitais recentes
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  Última medição em {formatDatePT(v.recorded_at)}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {v.temperature_c != null && (
+              <VitalChip
+                icon={<Thermometer className="size-4" />}
+                label="Temperatura"
+                value={`${v.temperature_c} °C`}
+                tone="rose"
+              />
+            )}
+            {v.blood_pressure && (
+              <VitalChip
+                icon={<ActivityIcon className="size-4" />}
+                label="Pressão"
+                value={v.blood_pressure}
+                tone="sky"
+              />
+            )}
+            {v.pulse_bpm != null && (
+              <VitalChip
+                icon={<HeartPulse className="size-4" />}
+                label="Pulso"
+                value={`${v.pulse_bpm} bpm`}
+                tone="amber"
+              />
+            )}
+            {v.oxygen_saturation != null && (
+              <VitalChip
+                icon={<Wind className="size-4" />}
+                label="SpO₂"
+                value={`${v.oxygen_saturation}%`}
+                tone="indigo"
+              />
+            )}
+            {v.weight_kg != null && (
+              <VitalChip
+                icon={<Scale className="size-4" />}
+                label="Peso"
+                value={`${v.weight_kg} kg`}
+                tone="emerald"
+              />
+            )}
+          </div>
+        </section>
+      )}
+
       {/* Activity + quick actions */}
       <section className="mt-6 grid gap-5 lg:grid-cols-3">
         <div className="lg:col-span-2 rounded-2xl border border-border bg-card">
@@ -488,6 +580,44 @@ function Banner({ children }: { children: React.ReactNode }) {
     <div className="mb-6 flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">
       <CheckCircle2 className="size-4 shrink-0" />
       {children}
+    </div>
+  );
+}
+
+const VITAL_TONE: Record<string, string> = {
+  rose: "bg-rose-500/10 text-rose-600 dark:text-rose-400",
+  sky: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
+  amber: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  indigo: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400",
+  emerald: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+};
+
+function VitalChip({
+  icon,
+  label,
+  value,
+  tone,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  tone: "rose" | "sky" | "amber" | "indigo" | "emerald";
+}) {
+  return (
+    <div className="rounded-xl border border-border bg-background p-3">
+      <div className="flex items-center gap-2">
+        <span
+          className={`grid size-8 place-items-center rounded-lg ${VITAL_TONE[tone]}`}
+        >
+          {icon}
+        </span>
+        <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+          {label}
+        </span>
+      </div>
+      <div className="mt-2 text-lg font-semibold tabular-nums text-foreground">
+        {value}
+      </div>
     </div>
   );
 }

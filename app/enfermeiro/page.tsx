@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import {
+  Stethoscope,
+  CheckCircle2,
+  Clock3,
+  Package,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { APPOINTMENT_STATUS_LABELS } from "@/lib/labels";
-import StatCard from "../_ui/StatCard";
+import GradientStatCard from "../_ui/GradientStatCard";
 import ConsultasBarChart, {
   type ConsultaPoint,
 } from "../_ui/charts/ConsultasBarChart";
@@ -203,10 +209,10 @@ export default async function EnfermeiroHomePage() {
       />
 
       <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard tone="red" icon="🩺" label="Aguardam triagem" value={awaiting.length} hint="Check-in feito" />
-        <StatCard tone="emerald" icon="✅" label="Triagem feita" value={triaged.length} hint="Hoje" />
-        <StatCard tone="sky" icon="🕐" label="Por chegar" value={upcoming.length} hint="Ainda não confirmados" />
-        <StatCard tone="amber" icon="📦" label="Stock baixo" value={lowStockItems.length} hint="Itens a repor" />
+        <GradientStatCard tone="rose" icon={<Stethoscope className="size-5" />} label="Aguardam triagem" value={awaiting.length} hint="check-in feito" spark={triagem7Series.map((p) => p.total)} />
+        <GradientStatCard tone="emerald" icon={<CheckCircle2 className="size-5" />} label="Triagem feita" value={triaged.length} hint="hoje" />
+        <GradientStatCard tone="sky" icon={<Clock3 className="size-5" />} label="Por chegar" value={upcoming.length} hint="ainda não confirmados" />
+        <GradientStatCard tone="amber" icon={<Package className="size-5" />} label="Stock baixo" value={lowStockItems.length} hint="itens a repor" />
       </section>
 
       {lowStockItems.length > 0 && (

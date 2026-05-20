@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { APPOINTMENT_TYPE_LABELS } from "@/lib/labels";
-import StatCard from "../_ui/StatCard";
+import GradientStatCard from "../_ui/GradientStatCard";
 import ConsultasBarChart, {
   type ConsultaPoint,
 } from "../_ui/charts/ConsultasBarChart";
@@ -210,12 +210,12 @@ export default async function RecepcaoHomePage() {
       />
 
       <section className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
-        <StatCard tone="sky" icon={<Clock3 className="size-5" />} label="Por chegar" value={aChegar.length} hint="agendados" />
-        <StatCard tone="red" icon={<AlertTriangle className="size-5" />} label="Atrasados" value={atrasados.length} hint="passou a hora" />
-        <StatCard tone="emerald" icon={<Armchair className="size-5" />} label="Em espera" value={emEspera.length} hint="check-in feito" />
-        <StatCard tone="amber" icon={<Stethoscope className="size-5" />} label="Em consulta" value={emConsulta.length} hint="no consultório" />
-        <StatCard tone="slate" icon={<CheckCircle2 className="size-5" />} label="Concluídas" value={concluidas.length} hint="hoje" />
-        <StatCard tone="sky" icon={<Timer className="size-5" />} label="Próxima" value={nextArrival ? hhmm(nextArrival.scheduled_at) : "—"} hint={nextArrival ? pickPatient(nextArrival.patient).name : "sem chegadas"} />
+        <GradientStatCard tone="sky" icon={<Clock3 className="size-5" />} label="Por chegar" value={aChegar.length} hint="agendados" spark={flow7Series.map((p) => p.total)} />
+        <GradientStatCard tone="rose" icon={<AlertTriangle className="size-5" />} label="Atrasados" value={atrasados.length} hint="passou a hora" />
+        <GradientStatCard tone="emerald" icon={<Armchair className="size-5" />} label="Em espera" value={emEspera.length} hint="check-in feito" />
+        <GradientStatCard tone="amber" icon={<Stethoscope className="size-5" />} label="Em consulta" value={emConsulta.length} hint="no consultório" />
+        <GradientStatCard tone="teal" icon={<CheckCircle2 className="size-5" />} label="Concluídas" value={concluidas.length} hint="hoje" />
+        <GradientStatCard tone="indigo" icon={<Timer className="size-5" />} label="Próxima" value={nextArrival ? hhmm(nextArrival.scheduled_at) : "—"} hint={nextArrival ? pickPatient(nextArrival.patient).name : "sem chegadas"} />
       </section>
 
       {/* 7-day flow */}

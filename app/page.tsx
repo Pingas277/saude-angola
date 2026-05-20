@@ -191,14 +191,14 @@ export default function HomePage() {
       {/* ============ Hero (photo-forward) ============ */}
       <section className="relative overflow-hidden">
         <Image
-          src="/sobre/angola-hero.webp"
-          alt="Angola"
+          src="/landing/serra-leba.jpg"
+          alt="Serra da Leba, Angola"
           fill
           priority
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/65 to-primary/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/55 to-primary/40" />
         <div className="relative mx-auto max-w-5xl px-6 py-24 sm:py-32">
           <Stagger>
             <StaggerItem>
@@ -310,16 +310,58 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ============ Brand statement (big logo) ============ */}
+      <section className="relative overflow-hidden border-b border-border bg-background">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-100/40 via-background to-emerald-100/40 dark:from-sky-500/10 dark:to-emerald-500/10"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 size-[600px] rounded-full bg-gradient-to-br from-sky-300/20 to-emerald-300/20 blur-3xl"
+        />
+        <Reveal className="relative mx-auto max-w-4xl px-6 py-24 text-center sm:py-28">
+          <Image
+            src="/brand/logo-full.png"
+            alt="lunga"
+            width={520}
+            height={264}
+            priority
+            className="mx-auto h-auto w-[260px] sm:w-[360px] md:w-[440px]"
+          />
+          <h2 className="mt-8 text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-5xl">
+            Para todos. Em{" "}
+            <span className="bg-gradient-to-r from-sky-500 to-emerald-500 bg-clip-text text-transparent">
+              toda a Angola
+            </span>
+            .
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+            Saúde no telemóvel — de Luanda ao Cunene, da Lunda ao Namibe. Um
+            único sítio para encontrar, marcar e ser atendido.
+          </p>
+          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+            <Link href="/registar" className={btnPrimary}>
+              Criar conta grátis
+              <ArrowRight className="size-4" />
+            </Link>
+            <Link href="/sobre" className={btnOutline}>
+              Conhecer a lunga
+            </Link>
+          </div>
+        </Reveal>
+      </section>
+
       {/* ============ Stats band (animated, on photo) ============ */}
       <section className="relative overflow-hidden border-b border-border">
         <Image
-          src="/sobre/angola-2.jpg"
-          alt="Angola"
+          src="/landing/kalandula.jpg"
+          alt="Quedas de Kalandula, Angola"
           fill
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/60 to-black/70" />
         <Reveal className="relative mx-auto max-w-6xl px-6 py-20">
           <div className="grid grid-cols-2 gap-8 text-center text-white sm:grid-cols-4">
             <StatBlock value={21} label="Províncias" suffix="/ 21" />
@@ -569,13 +611,13 @@ export default function HomePage() {
       {/* ============ Final CTA (photo + scrim) ============ */}
       <section className="relative overflow-hidden">
         <Image
-          src="/sobre/angola.jpg"
-          alt="Angola"
+          src="/landing/aldeia.jpg"
+          alt="Comunidade angolana"
           fill
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-primary/60 to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-primary/55 to-black/80" />
         <div className="relative mx-auto max-w-3xl px-6 py-24 text-center">
           <Smartphone className="mx-auto size-10 text-white/70" />
           <h2 className="mt-6 text-3xl font-semibold tracking-tight text-white sm:text-5xl">

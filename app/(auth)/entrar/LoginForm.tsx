@@ -52,9 +52,10 @@ export default function LoginForm({
 
   if (lastUser) {
     return (
-      <form action={formAction} className="space-y-5">
-        <input type="hidden" name="redirect" value={redirectTo} />
-        <input type="hidden" name="email" value={lastUser.email} />
+      <div className="space-y-5">
+        <form action={formAction} className="space-y-5">
+          <input type="hidden" name="redirect" value={redirectTo} />
+          <input type="hidden" name="email" value={lastUser.email} />
 
         {/* Identity card */}
         <div className="flex flex-col items-center text-center">
@@ -130,9 +131,10 @@ export default function LoginForm({
             </>
           )}
         </button>
+        </form>
 
         <SwitchAccountButton />
-      </form>
+      </div>
     );
   }
 

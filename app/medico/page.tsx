@@ -17,7 +17,7 @@ import {
   APPOINTMENT_STATUS_LABELS,
   APPOINTMENT_TYPE_LABELS,
 } from "@/lib/labels";
-import StatCard from "../_ui/StatCard";
+import GradientStatCard from "../_ui/GradientStatCard";
 import ConsultasBarChart, {
   type ConsultaPoint,
 } from "../_ui/charts/ConsultasBarChart";
@@ -191,10 +191,10 @@ export default async function MedicoHomePage() {
       />
 
       <section className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard tone="emerald" icon={<CalendarClock className="size-5" />} label="Consultas hoje" value={todayList.length} hint={`${pending} por atender`} />
-        <StatCard tone="sky" icon={<CalendarDays className="size-5" />} label="Próximas" value={upcomingCount ?? 0} hint="marcadas/confirmadas" />
-        <StatCard tone="amber" icon={<Pill className="size-5" />} label="Receitas" value={rxCount ?? 0} hint="emitidas" />
-        <StatCard tone="slate" icon={<ClipboardList className="size-5" />} label="Registos" value={recordCount ?? 0} hint="clínicos" />
+        <GradientStatCard tone="sky" icon={<CalendarClock className="size-5" />} label="Consultas hoje" value={todayList.length} hint={`${pending} por atender`} spark={consultas14.map((p) => p.total)} />
+        <GradientStatCard tone="indigo" icon={<CalendarDays className="size-5" />} label="Próximas" value={upcomingCount ?? 0} hint="marcadas/confirmadas" />
+        <GradientStatCard tone="amber" icon={<Pill className="size-5" />} label="Receitas" value={rxCount ?? 0} hint="emitidas" />
+        <GradientStatCard tone="emerald" icon={<ClipboardList className="size-5" />} label="Registos" value={recordCount ?? 0} hint="clínicos" />
       </section>
 
       {/* Telemedicina banner */}

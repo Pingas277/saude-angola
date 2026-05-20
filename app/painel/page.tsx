@@ -22,7 +22,7 @@ import {
   formatDateTimePT,
   formatDatePT,
 } from "@/lib/labels";
-import StatCard from "../_ui/StatCard";
+import GradientStatCard from "../_ui/GradientStatCard";
 
 export const metadata = { title: "Painel · Lunga" };
 
@@ -325,15 +325,15 @@ export default async function PainelPage({
 
       {/* Stats */}
       <section className="mt-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard
-          tone="emerald"
+        <GradientStatCard
+          tone="sky"
           icon={<CalendarClock className="size-5" />}
           label="Consultas futuras"
           value={upcomingCount ?? 0}
           hint={(upcomingCount ?? 0) === 1 ? "marcação" : "marcações"}
         />
-        <StatCard
-          tone="slate"
+        <GradientStatCard
+          tone="indigo"
           icon={<History className="size-5" />}
           label="Histórico"
           value={pastApptCount ?? 0}
@@ -343,15 +343,15 @@ export default async function PainelPage({
               : "consultas anteriores"
           }
         />
-        <StatCard
-          tone="sky"
+        <GradientStatCard
+          tone="emerald"
           icon={<Pill className="size-5" />}
           label="Última receita"
           value={lastRx ? "Disponível" : "—"}
           hint={lastRx ? formatDatePT(lastRx.issued_at) : "Sem receitas"}
         />
-        <StatCard
-          tone="amber"
+        <GradientStatCard
+          tone="rose"
           icon={<FlaskConical className="size-5" />}
           label="Último exame"
           value={lastLab?.test_name ?? "—"}

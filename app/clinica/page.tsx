@@ -20,7 +20,7 @@ import {
   ROLE_LABELS,
   formatAOA,
 } from "@/lib/labels";
-import StatCard from "../_ui/StatCard";
+import GradientStatCard from "../_ui/GradientStatCard";
 import AdminHeader from "./_components/AdminHeader";
 import RevenueAreaChart, {
   type RevenuePoint,
@@ -318,12 +318,12 @@ export default async function ClinicaHomePage() {
 
       {/* KPI grid */}
       <section className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
-        <StatCard tone="emerald" icon={<CalendarDays className="size-5" />} label="Consultas hoje" value={todayList.length} hint={`${monthApptCount ?? 0} este mês`} />
-        <StatCard tone="sky" icon={<Users className="size-5" />} label="Pacientes hoje" value={distinctPatients} hint="distintos" />
-        <StatCard tone="slate" icon={<UserCog className="size-5" />} label="Equipa" value={staffCount} hint="membros ativos" />
-        <StatCard tone="emerald" icon={<Wallet className="size-5" />} label="Faturação (mês)" value={formatAOA(monthRevenue)} hint={`${(paidMonth ?? []).length} pagas`} />
-        <StatCard tone="amber" icon={<Clock3 className="size-5" />} label="A receber" value={formatAOA(pendingTotal)} hint={`${(pendingInv ?? []).length} pendentes`} />
-        <StatCard tone="sky" icon={<TrendingUp className="size-5" />} label="Conclusão hoje" value={`${completion}%`} hint={`${doneToday}/${todayList.length || 0} concluídas`} />
+        <GradientStatCard tone="sky" icon={<CalendarDays className="size-5" />} label="Consultas hoje" value={todayList.length} hint={`${monthApptCount ?? 0} este mês`} />
+        <GradientStatCard tone="indigo" icon={<Users className="size-5" />} label="Pacientes hoje" value={distinctPatients} hint="distintos" />
+        <GradientStatCard tone="teal" icon={<UserCog className="size-5" />} label="Equipa" value={staffCount} hint="membros ativos" />
+        <GradientStatCard tone="emerald" icon={<Wallet className="size-5" />} label="Faturação (mês)" value={formatAOA(monthRevenue)} hint={`${(paidMonth ?? []).length} pagas`} spark={revenueSeries.map((p) => p.amount)} />
+        <GradientStatCard tone="amber" icon={<Clock3 className="size-5" />} label="A receber" value={formatAOA(pendingTotal)} hint={`${(pendingInv ?? []).length} pendentes`} />
+        <GradientStatCard tone="rose" icon={<TrendingUp className="size-5" />} label="Conclusão hoje" value={`${completion}%`} hint={`${doneToday}/${todayList.length || 0} concluídas`} />
       </section>
 
       {/* Charts row 1: revenue + donut */}

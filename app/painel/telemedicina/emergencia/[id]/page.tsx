@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata = { title: "Emergência · ANGOLASAUDE" };
+export const metadata = { title: "Emergência · Lunga" };
 
 export default async function EmergenciaPage({
   params,

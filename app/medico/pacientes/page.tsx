@@ -12,7 +12,7 @@ import { formatDatePT } from "@/lib/labels";
 import StatCard from "../../_ui/StatCard";
 import MedicoHeader from "../_components/MedicoHeader";
 
-export const metadata = { title: "Pacientes · ANGOLASAUDE" };
+export const metadata = { title: "Pacientes · Lunga" };
 
 type ApptRow = {
   id: string;

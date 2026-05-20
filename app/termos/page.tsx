@@ -3,7 +3,7 @@ import { LegalLayout, Section } from "../_public/LegalLayout";
 export const metadata = {
   title: "Termos de Serviço",
   description:
-    "Termos e condições de utilização da plataforma ANGOLASAUDE.",
+    "Termos e condições de utilização da plataforma Lunga.",
 };
 
 export default function TermosPage() {
@@ -11,7 +11,7 @@ export default function TermosPage() {
     <LegalLayout title="Termos de Serviço" updated="18 de maio de 2026">
       <Section title="1. Aceitação">
         <p>
-          Ao criar uma conta ou utilizar a ANGOLASAUDE, aceita estes Termos de
+          Ao criar uma conta ou utilizar a Lunga, aceita estes Termos de
           Serviço e a Política de Privacidade. Se não concordar, não utilize a
           plataforma.
         </p>
@@ -19,11 +19,11 @@ export default function TermosPage() {
 
       <Section title="2. O serviço">
         <p>
-          A ANGOLASAUDE é uma plataforma que permite procurar profissionais de
+          A Lunga é uma plataforma que permite procurar profissionais de
           saúde, marcar consultas presenciais ou por vídeo, receber receitas
           digitais, efetuar pagamentos e gerir informação clínica. As clínicas e
           os médicos são responsáveis pelos atos clínicos que praticam; a
-          ANGOLASAUDE fornece a tecnologia que liga as partes.
+          Lunga fornece a tecnologia que liga as partes.
         </p>
       </Section>
 
@@ -65,8 +65,8 @@ export default function TermosPage() {
 
       <Section title="7. Propriedade intelectual">
         <p>
-          A marca ANGOLASAUDE, o software e o conteúdo da plataforma são
-          propriedade da ANGOLASAUDE ou dos seus licenciadores. Os seus dados
+          A marca Lunga, o software e o conteúdo da plataforma são
+          propriedade da Lunga ou dos seus licenciadores. Os seus dados
           clínicos continuam a ser seus.
         </p>
       </Section>
@@ -74,7 +74,7 @@ export default function TermosPage() {
       <Section title="8. Limitação de responsabilidade">
         <p>
           A plataforma é fornecida &quot;tal como está&quot;. Na medida
-          permitida por lei, a ANGOLASAUDE não é responsável por decisões
+          permitida por lei, a Lunga não é responsável por decisões
           clínicas dos profissionais nem por danos indiretos resultantes do uso
           do serviço. Esforçamo-nos por garantir disponibilidade, mas não
           garantimos funcionamento ininterrupto.

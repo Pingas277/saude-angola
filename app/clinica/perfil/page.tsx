@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import AdminHeader from "../_components/AdminHeader";
 import ClinicProfileForm from "./ClinicProfileForm";
 
-export const metadata = { title: "Perfil da Clínica · ANGOLASAUDE" };
+export const metadata = { title: "Perfil da Clínica · Lunga" };
 
 const PLAN_LABEL: Record<string, string> = {
   basic: "Básico",
@@ -99,7 +99,7 @@ export default async function ClinicProfilePage() {
               Plano de subscrição
             </h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              O plano é gerido pela ANGOLASAUDE. Para alterar limites ou
+              O plano é gerido pela Lunga. Para alterar limites ou
               funcionalidades, contacte{" "}
               <a
                 href="mailto:suporte@saudeangola.ao"

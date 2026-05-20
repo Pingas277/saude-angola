@@ -5,7 +5,7 @@ import Logo from "../_brand/Logo";
 import AvatarUpload from "../_app/AvatarUpload";
 import PerfilForm from "./PerfilForm";
 
-export const metadata = { title: "Perfil · ANGOLASAUDE" };
+export const metadata = { title: "Perfil · Lunga" };
 
 export default async function PerfilPage() {
   const supabase = await createClient();

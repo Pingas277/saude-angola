@@ -59,7 +59,7 @@ export default function MulticaixaForm({
       <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm">
         <div className="flex items-center justify-between">
           <span className="text-muted-foreground">Para</span>
-          <span className="font-medium text-foreground">ANGOLASAUDE</span>
+          <span className="font-medium text-foreground">Lunga</span>
         </div>
         <div className="mt-2 flex items-center justify-between">
           <span className="text-muted-foreground">Número</span>

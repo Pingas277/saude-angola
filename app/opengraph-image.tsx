@@ -6,7 +6,7 @@ import { ImageResponse } from "next/og";
 // add another `opengraph-image.tsx` inside any subroute to override it.
 
 export const runtime = "edge";
-export const alt = "ANGOLASAUDE — Marque com qualquer médico, em qualquer clínica";
+export const alt = "Lunga — Marque com qualquer médico, em qualquer clínica";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -39,26 +39,21 @@ export default async function OG() {
             padding: "52px 64px 0 64px",
           }}
         >
-          {/* pulse mark */}
-          <div style={{ display: "flex", alignItems: "center", gap: 5, height: 56 }}>
-            <div style={{ width: 11, height: 30, borderRadius: 6, background: "#E08A4B" }} />
-            <div style={{ width: 11, height: 56, borderRadius: 6, background: "#2F74C4" }} />
-            <div style={{ width: 11, height: 38, borderRadius: 6, background: "#E08A4B" }} />
-            <div style={{ width: 11, height: 50, borderRadius: 6, background: "#F0B43C" }} />
-            <div style={{ width: 11, height: 26, borderRadius: 6, background: "#2F74C4" }} />
-          </div>
           <div
             style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}
           >
             <span
               style={{
-                fontSize: 30,
+                fontSize: 56,
                 fontWeight: 800,
-                color: "#0f172a",
-                letterSpacing: 2,
+                letterSpacing: -1,
+                background:
+                  "linear-gradient(90deg, #2F74C4 0%, #3DB388 60%, #4CB964 100%)",
+                backgroundClip: "text",
+                color: "transparent",
               }}
             >
-              ANGOLASAUDE
+              lunga
             </span>
             <span
               style={{

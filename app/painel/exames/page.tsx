@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatDatePT } from "@/lib/labels";
 
-export const metadata = { title: "Exames · ANGOLASAUDE" };
+export const metadata = { title: "Exames · Lunga" };
 
 type LabRow = {
   id: string;

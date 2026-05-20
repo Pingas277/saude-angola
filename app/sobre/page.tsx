@@ -20,7 +20,7 @@ import Timeline, { type Milestone } from "./Timeline";
 export const metadata = {
   title: "Sobre nós",
   description:
-    "ANGOLASAUDE — a plataforma que liga pacientes, médicos e clínicas privadas em Angola. Missão, visão, valores e o nosso percurso.",
+    "Lunga — a plataforma que liga pacientes, médicos e clínicas privadas em Angola. Missão, visão, valores e o nosso percurso.",
 };
 
 const IMPACT = [
@@ -57,7 +57,7 @@ const HISTORY: Milestone[] = [
   },
   {
     marker: "A plataforma",
-    title: "Construímos a ANGOLASAUDE",
+    title: "Construímos a Lunga",
     desc: "Rede de médicos, telemedicina por vídeo, receitas digitais com QR, faturação Multicaixa e um sistema de gestão clínica completo — cinco perfis num só produto.",
     icon: <Layers className="size-4" />,
   },
@@ -96,7 +96,7 @@ export default function SobrePage() {
               feita para Angola.
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85">
-              A ANGOLASAUDE liga pacientes, médicos e clínicas privadas num só
+              A Lunga liga pacientes, médicos e clínicas privadas num só
               sítio — da marcação de consultas à telemedicina e à gestão
               clínica.
             </p>
@@ -336,7 +336,7 @@ export default function SobrePage() {
         <div className="mx-auto max-w-5xl px-6 py-20">
           <div className="overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-primary/10 via-card to-card px-6 py-14 text-center">
             <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-              Junte-se à ANGOLASAUDE
+              Junte-se à Lunga
             </h2>
             <p className="mx-auto mt-3 max-w-lg text-sm text-muted-foreground">
               Grátis para pacientes. As clínicas falam connosco para um setup

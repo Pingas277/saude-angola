@@ -94,7 +94,7 @@ const A4 = { w: 595.28, h: 841.89 };
 const MARGIN = 48;
 const HEADER_BAND_H = 96;
 
-const EMERALD = rgb(0.184, 0.455, 0.769); // ANGOLASAUDE brand blue ≈ #2F74C4
+const EMERALD = rgb(0.184, 0.455, 0.769); // Lunga brand blue ≈ #2F74C4
 const EMERALD_DARK = rgb(0.13, 0.33, 0.58);
 const EMERALD_50 = rgb(0.945, 0.965, 0.99);
 const WHITE = rgb(1, 1, 1);
@@ -225,9 +225,9 @@ export async function GET(
 
   const pdf = await PDFDocument.create();
   pdf.setTitle(`Fatura ${inv.id}`);
-  pdf.setAuthor("ANGOLASAUDE");
+  pdf.setAuthor("Lunga");
   pdf.setSubject(isPaid ? "Comprovativo de pagamento" : "Fatura");
-  pdf.setCreator("ANGOLASAUDE");
+  pdf.setCreator("Lunga");
 
   const fonts = await embedPdfFonts(pdf);
   const logoImage = await pdf.embedPng(loadLogoBytes());
@@ -265,7 +265,7 @@ export async function GET(
   });
 
   const tx = MARGIN + plate + 16;
-  drawText(page, "ANGOLASAUDE", tx, cy + 8, fonts, "bold", 17, WHITE);
+  drawText(page, "Lunga", tx, cy + 8, fonts, "bold", 17, WHITE);
   drawText(
     page,
     isPaid
@@ -332,7 +332,7 @@ export async function GET(
   drawText(page, "EMITIDO POR", MARGIN + 14, cursorY - 16, fonts, "bold", 8, EMERALD_DARK);
   drawText(
     page,
-    clinic?.name ?? "ANGOLASAUDE — Telemedicina",
+    clinic?.name ?? "Lunga — Telemedicina",
     MARGIN + 14,
     cursorY - 32,
     fonts,
@@ -528,7 +528,7 @@ export async function GET(
   // Footer
   drawText(
     page,
-    "Documento gerado automaticamente pela plataforma ANGOLASAUDE.",
+    "Documento gerado automaticamente pela plataforma Lunga.",
     MARGIN,
     MARGIN + 24,
     fonts,
@@ -551,7 +551,7 @@ export async function GET(
   // never over the line items / text).
   drawStamp(page, fonts, {
     label: isPaid ? "PAGO" : "PENDENTE",
-    sub: isPaid && inv.paid_at ? fmtDatePT(inv.paid_at) : "ANGOLASAUDE",
+    sub: isPaid && inv.paid_at ? fmtDatePT(inv.paid_at) : "Lunga",
     cx: A4.w - MARGIN - 72,
     cy: payY - 46,
     color: isPaid ? EMERALD : SLATE_500,

@@ -23,7 +23,7 @@ import ConsultasBarChart, {
 } from "../_ui/charts/ConsultasBarChart";
 import MedicoHeader from "./_components/MedicoHeader";
 
-export const metadata = { title: "Painel do Médico · ANGOLASAUDE" };
+export const metadata = { title: "Painel do Médico · Lunga" };
 
 const STATUS_BADGE: Record<string, string> = {
   scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",

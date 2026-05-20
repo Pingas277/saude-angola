@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/accordion";
 
 // =============================================================================
-// ANGOLASAUDE landing — photo-forward, simple words, dense visuals.
+// Lunga landing — photo-forward, simple words, dense visuals.
 // =============================================================================
 
 const STEPS = [
@@ -218,7 +218,7 @@ export default function HomePage() {
             </StaggerItem>
             <StaggerItem>
               <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
-                A ANGOLASAUDE liga pacientes, médicos e clínicas privadas em
+                A Lunga liga pacientes, médicos e clínicas privadas em
                 Angola. Sem filas. Sem telefonemas.
               </p>
             </StaggerItem>
@@ -647,7 +647,7 @@ export default function HomePage() {
         <div className="border-t border-border">
           <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <span>
-              © {new Date().getFullYear()} ANGOLASAUDE. Todos os direitos
+              © {new Date().getFullYear()} Lunga. Todos os direitos
               reservados.
             </span>
             <span className="inline-flex items-center gap-1.5">

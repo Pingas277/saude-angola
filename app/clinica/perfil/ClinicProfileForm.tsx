@@ -57,7 +57,7 @@ export default function ClinicProfileForm({ initial }: { initial: Initial }) {
               ))}
             </select>
           </Field>
-          <Field label="Plano de subscrição" hint="Apenas leitura — geriado pela ANGOLASAUDE.">
+          <Field label="Plano de subscrição" hint="Apenas leitura — geriado pela Lunga.">
             <input
               disabled
               defaultValue={initial.subscription_plan ?? "basic"}

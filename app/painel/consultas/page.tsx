@@ -7,7 +7,7 @@ import {
   formatDateTimePT,
 } from "@/lib/labels";
 
-export const metadata = { title: "Consultas · ANGOLASAUDE" };
+export const metadata = { title: "Consultas · Lunga" };
 
 const STATUS_BADGE: Record<string, string> = {
   scheduled: "bg-sky-500/100/10 text-sky-600 dark:text-sky-400",

@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import RecepHeader from "../_components/RecepHeader";
 import MarcarRecepcaoFlow from "./MarcarRecepcaoFlow";
 
-export const metadata = { title: "Nova marcação · ANGOLASAUDE" };
+export const metadata = { title: "Nova marcação · Lunga" };
 
 function todayISODate(): string {
   return new Date().toISOString().slice(0, 10);

@@ -6,7 +6,7 @@ import MedicoHeader from "../_components/MedicoHeader";
 import AvatarUpload from "../../_app/AvatarUpload";
 import DoctorProfileForm from "./DoctorProfileForm";
 
-export const metadata = { title: "Perfil do Médico · ANGOLASAUDE" };
+export const metadata = { title: "Perfil do Médico · Lunga" };
 
 export default async function MedicoPerfilPage() {
   const supabase = await createClient();

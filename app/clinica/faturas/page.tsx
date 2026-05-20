@@ -17,7 +17,7 @@ import {
 import StatCard from "../../_ui/StatCard";
 import AdminHeader from "../_components/AdminHeader";
 
-export const metadata = { title: "Faturas da Clínica · ANGOLASAUDE" };
+export const metadata = { title: "Faturas da Clínica · Lunga" };
 
 type InvRow = {
   id: string;

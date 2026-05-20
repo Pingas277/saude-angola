@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import TriageForm from "./TriageForm";
 
-export const metadata = { title: "Triagem · ANGOLASAUDE" };
+export const metadata = { title: "Triagem · Lunga" };
 
 export default async function TriagemPage() {
   const supabase = await createClient();

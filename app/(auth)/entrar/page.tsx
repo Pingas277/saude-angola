@@ -2,7 +2,7 @@ import Link from "next/link";
 import AuthShell from "../AuthShell";
 import LoginForm from "./LoginForm";
 
-export const metadata = { title: "Entrar · ANGOLASAUDE" };
+export const metadata = { title: "Entrar · Lunga" };
 
 export default async function EntrarPage({
   searchParams,

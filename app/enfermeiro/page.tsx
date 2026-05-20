@@ -10,7 +10,7 @@ import SectionHeading from "../_ui/SectionHeading";
 import PageHeading from "../_ui/PageHeading";
 import EmptyState from "../_ui/EmptyState";
 
-export const metadata = { title: "Enfermagem · ANGOLASAUDE" };
+export const metadata = { title: "Enfermagem · Lunga" };
 
 const STATUS_BADGE: Record<string, string> = {
   scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",

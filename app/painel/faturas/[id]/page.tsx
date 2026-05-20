@@ -10,7 +10,7 @@ import {
   formatDatePT,
 } from "@/lib/labels";
 
-export const metadata = { title: "Fatura · ANGOLASAUDE" };
+export const metadata = { title: "Fatura · Lunga" };
 
 type Doctor = { full_name: string | null; specialty: string | null };
 type Clinic = { name: string | null; address: string | null };

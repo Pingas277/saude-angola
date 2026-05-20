@@ -9,7 +9,7 @@ import {
 } from "@/lib/triage";
 import { formatDateTimePT } from "@/lib/labels";
 
-export const metadata = { title: "Telemedicina · ANGOLASAUDE" };
+export const metadata = { title: "Telemedicina · Lunga" };
 
 type ConsultationRow = {
   id: string;

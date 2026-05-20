@@ -2,7 +2,7 @@ import Link from "next/link";
 import AuthShell from "../AuthShell";
 import SignupForm from "./SignupForm";
 
-export const metadata = { title: "Criar conta · ANGOLASAUDE" };
+export const metadata = { title: "Criar conta · Lunga" };
 
 export default function RegistarPage() {
   return (

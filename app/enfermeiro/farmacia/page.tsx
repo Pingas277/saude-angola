@@ -6,7 +6,7 @@ import EmptyState from "../../_ui/EmptyState";
 import AddStockForm from "./AddStockForm";
 import { adjustStockAction } from "./actions";
 
-export const metadata = { title: "Farmácia · ANGOLASAUDE" };
+export const metadata = { title: "Farmácia · Lunga" };
 
 type StockItem = {
   id: string;

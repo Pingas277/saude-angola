@@ -3,7 +3,7 @@ import { LegalLayout, Section } from "../_public/LegalLayout";
 export const metadata = {
   title: "Política de Privacidade",
   description:
-    "Como a ANGOLASAUDE recolhe, utiliza e protege os seus dados pessoais e clínicos.",
+    "Como a Lunga recolhe, utiliza e protege os seus dados pessoais e clínicos.",
 };
 
 export default function PrivacidadePage() {
@@ -11,7 +11,7 @@ export default function PrivacidadePage() {
     <LegalLayout title="Política de Privacidade" updated="18 de maio de 2026">
       <Section title="1. Quem somos">
         <p>
-          A ANGOLASAUDE é uma plataforma digital de saúde que liga pacientes,
+          A Lunga é uma plataforma digital de saúde que liga pacientes,
           médicos e clínicas privadas em Angola. Esta política explica que
           dados recolhemos, porquê, e quais são os seus direitos. O responsável
           pelo tratamento de dados pode ser contactado em{" "}

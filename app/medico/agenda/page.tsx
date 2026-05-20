@@ -13,7 +13,7 @@ import { APPOINTMENT_STATUS_LABELS } from "@/lib/labels";
 import StatCard from "../../_ui/StatCard";
 import MedicoHeader from "../_components/MedicoHeader";
 
-export const metadata = { title: "Agenda · ANGOLASAUDE" };
+export const metadata = { title: "Agenda · Lunga" };
 
 const STATUS_BADGE: Record<string, string> = {
   scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",

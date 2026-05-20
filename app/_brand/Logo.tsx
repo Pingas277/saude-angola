@@ -3,74 +3,63 @@ import Image from "next/image";
 
 type LogoProps = {
   href?: string;
-  /** "auto" follows the active theme; "light" is an alias of "auto" kept for
-   *  back-compat; "dark" forces light text (for fixed dark surfaces). */
+  /** "auto" follows the active theme (default). "light" is an alias of
+   *  "auto" kept for back-compat. "dark" forces light subtitle color (for
+   *  fixed dark surfaces). The lockup image itself is transparent and
+   *  reads on any background. */
   variant?: "auto" | "light" | "dark";
   size?: "sm" | "md" | "lg";
-  /** Overrides the default brand tagline ("Saúde para todos"). Role shells
-   *  pass their own label here (e.g. "Médico"). */
+  /** Optional small line under the lockup (role label or tagline). */
   subtitle?: string;
   subtitleColor?: string;
-  /** Hide the wordmark, show only the pulse mark (collapsed contexts). */
+  /** No-op: kept for back-compat with old callsites that passed it. */
   markOnly?: boolean;
 };
 
+const RATIO = 913 / 464; // intrinsic aspect of the lunga lockup
 const SIZES = {
-  sm: { mark: 22, text: "text-sm", sub: "text-[9px]" },
-  md: { mark: 26, text: "text-[15px]", sub: "text-[10px]" },
-  lg: { mark: 34, text: "text-lg", sub: "text-[11px]" },
+  sm: { h: 22, subSize: "text-[9px]" },
+  md: { h: 30, subSize: "text-[10px]" },
+  lg: { h: 42, subSize: "text-[11px]" },
 } as const;
-
-const MARK_RATIO = 506 / 335; // intrinsic logo-mark.png aspect
 
 export default function Logo({
   href = "/",
   variant = "auto",
   size = "md",
-  subtitle = "Saúde para todos",
+  subtitle,
   subtitleColor,
-  markOnly = false,
 }: LogoProps) {
   const s = SIZES[size];
-  const h = s.mark;
-  const w = Math.round(h * MARK_RATIO);
-  const textColor = variant === "dark" ? "text-white" : "text-foreground";
+  const h = s.h;
+  const w = Math.round(h * RATIO);
   const subColor =
     subtitleColor ??
-    (variant === "dark" ? "text-white/70" : "text-muted-foreground");
+    (variant === "dark" ? "text-white/75" : "text-muted-foreground");
 
   const Inner = (
-    <div className="flex items-center gap-2.5">
+    <div className="flex flex-col items-start leading-none">
       <Image
-        src="/brand/logo-mark.png"
-        alt="ANGOLASAUDE"
+        src="/brand/logo-full.png"
+        alt="lunga"
         width={w}
         height={h}
         priority
         className="shrink-0 object-contain"
         style={{ height: h, width: w }}
       />
-      {!markOnly && (
-        <div className="flex flex-col leading-none">
-          <span
-            className={`font-bold tracking-[0.06em] ${textColor} ${s.text}`}
-          >
-            ANGOLASAUDE
-          </span>
-          {subtitle && (
-            <span
-              className={`mt-1 font-medium uppercase tracking-[0.16em] ${s.sub} ${subColor}`}
-            >
-              {subtitle}
-            </span>
-          )}
-        </div>
+      {subtitle && (
+        <span
+          className={`mt-1.5 font-medium uppercase tracking-[0.18em] ${s.subSize} ${subColor}`}
+        >
+          {subtitle}
+        </span>
       )}
     </div>
   );
 
   return href ? (
-    <Link href={href} className="inline-flex items-center" aria-label="ANGOLASAUDE">
+    <Link href={href} className="inline-flex items-center" aria-label="lunga">
       {Inner}
     </Link>
   ) : (

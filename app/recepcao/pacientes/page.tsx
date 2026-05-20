@@ -14,7 +14,7 @@ import { createClient } from "@/lib/supabase/server";
 import StatCard from "../../_ui/StatCard";
 import RecepHeader from "../_components/RecepHeader";
 
-export const metadata = { title: "Pacientes · ANGOLASAUDE" };
+export const metadata = { title: "Pacientes · Lunga" };
 
 type Row = {
   id: string;

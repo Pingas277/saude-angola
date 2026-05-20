@@ -23,7 +23,7 @@ import ConsultasBarChart, {
 import RecepHeader from "./_components/RecepHeader";
 import QueueActions from "./QueueActions";
 
-export const metadata = { title: "Recepção · ANGOLASAUDE" };
+export const metadata = { title: "Recepção · Lunga" };
 
 type ApptRow = {
   id: string;

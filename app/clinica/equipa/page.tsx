@@ -17,7 +17,7 @@ import AdminHeader from "../_components/AdminHeader";
 import AddStaffForm from "./AddStaffForm";
 import StaffRowActions from "./StaffRowActions";
 
-export const metadata = { title: "Equipa · ANGOLASAUDE" };
+export const metadata = { title: "Equipa · Lunga" };
 
 const ROLE_BADGE: Record<string, string> = {
   admin: "bg-foreground/10 text-foreground",

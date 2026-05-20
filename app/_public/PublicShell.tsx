@@ -61,7 +61,7 @@ export default function PublicShell({
               className="rounded-[2px] ring-1 ring-border"
             />
             <span>
-              © {new Date().getFullYear()} ANGOLASAUDE · Feito em Angola
+              © {new Date().getFullYear()} Lunga · Feito em Angola
             </span>
           </div>
           <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">

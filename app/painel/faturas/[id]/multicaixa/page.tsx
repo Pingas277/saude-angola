@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { formatAOA, formatDateTimePT } from "@/lib/labels";
 import MulticaixaForm from "./MulticaixaForm";
 
-export const metadata = { title: "Pagar com Multicaixa Express · ANGOLASAUDE" };
+export const metadata = { title: "Pagar com Multicaixa Express · Lunga" };
 
 export default async function MulticaixaPage({
   params,

@@ -11,7 +11,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { formatDatePT, formatDateTimePT } from "@/lib/labels";
 
-export const metadata = { title: "Receitas · ANGOLASAUDE" };
+export const metadata = { title: "Receitas · Lunga" };
 
 type Medication = {
   name?: string;

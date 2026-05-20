@@ -8,7 +8,7 @@ import {
 } from "@/lib/labels";
 import VitalSignsForm from "./VitalSignsForm";
 
-export const metadata = { title: "Triagem · ANGOLASAUDE" };
+export const metadata = { title: "Triagem · Lunga" };
 
 function age(dob: string | null): number | null {
   if (!dob) return null;

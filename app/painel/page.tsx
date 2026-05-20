@@ -24,7 +24,7 @@ import {
 } from "@/lib/labels";
 import StatCard from "../_ui/StatCard";
 
-export const metadata = { title: "Painel · ANGOLASAUDE" };
+export const metadata = { title: "Painel · Lunga" };
 
 const STATUS_BADGE: Record<string, string> = {
   scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
@@ -160,7 +160,7 @@ export default async function PainelPage({
   return (
     <main className="mx-auto max-w-6xl px-6 py-8">
       {bemvindo === "1" && (
-        <Banner>Conta criada com sucesso. Bem-vindo à ANGOLASAUDE!</Banner>
+        <Banner>Conta criada com sucesso. Bem-vindo à Lunga!</Banner>
       )}
       {perfilOk === "ok" && <Banner>Perfil atualizado com sucesso.</Banner>}
 

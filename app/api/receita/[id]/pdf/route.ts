@@ -120,7 +120,7 @@ const MARGIN = 42;
 const HEADER_BAND_H = 96;
 const FOOTER_PHARMACY_H = 188;
 
-// === Palette === (ANGOLASAUDE logo blue)
+// === Palette === (Lunga logo blue)
 const EMERALD = rgb(0.184, 0.455, 0.769); // brand blue ≈ #2F74C4
 const EMERALD_DARK = rgb(0.13, 0.33, 0.58);
 const EMERALD_50 = rgb(0.945, 0.965, 0.99);
@@ -229,7 +229,7 @@ function drawHeaderBand(
 
   // Wordmark + subtitle, vertically centred against the plate
   const tx = MARGIN + plate + 16;
-  drawText(page, "ANGOLASAUDE", tx, cy + 8, fonts, "bold", 17, WHITE);
+  drawText(page, "Lunga", tx, cy + 8, fonts, "bold", 17, WHITE);
   drawText(
     page,
     "Receita Médica  ·  Medical Prescription",
@@ -772,9 +772,9 @@ export async function GET(
 
   const pdf = await PDFDocument.create();
   pdf.setTitle(`Receita médica ${rx.qr_code}`);
-  pdf.setAuthor(doctor?.full_name ?? "ANGOLASAUDE");
+  pdf.setAuthor(doctor?.full_name ?? "Lunga");
   pdf.setSubject("Receita médica · Medical Prescription");
-  pdf.setCreator("ANGOLASAUDE");
+  pdf.setCreator("Lunga");
 
   const fonts = await embedPdfFonts(pdf);
 

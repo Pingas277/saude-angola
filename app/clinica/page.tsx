@@ -32,7 +32,7 @@ import RoleDonutChart, {
   type RoleSlice,
 } from "../_ui/charts/RoleDonutChart";
 
-export const metadata = { title: "Painel da Clínica · ANGOLASAUDE" };
+export const metadata = { title: "Painel da Clínica · Lunga" };
 
 const STATUS_BADGE: Record<string, string> = {
   scheduled: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
@@ -134,7 +134,7 @@ export default async function ClinicaHomePage() {
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
             O seu utilizador é administrador mas ainda não está associado a
-            nenhuma clínica. Contacte o suporte da ANGOLASAUDE.
+            nenhuma clínica. Contacte o suporte da Lunga.
           </p>
         </div>
       </main>

@@ -20,7 +20,7 @@ import { formatDateTimePT } from "@/lib/labels";
 import StatCard from "../../_ui/StatCard";
 import MedicoHeader from "../_components/MedicoHeader";
 
-export const metadata = { title: "Telemedicina · ANGOLASAUDE" };
+export const metadata = { title: "Telemedicina · Lunga" };
 
 const URGENCY_RANK: Record<Urgency, number> = {
   emergency: 0,

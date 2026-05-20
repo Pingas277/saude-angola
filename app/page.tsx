@@ -3,6 +3,7 @@ import Image from "next/image";
 import {
   ArrowRight,
   Check,
+  ChevronDown,
   Video,
   FileText,
   Pill,
@@ -17,7 +18,6 @@ import {
   MapPin,
 } from "lucide-react";
 import Logo from "./_brand/Logo";
-import ThemeToggle from "./_theme/ThemeToggle";
 import DoctorSearch from "./_landing/DoctorSearch";
 import AnimatedNumber from "./_ui/AnimatedNumber";
 import PhoneMockup from "./_ui/PhoneMockup";
@@ -174,7 +174,6 @@ export default function HomePage() {
             <NavLink href="#faq">Perguntas</NavLink>
           </nav>
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <Link
               href="/entrar"
               className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
@@ -200,9 +199,36 @@ export default function HomePage() {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/55 to-primary/40" />
-        <div className="relative mx-auto max-w-6xl px-6 py-24 sm:py-28 lg:py-32">
+        <div className="relative mx-auto max-w-6xl px-6 py-16 sm:py-24 lg:py-32">
           <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
             <Stagger>
+              {/* Mobile-only welcome splash — first thing on phones */}
+              <StaggerItem className="lg:hidden">
+                <div className="mb-10 flex flex-col items-center text-center">
+                  <div className="rounded-3xl bg-white/95 px-7 py-5 shadow-2xl shadow-black/40 ring-1 ring-white/20 backdrop-blur">
+                    <Image
+                      src="/brand/logo-full.png"
+                      alt="lunga"
+                      width={220}
+                      height={112}
+                      className="h-14 w-auto"
+                      priority
+                    />
+                  </div>
+                  <div className="mt-6 text-[10px] font-bold uppercase tracking-[0.32em] text-white/85">
+                    Bem-vindo à Lunga
+                  </div>
+                  <p className="mt-2 max-w-xs text-base font-medium leading-relaxed text-white">
+                    Encontre a consulta que precisa,{" "}
+                    <span className="text-white/75">em segundos.</span>
+                  </p>
+                  <div className="mt-5 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/55">
+                    <span>Veja como</span>
+                    <ChevronDown className="size-3.5 animate-bounce" />
+                  </div>
+                </div>
+              </StaggerItem>
+
               <StaggerItem>
                 <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/85 backdrop-blur">
                   <span className="size-1.5 rounded-full bg-primary" />

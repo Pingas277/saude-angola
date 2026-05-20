@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Search, MapPin, Stethoscope, Star } from "lucide-react";
+import {
+  Building2,
+  CheckCircle2,
+  MapPin,
+  Search,
+  Stethoscope,
+  Video,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import PageHeading from "@/app/_ui/PageHeading";
 import EmptyState from "@/app/_ui/EmptyState";
@@ -13,9 +20,18 @@ type DoctorRow = {
   full_name: string | null;
   specialty: string | null;
   medical_license: string | null;
+  avatar_url: string | null;
   clinic:
-    | { name: string | null; province: string | null; address: string | null }
-    | { name: string | null; province: string | null; address: string | null }[]
+    | {
+        name: string | null;
+        province: string | null;
+        address: string | null;
+      }
+    | {
+        name: string | null;
+        province: string | null;
+        address: string | null;
+      }[]
     | null;
 };
 
@@ -24,16 +40,18 @@ function pickClinic(c: DoctorRow["clinic"]) {
   return Array.isArray(c) ? c[0] : c;
 }
 
-function tomorrowISODate(): string {
+function todayISODate(): string {
   const d = new Date();
-  d.setDate(d.getDate() + 1);
-  return d.toISOString().slice(0, 10);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 function initials(name: string | null): string {
   if (!name) return "—";
-  const parts = name.trim().split(/\s+/);
-  return ((parts[0]?.[0] ?? "") + (parts[parts.length - 1]?.[0] ?? "")).toUpperCase();
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (
+    (parts[0]?.[0] ?? "") + (parts[parts.length - 1]?.[0] ?? "")
+  ).toUpperCase();
 }
 
 export default async function MarcarPage({
@@ -66,7 +84,7 @@ export default async function MarcarPage({
   const { data: rawDoctors } = await supabase
     .from("profiles")
     .select(
-      "id, full_name, specialty, medical_license, clinic:clinics(name, province, address)"
+      "id, full_name, specialty, medical_license, avatar_url, clinic:clinics(name, province, address)"
     )
     .eq("role", "doctor")
     .order("full_name", { ascending: true });
@@ -117,14 +135,18 @@ export default async function MarcarPage({
     return s ? `${baseHref}?${s}` : baseHref;
   };
 
+  const today = todayISODate();
+  const hasFilters = Boolean(q || specialty || province);
+
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
       <PageHeading
-        eyebrow="Médicos e clínicas"
+        eyebrow="Marcar consulta"
         title="Encontre o seu médico"
-        subtitle="Procure por especialidade, clínica ou nome. Marque online, sem telefonemas."
+        subtitle="Procure por especialidade, clínica ou nome. Marque em 30 segundos, sem telefonemas."
       />
 
+      {/* ─── Search + facets ─── */}
       <section className="rounded-2xl border border-border bg-card p-5 shadow-sm">
         <form
           method="GET"
@@ -134,10 +156,12 @@ export default async function MarcarPage({
           {specialty && (
             <input type="hidden" name="especialidade" value={specialty} />
           )}
-          {province && <input type="hidden" name="provincia" value={province} />}
+          {province && (
+            <input type="hidden" name="provincia" value={province} />
+          )}
 
-          <div className="flex flex-1 items-center gap-3 rounded-full border border-border bg-muted/40 px-4 py-2.5 focus-within:border-ring focus-within:bg-card">
-            <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <div className="flex flex-1 items-center gap-3 rounded-full border border-border bg-muted/40 px-4 py-2.5 transition-colors focus-within:border-ring focus-within:bg-card">
+            <Search className="size-4 shrink-0 text-muted-foreground" />
             <input
               type="search"
               name="q"
@@ -148,14 +172,14 @@ export default async function MarcarPage({
           </div>
           <button
             type="submit"
-            className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-sky-500 to-emerald-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-sky-500/30 transition-all hover:shadow-lg"
           >
             Pesquisar
           </button>
-          {(q || specialty || province) && (
+          {hasFilters && (
             <Link
               href={baseHref}
-              className="text-xs font-medium text-muted-foreground hover:text-foreground"
+              className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               Limpar filtros
             </Link>
@@ -194,98 +218,142 @@ export default async function MarcarPage({
         )}
       </section>
 
-      <div className="mt-6 flex flex-wrap items-baseline justify-between gap-2">
+      {/* ─── Result count + active filter chips ─── */}
+      <div className="mt-7 flex flex-wrap items-baseline justify-between gap-2">
         <p className="text-sm text-muted-foreground">
           <strong className="text-foreground">{filtered.length}</strong>{" "}
           {filtered.length === 1 ? "médico" : "médicos"}
-          {q ? ` para "${q}"` : ""}
+          {q ? (
+            <>
+              {" para "}
+              <strong className="text-foreground">&ldquo;{q}&rdquo;</strong>
+            </>
+          ) : null}
           {specialty ? ` · ${specialty}` : ""}
           {province ? ` · ${province}` : ""}
         </p>
       </div>
 
+      {/* ─── Doctor list ─── */}
       {filtered.length === 0 ? (
         <div className="mt-4">
           <EmptyState
             icon="🩺"
             title="Nenhum médico encontrado"
             desc={
-              q || specialty || province
+              hasFilters
                 ? "Tente ajustar os filtros ou limpar a pesquisa."
                 : "Ainda não há médicos no sistema. Volte mais tarde."
             }
             action={
-              q || specialty || province
+              hasFilters
                 ? { href: baseHref, label: "Limpar filtros" }
                 : undefined
             }
           />
         </div>
       ) : (
-        <ul className="mt-4 space-y-3">
+        <ul className="mt-4 grid gap-3">
           {filtered.map((d) => {
             const c = pickClinic(d.clinic);
             return (
               <li
                 key={d.id}
-                className="group flex flex-wrap items-center gap-4 rounded-2xl border border-border bg-card p-5 transition hover:border-primary/40 hover:shadow-md"
+                className="group relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg"
               >
-                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-primary text-base font-bold text-white shadow-sm">
-                  {initials(d.full_name)}
-                </span>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-base font-bold text-foreground">
-                      Dr(a). {d.full_name ?? "—"}
-                    </span>
+                <div className="flex flex-wrap items-center gap-4">
+                  {/* Gradient-ringed avatar */}
+                  <div className="relative shrink-0">
+                    <div className="rounded-2xl bg-gradient-to-br from-sky-500 to-emerald-500 p-0.5 shadow-md shadow-sky-500/20">
+                      <div className="grid size-16 place-items-center overflow-hidden rounded-[14px] bg-card text-base font-bold text-foreground">
+                        {d.avatar_url ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={d.avatar_url}
+                            alt={d.full_name ?? "Médico"}
+                            className="size-full object-cover"
+                          />
+                        ) : (
+                          initials(d.full_name)
+                        )}
+                      </div>
+                    </div>
                     {d.medical_license && (
-                      <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary ring-1 ring-primary/20">
-                        Verificado
+                      <span
+                        title="Médico verificado"
+                        className="absolute -bottom-1 -right-1 grid size-5 place-items-center rounded-full bg-emerald-500 text-white shadow-sm ring-2 ring-card"
+                      >
+                        <CheckCircle2 className="size-3" />
                       </span>
                     )}
-                    <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/100/10 px-1.5 py-0.5 text-[11px] font-bold text-amber-600 dark:text-amber-400">
-                      <Star className="h-2.5 w-2.5 fill-amber-500 text-amber-500" />
-                      Novo
-                    </span>
                   </div>
 
-                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                    {d.specialty ? (
-                      <span className="inline-flex items-center gap-1">
-                        <Stethoscope className="h-3.5 w-3.5 text-primary" />
-                        {d.specialty}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <span className="text-base font-bold tracking-tight text-foreground">
+                        Dr(a). {d.full_name ?? "—"}
                       </span>
-                    ) : (
-                      <span className="italic text-muted-foreground">
-                        Especialidade não indicada
-                      </span>
-                    )}
-                    {c?.name && (
-                      <>
-                        <span aria-hidden className="text-border">·</span>
-                        <span>{c.name}</span>
-                      </>
-                    )}
-                    {c?.province && (
-                      <>
-                        <span aria-hidden className="text-border">·</span>
-                        <span className="inline-flex items-center gap-1">
-                          <MapPin className="h-3.5 w-3.5" />
-                          {c.province}
+                      {d.medical_license && (
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-emerald-500/20 dark:text-emerald-400">
+                          <CheckCircle2 className="size-2.5" />
+                          Verificado
                         </span>
-                      </>
-                    )}
-                  </div>
-                </div>
+                      )}
+                    </div>
 
-                <BookingSheet
-                  doctorId={d.id}
-                  doctorName={d.full_name ?? "Médico"}
-                  doctorSpecialty={d.specialty}
-                  clinicName={c?.name ?? null}
-                  defaultDate={tomorrowISODate()}
-                />
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                      {d.specialty ? (
+                        <span className="inline-flex items-center gap-1.5">
+                          <Stethoscope className="size-3.5 text-primary" />
+                          {d.specialty}
+                        </span>
+                      ) : (
+                        <span className="italic text-muted-foreground">
+                          Especialidade não indicada
+                        </span>
+                      )}
+                      {c?.name && (
+                        <>
+                          <span aria-hidden className="text-border">
+                            ·
+                          </span>
+                          <span className="inline-flex items-center gap-1.5">
+                            <Building2 className="size-3.5" />
+                            {c.name}
+                          </span>
+                        </>
+                      )}
+                      {c?.province && (
+                        <>
+                          <span aria-hidden className="text-border">
+                            ·
+                          </span>
+                          <span className="inline-flex items-center gap-1.5">
+                            <MapPin className="size-3.5" />
+                            {c.province}
+                          </span>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Type chips */}
+                    <div className="mt-2.5 flex flex-wrap gap-1.5">
+                      <ConsultTypePill icon={Building2}>
+                        Presencial
+                      </ConsultTypePill>
+                      <ConsultTypePill icon={Video}>Vídeo</ConsultTypePill>
+                    </div>
+                  </div>
+
+                  <BookingSheet
+                    doctorId={d.id}
+                    doctorName={d.full_name ?? "Médico"}
+                    doctorSpecialty={d.specialty}
+                    doctorAvatarUrl={d.avatar_url}
+                    clinicName={c?.name ?? null}
+                    defaultDate={today}
+                  />
+                </div>
               </li>
             );
           })}
@@ -327,11 +395,26 @@ function FacetPill({
       className={
         "inline-flex items-center rounded-full px-3 py-1 text-xs font-medium transition " +
         (active
-          ? "bg-primary text-white shadow-sm"
-          : "border border-border bg-card text-foreground hover:border-primary/40 hover:bg-primary/10/40")
+          ? "bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-sm"
+          : "border border-border bg-card text-foreground hover:border-primary/40 hover:bg-primary/5")
       }
     >
       {children}
     </Link>
+  );
+}
+
+function ConsultTypePill({
+  icon: Icon,
+  children,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  children: React.ReactNode;
+}) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full bg-muted/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+      <Icon className="size-3" />
+      {children}
+    </span>
   );
 }

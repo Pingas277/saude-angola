@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import Logo from "../_brand/Logo";
-import ThemeToggle from "../_theme/ThemeToggle";
 import { logoutAction } from "../(auth)/actions";
 import { ROLE_NAV, type RoleKey, type NavItem } from "./nav";
 import {
@@ -68,7 +67,6 @@ export default function AppShell({
         <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur md:hidden">
           <Logo href={homeHref} size="sm" subtitle={roleLabel} />
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger
                 aria-label="Abrir menu"
@@ -175,9 +173,6 @@ function SidebarFooter({
             Sair
           </button>
         </form>
-        <div className="hidden md:block">
-          <ThemeToggle />
-        </div>
       </div>
     </div>
   );

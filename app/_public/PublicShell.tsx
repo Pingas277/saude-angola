@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../_brand/Logo";
-import ThemeToggle from "../_theme/ThemeToggle";
 
 const NAV = [
   { href: "/sobre", label: "Sobre nós" },
@@ -31,7 +30,6 @@ export default function PublicShell({
             ))}
           </nav>
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <Link
               href="/entrar"
               className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"

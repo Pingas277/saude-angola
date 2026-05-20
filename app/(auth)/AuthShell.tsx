@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Video, FileText, CreditCard, ShieldCheck } from "lucide-react";
 import Logo from "../_brand/Logo";
-import ThemeToggle from "../_theme/ThemeToggle";
 
 const FEATURES = [
   {
@@ -120,10 +119,6 @@ export default function AuthShell({
 
       {/* === Form panel (right) === */}
       <section className="relative flex flex-col items-center justify-center px-6 py-12 sm:px-10">
-        <div className="absolute right-5 top-5">
-          <ThemeToggle />
-        </div>
-
         <div className="w-full max-w-md">
           <div className="mb-10 flex justify-center lg:hidden">
             <Logo href="/" size="md" />

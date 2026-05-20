@@ -9,14 +9,17 @@ import {
   ShieldCheck,
   Stethoscope,
   CreditCard,
-  Clock,
-  Users,
   Search,
+  Smartphone,
+  Building2,
+  CalendarCheck,
+  Sparkles,
   MapPin,
 } from "lucide-react";
 import Logo from "./_brand/Logo";
 import ThemeToggle from "./_theme/ThemeToggle";
 import DoctorSearch from "./_landing/DoctorSearch";
+import AnimatedNumber from "./_ui/AnimatedNumber";
 import { Reveal, Stagger, StaggerItem } from "./_motion/Reveal";
 import {
   Accordion,
@@ -26,59 +29,83 @@ import {
 } from "@/components/ui/accordion";
 
 // =============================================================================
-// ANGOLASAUDE · landing page — clinical-minimal
-// Linear/Vercel-inspired: airy, hairline borders, one emerald accent, fully
-// token-driven so it works in light and dark. No gradients/glows/heavy shadows.
+// ANGOLASAUDE landing — photo-forward, simple words, dense visuals.
 // =============================================================================
+
+const STEPS = [
+  {
+    icon: Search,
+    n: "1",
+    title: "Procure",
+    desc: "Escolha a especialidade ou o nome do médico. Veja quem está disponível em Angola.",
+  },
+  {
+    icon: CalendarCheck,
+    n: "2",
+    title: "Marque",
+    desc: "Escolha o horário e pague no telemóvel com Multicaixa Express.",
+  },
+  {
+    icon: Video,
+    n: "3",
+    title: "Consulte",
+    desc: "Vai à clínica ou fala por vídeo. Recebe a receita digital no telemóvel.",
+  },
+];
 
 const FEATURES = [
   {
     icon: Search,
-    title: "Rede de médicos",
-    desc: "Procure por especialidade, clínica ou nome. Veja preço, disponibilidade e marque online — em qualquer cidade de Angola.",
+    title: "Encontre o seu médico",
+    desc: "Procure por especialidade, clínica, província ou nome. Marque em segundos.",
   },
   {
     icon: Video,
-    title: "Telemedicina por vídeo",
-    desc: "Sem deslocações. Triagem assistida por IA em segundos e consulta com médico licenciado em minutos.",
+    title: "Consulta por vídeo",
+    desc: "Sem deslocações. Fale com um médico licenciado em minutos.",
   },
   {
     icon: FileText,
-    title: "Receitas digitais com QR",
-    desc: "Receitas válidas em farmácias parceiras em Angola. PDF descarregável e código QR para verificação.",
+    title: "Receita no telemóvel",
+    desc: "Com código QR, válida nas farmácias. Sempre consigo.",
   },
   {
     icon: Pill,
-    title: "Histórico clínico unificado",
-    desc: "Diagnósticos, prescrições, exames e sinais vitais — todos num passaporte de saúde digital seu.",
+    title: "Tudo num só sítio",
+    desc: "Consultas, receitas, exames e faturas — sempre acessíveis.",
   },
   {
     icon: CreditCard,
-    title: "Pagamentos integrados",
-    desc: "Multicaixa Express integrado. Comprovativo automático em PDF logo após o pagamento.",
+    title: "Multicaixa Express",
+    desc: "Pague no telemóvel. Recebe o comprovativo automaticamente.",
   },
   {
     icon: Stethoscope,
-    title: "Plataforma para clínicas",
-    desc: "Gestão de equipa, agenda e faturação — substitua livros de marcações em papel pelo digital.",
+    title: "Sistema para clínicas",
+    desc: "Equipa, agenda, faturação e farmácia — substitua o papel.",
   },
 ];
 
-const STEPS = [
+const FAQ = [
   {
-    n: "01",
-    title: "Procure",
-    desc: "Pesquise por especialidade, clínica ou nome do médico. Filtre por província ou disponibilidade.",
+    q: "Preciso de instalar alguma aplicação?",
+    a: "Não. Funciona no telemóvel, tablet ou computador — só precisa do navegador. Funciona em redes 3G.",
   },
   {
-    n: "02",
-    title: "Marque",
-    desc: "Escolha o horário e o tipo — presencial na clínica ou por vídeo. Pagamento via Multicaixa Express.",
+    q: "As receitas são reconhecidas nas farmácias?",
+    a: "Sim. Cada receita tem um código QR único, verificável no acto pelas farmácias parceiras.",
   },
   {
-    n: "03",
-    title: "Consulte",
-    desc: "Atendimento com o médico. Receita digital com QR e histórico clínico ficam no seu painel.",
+    q: "Como pago a consulta?",
+    a: "Por Multicaixa Express, no telemóvel. Recebe o comprovativo automaticamente em PDF.",
+  },
+  {
+    q: "Os meus dados estão seguros?",
+    a: "Sim. Cada utilizador acede apenas aos seus dados. Conformidade RGPD desde o primeiro dia.",
+  },
+  {
+    q: "A minha clínica pode aderir?",
+    a: "Sim. As subscrições começam em 100.000 Kz/mês com contrato anual e setup personalizado. Contacte suporte@saudeangola.ao.",
   },
 ];
 
@@ -86,9 +113,7 @@ const PLANS = [
   {
     name: "Básico",
     price: "100.000",
-    currency: "Kz",
-    period: "/mês",
-    desc: "Ideal para clínicas pequenas a iniciar a digitalização.",
+    desc: "Clínicas pequenas a começar a digitalização.",
     features: [
       "Até 3 médicos",
       "Marcações online",
@@ -100,12 +125,10 @@ const PLANS = [
   {
     name: "Padrão",
     price: "250.000",
-    currency: "Kz",
-    period: "/mês",
-    desc: "Para clínicas estabelecidas que querem escalar operações.",
+    desc: "Clínicas estabelecidas que querem escalar.",
     features: [
       "Até 10 médicos",
-      "Telemedicina B2C ilimitada",
+      "Consultas por vídeo ilimitadas",
       "Faturação Multicaixa Express",
       "Gestão de farmácia interna",
       "Suporte prioritário",
@@ -115,9 +138,7 @@ const PLANS = [
   {
     name: "Premium",
     price: "500.000",
-    currency: "Kz",
-    period: "/mês",
-    desc: "Para grupos hospitalares e redes de clínicas.",
+    desc: "Grupos hospitalares e redes de clínicas.",
     features: [
       "Médicos ilimitados",
       "Multi-clínica",
@@ -129,82 +150,25 @@ const PLANS = [
   },
 ];
 
-const TESTIMONIALS = [
-  {
-    quote:
-      "Pela primeira vez consigo gerir as marcações da clínica sem livros em papel. A faturação por Multicaixa Express simplificou tudo.",
-    author: "Dr.ª Esperança Cardoso",
-    role: "Diretora Clínica · Luanda",
-    initials: "EC",
-  },
-  {
-    quote:
-      "Vivo no Huambo. Antes ia a Luanda para uma consulta de seguimento. Agora falo com o meu médico por vídeo e recebo a receita no telemóvel.",
-    author: "Joaquim Mateus",
-    role: "Paciente · Huambo",
-    initials: "JM",
-  },
-  {
-    quote:
-      "A triagem com IA prioriza correctamente os casos urgentes. Atendo o que importa primeiro — uma poupança real de tempo no consultório.",
-    author: "Dr. Manuel Silva",
-    role: "Medicina Geral · Benguela",
-    initials: "MS",
-  },
-];
-
-const FAQ = [
-  {
-    q: "Preciso de instalar alguma aplicação?",
-    a: "Não. A ANGOLASAUDE funciona inteiramente no navegador — Chrome, Safari, Edge — em qualquer telemóvel, tablet ou computador. Funciona em ligações 3G/4G.",
-  },
-  {
-    q: "As receitas digitais são reconhecidas em farmácias?",
-    a: "Sim. Cada receita inclui um código QR único. As farmácias parceiras verificam a autenticidade no acto. Estamos a expandir a rede de parceiros em Luanda e nas províncias.",
-  },
-  {
-    q: "Como funciona o pagamento?",
-    a: "Pagamentos por Multicaixa Express, integrado nativamente. Confirma no telemóvel, recebe o comprovativo automaticamente em PDF. Em breve: cartão e transferência bancária.",
-  },
-  {
-    q: "Os meus dados clínicos estão seguros?",
-    a: "Sim. Cada utilizador acede apenas aos seus próprios dados (Row-Level Security ao nível da base de dados). Conformidade RGPD. Nunca partilhamos dados com terceiros sem consentimento.",
-  },
-  {
-    q: "A minha clínica pode aderir?",
-    a: "Sim. As subscrições começam em 100.000 Kz/mês com contrato anual e setup personalizado para a clínica. Para aderir, contacte a nossa equipa em suporte@saudeangola.ao — tratamos de tudo, do onboarding à formação.",
-  },
-  {
-    q: "Há contrato anual? Posso cancelar?",
-    a: "Sim, há contrato anual. Cobre o setup inicial, formação da equipa e suporte prioritário. As condições de renovação são acordadas com cada clínica antes de aderir.",
-  },
-];
-
-const REGIONS = [
-  "Luanda",
-  "Benguela",
-  "Huambo",
-  "Huíla",
-  "Cabinda",
-  "Lunda Norte",
-  "Bié",
-];
-
 const btnPrimary =
-  "inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
 const btnOutline =
-  "inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground";
+  "inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent hover:text-accent-foreground";
+
+const btnOnDark =
+  "inline-flex items-center justify-center gap-2 rounded-lg border border-white/30 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur transition-colors hover:bg-white/20";
 
 export default function HomePage() {
   return (
     <main className="bg-background text-foreground">
-      {/* === Nav === */}
+      {/* ============ Top nav ============ */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
           <Logo size="md" />
           <nav className="hidden items-center gap-1 md:flex">
-            <NavLink href="#marcar">Marcar consulta</NavLink>
-            <NavLink href="#caracteristicas">Características</NavLink>
+            <NavLink href="#como">Como funciona</NavLink>
+            <NavLink href="#procurar">Procurar médico</NavLink>
             <NavLink href="#precos">Preços</NavLink>
             <NavLink href="#faq">Perguntas</NavLink>
           </nav>
@@ -217,212 +181,219 @@ export default function HomePage() {
               Entrar
             </Link>
             <Link href="/registar" className={btnPrimary}>
-              Começar
+              Criar conta
               <ArrowRight className="size-4" />
             </Link>
           </div>
         </div>
       </header>
 
-      {/* === Hero === */}
-      <section className="border-b border-border">
-        <Stagger className="mx-auto max-w-4xl px-6 py-24 text-center sm:py-32">
-          <StaggerItem>
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-              <span
-                aria-hidden
-                className="inline-block size-1.5 rounded-full bg-primary"
-              />
-              Plataforma de saúde · Angola
-            </span>
-          </StaggerItem>
-
-          <StaggerItem>
-            <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Marque com <span className="text-primary">qualquer médico</span>,
-              em qualquer clínica.
-            </h1>
-          </StaggerItem>
-
-          <StaggerItem>
-            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-              A primeira plataforma que junta médicos e clínicas privadas em
-              Angola num só sítio. Procure por especialidade, escolha o
-              profissional e marque online — sem telefonemas.
-            </p>
-          </StaggerItem>
-
-          <StaggerItem>
-            <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link href="/registar" className={btnPrimary}>
-                Começar gratuitamente
-                <ArrowRight className="size-4" />
-              </Link>
-              <Link href="#marcar" className={btnOutline}>
-                Procurar médicos
-              </Link>
-            </div>
-          </StaggerItem>
-
-          <StaggerItem>
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
-              <TrustItem>Multicaixa Express integrado</TrustItem>
-              <TrustItem>Receita com QR válida em farmácias</TrustItem>
-              <TrustItem>Conformidade RGPD</TrustItem>
-            </div>
-          </StaggerItem>
-
-          {/* === Hero product preview === */}
-          <StaggerItem className="mx-auto mt-16 max-w-3xl">
-            <div className="overflow-hidden rounded-xl border border-border bg-card text-left shadow-sm">
-              <div className="flex items-center gap-1.5 border-b border-border px-4 py-3">
-                <span className="size-2.5 rounded-full bg-muted-foreground/20" />
-                <span className="size-2.5 rounded-full bg-muted-foreground/20" />
-                <span className="size-2.5 rounded-full bg-muted-foreground/20" />
-                <span className="ml-3 truncate text-[11px] text-muted-foreground">
-                  saude-angola.vercel.app
+      {/* ============ Hero (photo-forward) ============ */}
+      <section className="relative overflow-hidden">
+        <Image
+          src="/sobre/angola-hero.webp"
+          alt="Angola"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/65 to-primary/40" />
+        <div className="relative mx-auto max-w-5xl px-6 py-24 sm:py-32">
+          <Stagger>
+            <StaggerItem>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/85 backdrop-blur">
+                <span className="size-1.5 rounded-full bg-primary" />
+                Saúde digital · Angola
+              </span>
+            </StaggerItem>
+            <StaggerItem>
+              <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl">
+                Marque consultas.
+                <br />
+                Fale com médicos.
+                <br />
+                <span className="text-white/70">Tudo no telemóvel.</span>
+              </h1>
+            </StaggerItem>
+            <StaggerItem>
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
+                A ANGOLASAUDE liga pacientes, médicos e clínicas privadas em
+                Angola. Sem filas. Sem telefonemas.
+              </p>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link href="/registar" className={btnPrimary}>
+                  Criar conta grátis
+                  <ArrowRight className="size-4" />
+                </Link>
+                <a
+                  href="mailto:suporte@saudeangola.ao?subject=Quero%20saber%20mais%20(cl%C3%ADnica)"
+                  className={btnOnDark}
+                >
+                  Sou uma clínica
+                </a>
+              </div>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-white/80">
+                <span className="inline-flex items-center gap-2">
+                  <Check className="size-4 text-primary-foreground/90" />
+                  Grátis para pacientes
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <Check className="size-4 text-primary-foreground/90" />
+                  21 províncias
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <Check className="size-4 text-primary-foreground/90" />
+                  Receita válida nas farmácias
                 </span>
               </div>
-              <div className="grid gap-4 p-6 md:grid-cols-[1.4fr_1fr]">
-                <div>
-                  <div className="text-[11px] font-medium uppercase tracking-wider text-primary">
-                    Telemedicina · Disponível agora
-                  </div>
-                  <div className="mt-1.5 text-xl font-semibold tracking-tight text-foreground">
-                    Falar com um médico
-                  </div>
-
-                  <div className="mt-5 flex items-center gap-3 rounded-lg border border-border px-4 py-3">
-                    <span className="grid size-10 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-                      MS
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-sm font-semibold text-foreground">
-                        Dr. Manuel Silva
-                      </div>
-                      <div className="truncate text-xs text-muted-foreground">
-                        Medicina Geral · ★ 4,9
-                      </div>
-                    </div>
-                    <span className="rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-primary">
-                      ≈ 3 min
-                    </span>
-                  </div>
-
-                  <div className="mt-3 grid grid-cols-3 gap-2">
-                    <Mini label="Consulta" value="15.000 Kz" />
-                    <Mini label="Receita" value="QR + PDF" />
-                    <Mini label="Pagamento" value="MCX" />
-                  </div>
-                </div>
-
-                <div className="flex flex-col justify-between gap-4 rounded-lg border border-border bg-muted/40 p-5">
-                  <div>
-                    <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                      Triagem assistida
-                    </div>
-                    <div className="mt-1 text-sm font-semibold text-foreground">
-                      Urgência: Média
-                    </div>
-                    <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-                      Cefaleia há 3 dias · Intensidade 6/10 · sem bandeiras
-                      vermelhas. Recomenda-se consulta no próprio dia.
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs">
-                    <span className="rounded-full border border-border px-2 py-0.5 font-medium text-foreground">
-                      Média
-                    </span>
-                    <span className="text-muted-foreground">
-                      classificação IA
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </StaggerItem>
-        </Stagger>
+            </StaggerItem>
+          </Stagger>
+        </div>
       </section>
 
-      {/* === Regions strip === */}
-      <section className="border-b border-border bg-muted/30">
-        <Reveal className="mx-auto max-w-6xl px-6 py-10 text-center">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Disponível em todas as 21 províncias de Angola
-          </p>
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground">
-            {REGIONS.map((r) => (
-              <span key={r} className="inline-flex items-center gap-2">
-                <span
-                  aria-hidden
-                  className="inline-block size-1.5 rounded-full bg-primary/60"
-                />
-                {r}
-              </span>
-            ))}
-            <span className="text-muted-foreground/60">+ 14 outras</span>
-          </div>
-        </Reveal>
-      </section>
-
-      {/* === Encontrar médico / Discovery === */}
-      <section id="marcar" className="border-b border-border">
-        <div className="mx-auto max-w-6xl px-6 py-24">
+      {/* ============ Como funciona — 3 steps ============ */}
+      <section id="como" className="border-b border-border bg-muted/30">
+        <div className="mx-auto max-w-6xl px-6 py-20">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <SectionEyebrow>Médicos e clínicas</SectionEyebrow>
-            <SectionTitle>Encontre o seu médico.</SectionTitle>
+            <SectionEyebrow>Como funciona</SectionEyebrow>
+            <SectionTitle>Três passos. Nada mais.</SectionTitle>
             <SectionLede>
-              Pesquise por especialidade, clínica ou nome. Compare
-              disponibilidade e preços. Marque online — em qualquer cidade de
-              Angola, sem fazer um único telefonema.
+              Sem filas, sem telefonemas, sem deslocações desnecessárias.
             </SectionLede>
           </Reveal>
 
-          <Reveal className="mx-auto mt-14 max-w-3xl">
-            <DoctorSearch />
+          <Stagger className="mt-14 grid gap-6 md:grid-cols-3">
+            {STEPS.map((s) => (
+              <StaggerItem
+                key={s.n}
+                className="relative rounded-2xl border border-border bg-card p-7 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="grid size-11 place-items-center rounded-xl bg-primary/10 text-primary">
+                    <s.icon className="size-5" />
+                  </span>
+                  <span className="text-3xl font-extrabold tracking-tight text-primary/20">
+                    {s.n}
+                  </span>
+                </div>
+                <h3 className="mt-5 text-lg font-semibold text-foreground">
+                  {s.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {s.desc}
+                </p>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
+      </section>
+
+      {/* ============ Procurar médico (live search) ============ */}
+      <section id="procurar" className="border-b border-border">
+        <div className="mx-auto max-w-6xl px-6 py-24">
+          <Reveal className="mx-auto max-w-2xl text-center">
+            <SectionEyebrow>Médicos e clínicas</SectionEyebrow>
+            <SectionTitle>Encontre o seu médico em segundos.</SectionTitle>
+            <SectionLede>
+              Procure por especialidade, clínica ou província. Marque online.
+            </SectionLede>
           </Reveal>
 
-          <Reveal
-            className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-sm text-muted-foreground"
-            delay={0.1}
-          >
-            <span className="inline-flex items-center gap-2">
-              <Stethoscope className="size-4 text-primary" />
-              Centenas de médicos verificados
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <MapPin className="size-4 text-primary" />
-              Em todas as 21 províncias
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <CreditCard className="size-4 text-primary" />
-              Pagamento por Multicaixa Express
-            </span>
+          <Reveal className="mx-auto mt-12 max-w-3xl">
+            <DoctorSearch />
           </Reveal>
         </div>
       </section>
 
-      {/* === Features === */}
-      <section id="caracteristicas" className="border-b border-border bg-muted/30">
+      {/* ============ Stats band (animated, on photo) ============ */}
+      <section className="relative overflow-hidden border-b border-border">
+        <Image
+          src="/sobre/angola-2.jpg"
+          alt="Angola"
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-black/70" />
+        <Reveal className="relative mx-auto max-w-6xl px-6 py-20">
+          <div className="grid grid-cols-2 gap-8 text-center text-white sm:grid-cols-4">
+            <StatBlock value={21} label="Províncias" suffix="/ 21" />
+            <StatBlock value={500} label="Clínicas privadas" suffix="+" />
+            <StatBlock value={3} label="Min. até atendimento" prefix="≈" />
+            <StatBlock value={5} label="Perfis num só sistema" />
+          </div>
+        </Reveal>
+      </section>
+
+      {/* ============ Por dentro (product preview) ============ */}
+      <section className="border-b border-border bg-muted/30">
+        <div className="mx-auto max-w-6xl px-6 py-24">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <Reveal>
+              <SectionEyebrow>Por dentro</SectionEyebrow>
+              <SectionTitle>O seu painel de saúde, sempre consigo.</SectionTitle>
+              <ul className="mt-6 space-y-3">
+                {[
+                  "Veja as suas próximas consultas",
+                  "Descarregue receitas com QR para a farmácia",
+                  "Pague faturas no telemóvel com Multicaixa Express",
+                  "Aceda ao seu histórico clínico em qualquer lado",
+                ].map((b) => (
+                  <li key={b} className="flex items-start gap-3 text-sm">
+                    <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+                      <Check className="size-3" />
+                    </span>
+                    <span className="text-foreground">{b}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8">
+                <Link href="/registar" className={btnPrimary}>
+                  Começar agora
+                  <ArrowRight className="size-4" />
+                </Link>
+              </div>
+            </Reveal>
+
+            <Reveal>
+              <DashboardMockup />
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ Features grid ============ */}
+      <section className="border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-24">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <SectionEyebrow>Características</SectionEyebrow>
-            <SectionTitle>Tudo o que precisa para a saúde digital.</SectionTitle>
+            <SectionEyebrow>O que recebe</SectionEyebrow>
+            <SectionTitle>Tudo o que precisa.</SectionTitle>
             <SectionLede>
-              Construído para a realidade angolana. Funciona em qualquer rede,
-              em qualquer telemóvel, em qualquer província.
+              Pensado para a realidade angolana — funciona em qualquer
+              telemóvel, em qualquer rede.
             </SectionLede>
           </Reveal>
 
-          <Stagger className="mt-16 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((f) => (
+          <Stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {FEATURES.map((f, i) => (
               <StaggerItem
                 key={f.title}
-                className="group bg-card p-7 transition-colors hover:bg-accent/40"
+                className="group rounded-2xl border border-border bg-card p-7 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
               >
-                <div className="grid size-10 place-items-center rounded-lg border border-border bg-background text-primary">
+                <span
+                  className="grid size-11 place-items-center rounded-xl"
+                  style={{
+                    background: i % 2 === 0 ? "rgba(47,116,196,0.12)" : "rgba(224,138,75,0.15)",
+                    color: i % 2 === 0 ? "#2F74C4" : "#E08A4B",
+                  }}
+                >
                   <f.icon className="size-5" />
-                </div>
+                </span>
                 <h3 className="mt-5 text-base font-semibold text-foreground">
                   {f.title}
                 </h3>
@@ -435,64 +406,73 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* === How it works === */}
-      <section id="como-funciona" className="border-b border-border">
+      {/* ============ For clinics ============ */}
+      <section className="border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-24">
-          <Reveal className="max-w-2xl">
-            <SectionEyebrow>Como funciona</SectionEyebrow>
-            <SectionTitle>Da triagem à receita em minutos.</SectionTitle>
-            <SectionLede>
-              Um fluxo simples, pensado para quem nunca usou uma aplicação de
-              saúde. Sem jargão. Sem deslocações.
-            </SectionLede>
-          </Reveal>
-
-          <Stagger className="mt-16 grid gap-6 lg:grid-cols-3">
-            {STEPS.map((s) => (
-              <StaggerItem
-                key={s.n}
-                className="rounded-xl border border-border bg-card p-7"
-              >
-                <span className="inline-grid size-10 place-items-center rounded-lg border border-border text-sm font-semibold text-primary">
-                  {s.n}
-                </span>
-                <h3 className="mt-6 text-base font-semibold text-foreground">
-                  {s.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {s.desc}
-                </p>
-              </StaggerItem>
-            ))}
-          </Stagger>
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <Reveal className="order-2 lg:order-1">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border shadow-sm">
+                <Image
+                  src="/sobre/angola.jpg"
+                  alt="Angola"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-primary/30 via-transparent to-transparent" />
+                <div className="absolute bottom-5 left-5 right-5">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-foreground backdrop-blur">
+                    <Building2 className="size-3.5 text-primary" />
+                    Para clínicas privadas em Angola
+                  </span>
+                </div>
+              </div>
+            </Reveal>
+            <Reveal className="order-1 lg:order-2">
+              <SectionEyebrow>Para clínicas</SectionEyebrow>
+              <SectionTitle>Sem papel. Sem livros de marcações.</SectionTitle>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                Um único sistema para a sua clínica — médicos, recepção,
+                enfermagem e administração — com agenda, faturação Multicaixa
+                Express e farmácia.
+              </p>
+              <ul className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {[
+                  "Marcações online",
+                  "Receitas digitais",
+                  "Faturação automática",
+                  "Gestão de equipa",
+                  "Farmácia interna",
+                  "Painel de gestão",
+                ].map((b) => (
+                  <li
+                    key={b}
+                    className="inline-flex items-center gap-2 text-sm text-foreground"
+                  >
+                    <Check className="size-4 text-primary" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a
+                  href="mailto:suporte@saudeangola.ao?subject=Ades%C3%A3o%20de%20cl%C3%ADnica"
+                  className={btnPrimary}
+                >
+                  Falar com a equipa
+                  <ArrowRight className="size-4" />
+                </a>
+                <Link href="#precos" className={btnOutline}>
+                  Ver preços
+                </Link>
+              </div>
+            </Reveal>
+          </div>
         </div>
       </section>
 
-      {/* === Stats === */}
-      <section className="border-b border-border bg-muted/30">
-        <Reveal className="mx-auto max-w-6xl px-6 py-20">
-          <div className="grid gap-10 sm:grid-cols-3">
-            <Stat
-              icon={<Clock className="size-5" />}
-              value="≈ 3 min"
-              label="Tempo médio até atendimento"
-            />
-            <Stat
-              icon={<Users className="size-5" />}
-              value="500+"
-              label="Clínicas privadas em Angola"
-            />
-            <Stat
-              icon={<ShieldCheck className="size-5" />}
-              value="21 / 21"
-              label="Províncias com cobertura"
-            />
-          </div>
-        </Reveal>
-      </section>
-
-      {/* === Pricing === */}
-      <section id="precos" className="border-b border-border">
+      {/* ============ Pricing ============ */}
+      <section id="precos" className="border-b border-border bg-muted/30">
         <div className="mx-auto max-w-6xl px-6 py-24">
           <Reveal className="mx-auto max-w-2xl text-center">
             <SectionEyebrow>Preços para clínicas</SectionEyebrow>
@@ -500,25 +480,25 @@ export default function HomePage() {
             <SectionLede>
               Contrato anual com setup personalizado.{" "}
               <strong className="font-semibold text-foreground">
-                Para aderir, fale connosco.
-              </strong>{" "}
-              Pacientes usam grátis.
+                Pacientes usam grátis.
+              </strong>
             </SectionLede>
           </Reveal>
 
-          <Stagger className="mt-16 grid gap-6 lg:grid-cols-3">
+          <Stagger className="mt-14 grid gap-6 lg:grid-cols-3">
             {PLANS.map((p) => (
               <StaggerItem
                 key={p.name}
                 className={
-                  "relative rounded-xl border bg-card p-8 " +
+                  "relative rounded-2xl border bg-card p-8 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md " +
                   (p.highlighted
                     ? "border-primary ring-1 ring-primary/20"
                     : "border-border")
                 }
               >
                 {p.highlighted && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
+                  <span className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow">
+                    <Sparkles className="size-3" />
                     Mais popular
                   </span>
                 )}
@@ -529,12 +509,8 @@ export default function HomePage() {
                   <span className="text-4xl font-semibold tracking-tight text-foreground">
                     {p.price}
                   </span>
-                  <span className="text-sm font-medium text-foreground">
-                    {p.currency}
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    {p.period}
-                  </span>
+                  <span className="text-sm font-medium text-foreground">Kz</span>
+                  <span className="text-sm text-muted-foreground">/mês</span>
                 </div>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                   {p.desc}
@@ -550,75 +526,25 @@ export default function HomePage() {
                     </li>
                   ))}
                 </ul>
-                <Link
-                  href={`mailto:suporte@saudeangola.ao?subject=Ades%C3%A3o%20ao%20plano%20${encodeURIComponent(p.name)}&body=Bom%20dia%2C%20gostar%C3%ADamos%20de%20aderir%20ao%20plano%20${encodeURIComponent(p.name)}.`}
-                  className={
-                    "mt-7 w-full " +
-                    (p.highlighted ? btnPrimary : btnOutline)
-                  }
+                <a
+                  href={`mailto:suporte@saudeangola.ao?subject=Ades%C3%A3o%20ao%20plano%20${encodeURIComponent(p.name)}`}
+                  className={"mt-7 w-full " + (p.highlighted ? btnPrimary : btnOutline)}
                 >
                   Falar com a equipa
                   <ArrowRight className="size-4" />
-                </Link>
-              </StaggerItem>
-            ))}
-          </Stagger>
-
-          <p className="mt-10 text-center text-sm text-muted-foreground">
-            Hospital ou rede com necessidades específicas?{" "}
-            <Link
-              href="mailto:suporte@saudeangola.ao?subject=Plano%20personalizado"
-              className="font-medium text-primary hover:underline"
-            >
-              Pedir proposta personalizada →
-            </Link>
-          </p>
-        </div>
-      </section>
-
-      {/* === Testimonials === */}
-      <section className="border-b border-border bg-muted/30">
-        <div className="mx-auto max-w-6xl px-6 py-24">
-          <Reveal className="max-w-2xl">
-            <SectionEyebrow>Histórias reais</SectionEyebrow>
-            <SectionTitle>Médicos e pacientes em Angola.</SectionTitle>
-          </Reveal>
-
-          <Stagger className="mt-14 grid gap-6 lg:grid-cols-3">
-            {TESTIMONIALS.map((t) => (
-              <StaggerItem
-                as="figure"
-                key={t.author}
-                className="rounded-xl border border-border bg-card p-8"
-              >
-                <blockquote className="text-sm leading-relaxed text-foreground">
-                  “{t.quote}”
-                </blockquote>
-                <figcaption className="mt-6 flex items-center gap-3 border-t border-border pt-5">
-                  <span className="grid size-10 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-                    {t.initials}
-                  </span>
-                  <div>
-                    <div className="text-sm font-semibold text-foreground">
-                      {t.author}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {t.role}
-                    </div>
-                  </div>
-                </figcaption>
+                </a>
               </StaggerItem>
             ))}
           </Stagger>
         </div>
       </section>
 
-      {/* === FAQ === */}
+      {/* ============ FAQ ============ */}
       <section id="faq" className="border-b border-border">
         <div className="mx-auto max-w-3xl px-6 py-24">
           <Reveal className="text-center">
             <SectionEyebrow>Perguntas frequentes</SectionEyebrow>
-            <SectionTitle>Tudo o que precisa de saber.</SectionTitle>
+            <SectionTitle>O que precisa de saber.</SectionTitle>
           </Reveal>
 
           <Accordion className="mt-12 space-y-3">
@@ -626,7 +552,7 @@ export default function HomePage() {
               <AccordionItem
                 key={i}
                 value={`item-${i}`}
-                className="rounded-lg border border-border bg-card px-5"
+                className="rounded-xl border border-border bg-card px-5 shadow-sm"
               >
                 <AccordionTrigger className="text-left text-sm font-medium text-foreground hover:no-underline">
                   {item.q}
@@ -637,53 +563,47 @@ export default function HomePage() {
               </AccordionItem>
             ))}
           </Accordion>
+        </div>
+      </section>
 
-          <div className="mt-10 text-center">
-            <p className="text-sm text-muted-foreground">
-              Outra pergunta?{" "}
-              <Link
-                href="mailto:suporte@saudeangola.ao"
-                className="font-medium text-primary hover:underline"
-              >
-                suporte@saudeangola.ao
-              </Link>
-            </p>
+      {/* ============ Final CTA (photo + scrim) ============ */}
+      <section className="relative overflow-hidden">
+        <Image
+          src="/sobre/angola.jpg"
+          alt="Angola"
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-primary/60 to-black/80" />
+        <div className="relative mx-auto max-w-3xl px-6 py-24 text-center">
+          <Smartphone className="mx-auto size-10 text-white/70" />
+          <h2 className="mt-6 text-3xl font-semibold tracking-tight text-white sm:text-5xl">
+            A sua saúde, no seu telemóvel.
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-base text-white/85">
+            Grátis para pacientes. Crie a sua conta em menos de um minuto.
+          </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link href="/registar" className={btnPrimary}>
+              Criar conta grátis
+              <ArrowRight className="size-4" />
+            </Link>
+            <Link href="/entrar" className={btnOnDark}>
+              Já tenho conta
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* === Final CTA === */}
-      <section className="border-b border-border">
-        <Reveal className="mx-auto max-w-6xl px-6 py-24">
-          <div className="rounded-2xl border border-border bg-muted/40 px-6 py-16 text-center">
-            <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              Pronto para começar?
-            </h2>
-            <p className="mx-auto mt-4 max-w-lg text-sm text-muted-foreground">
-              Crie a sua conta em menos de um minuto. Pacientes começam grátis.
-              Clínicas têm 14 dias de teste do plano Padrão.
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link href="/registar" className={btnPrimary}>
-                Começar gratuitamente
-                <ArrowRight className="size-4" />
-              </Link>
-              <Link href="/entrar" className={btnOutline}>
-                Já tenho conta
-              </Link>
-            </div>
-          </div>
-        </Reveal>
-      </section>
-
-      {/* === Footer === */}
+      {/* ============ Footer ============ */}
       <footer className="bg-background">
         <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Logo size="md" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Plataforma digital de saúde para Angola — telemedicina e gestão
-              clínica numa só app.
+              Saúde digital para Angola — marque consultas, fale com médicos e
+              receba receitas no telemóvel.
             </p>
             <div className="mt-5 flex items-center gap-2 text-xs text-muted-foreground">
               <Image
@@ -696,12 +616,11 @@ export default function HomePage() {
               <span>Feito em Angola</span>
             </div>
           </div>
-
           <FooterCol
             title="Produto"
             links={[
-              { href: "#caracteristicas", label: "Características" },
-              { href: "#como-funciona", label: "Como funciona" },
+              { href: "#como", label: "Como funciona" },
+              { href: "#procurar", label: "Procurar médico" },
               { href: "#precos", label: "Preços" },
               { href: "/registar", label: "Criar conta" },
             ]}
@@ -748,6 +667,8 @@ export default function HomePage() {
   );
 }
 
+// ============ Helpers ============
+
 function NavLink({
   href,
   children,
@@ -767,9 +688,9 @@ function NavLink({
 
 function SectionEyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-xs font-medium uppercase tracking-wider text-primary">
+    <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
       {children}
-    </span>
+    </div>
   );
 }
 
@@ -789,46 +710,25 @@ function SectionLede({ children }: { children: React.ReactNode }) {
   );
 }
 
-function TrustItem({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-1.5">
-      <Check className="size-3.5 text-primary" />
-      {children}
-    </span>
-  );
-}
-
-function Mini({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg border border-border px-2.5 py-2">
-      <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-        {label}
-      </div>
-      <div className="mt-0.5 text-xs font-semibold text-foreground">
-        {value}
-      </div>
-    </div>
-  );
-}
-
-function Stat({
-  icon,
+function StatBlock({
   value,
   label,
+  prefix,
+  suffix,
 }: {
-  icon: React.ReactNode;
-  value: string;
+  value: number;
   label: string;
+  prefix?: string;
+  suffix?: string;
 }) {
   return (
-    <div className="text-center">
-      <div className="mx-auto grid size-10 place-items-center rounded-lg border border-border text-primary">
-        {icon}
+    <div>
+      <div className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+        {prefix}
+        <AnimatedNumber value={value} />
+        {suffix}
       </div>
-      <div className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
-        {value}
-      </div>
-      <div className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
+      <div className="mt-1.5 text-xs font-medium uppercase tracking-wider text-white/80">
         {label}
       </div>
     </div>
@@ -863,5 +763,125 @@ function FooterCol({
   );
 }
 
-// (Static FilterPill / DoctorRow mock removed — the live search teaser is
-// now the live <DoctorSearch /> client component in app/_landing/.)
+// A polished CSS mockup of the patient painel — simple, on-brand, no real
+// screenshot needed and looks like our actual product.
+function DashboardMockup() {
+  return (
+    <div className="relative">
+      {/* Soft glow */}
+      <div
+        aria-hidden
+        className="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-br from-primary/15 via-transparent to-amber-400/10 blur-2xl"
+      />
+      <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-xl">
+        {/* Browser chrome */}
+        <div className="flex items-center gap-1.5 border-b border-border bg-muted/40 px-4 py-2.5">
+          <span className="size-2.5 rounded-full bg-muted-foreground/30" />
+          <span className="size-2.5 rounded-full bg-muted-foreground/30" />
+          <span className="size-2.5 rounded-full bg-muted-foreground/30" />
+          <span className="ml-2 truncate text-[10px] text-muted-foreground">
+            saude-angola.vercel.app/painel
+          </span>
+        </div>
+
+        <div className="p-5">
+          {/* Mini header */}
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-[10px] font-medium uppercase tracking-wider text-primary">
+                Bom dia, Maria
+              </div>
+              <div className="mt-0.5 text-base font-semibold text-foreground">
+                O seu painel
+              </div>
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-2.5 py-1.5 text-[11px] font-semibold text-primary-foreground">
+              <CalendarCheck className="size-3.5" />
+              Marcar
+            </span>
+          </div>
+
+          {/* KPI tiles */}
+          <div className="mt-4 grid grid-cols-3 gap-2.5">
+            <MiniKpi color="primary" label="Próx." value="14:30" />
+            <MiniKpi color="amber" label="Receitas" value="3" />
+            <MiniKpi color="sky" label="Exames" value="2" />
+          </div>
+
+          {/* Next appointment card */}
+          <div className="mt-3 rounded-xl border border-border bg-background p-3.5">
+            <div className="flex items-center gap-3">
+              <span className="grid size-9 place-items-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+                MS
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-semibold text-foreground">
+                  Dr. Manuel Silva
+                </div>
+                <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                  <MapPin className="size-3" />
+                  Clínica Demo · Luanda
+                </div>
+              </div>
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                Confirmada
+              </span>
+            </div>
+          </div>
+
+          {/* Mini chart */}
+          <div className="mt-3 rounded-xl border border-border bg-background p-3.5">
+            <div className="flex items-center justify-between">
+              <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                Atividade · 7 dias
+              </div>
+              <ShieldCheck className="size-3.5 text-primary" />
+            </div>
+            <div className="mt-2 flex h-14 items-end gap-1.5">
+              {[40, 70, 30, 90, 55, 80, 65].map((h, i) => (
+                <div
+                  key={i}
+                  className="flex-1 rounded-t"
+                  style={{
+                    height: `${h}%`,
+                    background:
+                      i === 5
+                        ? "linear-gradient(180deg, #2F74C4, #5C9CE0)"
+                        : "rgba(47,116,196,0.35)",
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MiniKpi({
+  color,
+  label,
+  value,
+}: {
+  color: "primary" | "amber" | "sky";
+  label: string;
+  value: string;
+}) {
+  const styles =
+    color === "primary"
+      ? "bg-primary/10 text-primary"
+      : color === "amber"
+        ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
+        : "bg-sky-500/10 text-sky-600 dark:text-sky-400";
+  return (
+    <div className="rounded-lg border border-border bg-background p-2.5">
+      <div className={"text-[9px] font-medium uppercase tracking-wider " + styles}>
+        {label}
+      </div>
+      <div className="mt-1 text-base font-semibold text-foreground tabular-nums">
+        {value}
+      </div>
+    </div>
+  );
+}

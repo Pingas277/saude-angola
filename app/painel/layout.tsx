@@ -3,7 +3,6 @@ import { createClient } from "@/lib/supabase/server";
 import AppShell from "../_app/AppShell";
 import FlashToast from "../_ui/FlashToast";
 import RealtimeAppointments from "../_ui/RealtimeAppointments";
-import { consumeFlash } from "@/lib/flash";
 
 export default async function PainelLayout({
   children,
@@ -16,7 +15,7 @@ export default async function PainelLayout({
   } = await supabase.auth.getUser();
   if (!user) redirect("/entrar");
 
-  const [{ data: profile }, { data: patient }, flash] = await Promise.all([
+  const [{ data: profile }, { data: patient }] = await Promise.all([
     supabase
       .from("profiles")
       .select("full_name, role, avatar_url")
@@ -27,7 +26,6 @@ export default async function PainelLayout({
       .select("id")
       .eq("profile_id", user.id)
       .maybeSingle(),
-    consumeFlash(),
   ]);
 
   return (
@@ -37,7 +35,7 @@ export default async function PainelLayout({
       avatarUrl={profile?.avatar_url}
     >
       {children}
-      <FlashToast flash={flash} />
+      <FlashToast />
       {patient?.id && (
         <RealtimeAppointments role="patient" filterId={patient.id} />
       )}

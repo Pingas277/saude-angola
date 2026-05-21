@@ -2,27 +2,41 @@
 
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
-import type { Flash } from "@/lib/flash";
+
+type FlashKind = "success" | "error" | "info";
+type FlashPayload = { kind?: FlashKind; title?: string; desc?: string } | null;
 
 /**
- * Client component that fires a single toast on mount. The flash
- * is consumed (cookie deleted) on the server before this renders,
- * so a refresh will not double-fire.
+ * Reads the one-shot flash cookie via /api/flash (the route
+ * handler also deletes it), then fires a single sonner toast.
+ *
+ * We fetch from the client because Next.js 15 forbids cookie
+ * mutation from Server Components.
  */
-export default function FlashToast({ flash }: { flash: Flash | null }) {
+export default function FlashToast() {
   const fired = useRef(false);
 
   useEffect(() => {
-    if (!flash || fired.current) return;
+    if (fired.current) return;
     fired.current = true;
-    const fn =
-      flash.kind === "error"
-        ? toast.error
-        : flash.kind === "info"
-          ? toast.info
-          : toast.success;
-    fn(flash.title, flash.desc ? { description: flash.desc } : undefined);
-  }, [flash]);
+
+    fetch("/api/flash", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data: { flash: FlashPayload } | null) => {
+        const f = data?.flash;
+        if (!f?.title) return;
+        const fn =
+          f.kind === "error"
+            ? toast.error
+            : f.kind === "info"
+              ? toast.info
+              : toast.success;
+        fn(f.title, f.desc ? { description: f.desc } : undefined);
+      })
+      .catch(() => {
+        /* ignore — flash is a nice-to-have */
+      });
+  }, []);
 
   return null;
 }

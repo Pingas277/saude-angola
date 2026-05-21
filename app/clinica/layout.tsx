@@ -3,7 +3,6 @@ import { createClient } from "@/lib/supabase/server";
 import AppShell from "../_app/AppShell";
 import FlashToast from "../_ui/FlashToast";
 import RealtimeAppointments from "../_ui/RealtimeAppointments";
-import { consumeFlash } from "@/lib/flash";
 
 export default async function ClinicaLayout({
   children,
@@ -33,8 +32,6 @@ export default async function ClinicaLayout({
     ? `${clinic.name}${clinic.subscription_plan ? ` · plano ${clinic.subscription_plan}` : ""}`
     : undefined;
 
-  const flash = await consumeFlash();
-
   return (
     <AppShell
       role="admin"
@@ -43,7 +40,7 @@ export default async function ClinicaLayout({
       avatarUrl={profile?.avatar_url}
     >
       {children}
-      <FlashToast flash={flash} />
+      <FlashToast />
       {profile?.clinic_id && (
         <RealtimeAppointments role="clinic" filterId={profile.clinic_id} />
       )}

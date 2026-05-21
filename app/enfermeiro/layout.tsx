@@ -3,7 +3,6 @@ import { createClient } from "@/lib/supabase/server";
 import AppShell from "../_app/AppShell";
 import FlashToast from "../_ui/FlashToast";
 import RealtimeAppointments from "../_ui/RealtimeAppointments";
-import { consumeFlash } from "@/lib/flash";
 
 export default async function EnfermeiroLayout({
   children,
@@ -28,8 +27,6 @@ export default async function EnfermeiroLayout({
     ? profile?.clinic[0]
     : profile?.clinic;
 
-  const flash = await consumeFlash();
-
   return (
     <AppShell
       role="nurse"
@@ -38,7 +35,7 @@ export default async function EnfermeiroLayout({
       avatarUrl={profile?.avatar_url}
     >
       {children}
-      <FlashToast flash={flash} />
+      <FlashToast />
       {profile?.clinic_id && (
         <RealtimeAppointments role="clinic" filterId={profile.clinic_id} />
       )}

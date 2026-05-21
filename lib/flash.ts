@@ -1,7 +1,8 @@
 // Server-only "flash" messages: one-shot toasts that survive a
-// redirect. A server action calls setFlash() before redirect();
-// the destination layout/page calls consumeFlash() to read +
-// delete the cookie, then passes the result to a client toast.
+// redirect. Server actions call setFlash() before redirect();
+// the destination is responsible for reading the cookie via the
+// /api/flash route handler (the handler also deletes it, since
+// Next.js 15 forbids cookie mutation from Server Components).
 
 import "server-only";
 import { cookies } from "next/headers";
@@ -22,24 +23,6 @@ export async function setFlash(flash: Flash): Promise<void> {
     path: "/",
     httpOnly: true,
     sameSite: "lax",
-    maxAge: 60, // 60s is plenty — the very next request consumes it
+    maxAge: 60, // 60s is plenty — /api/flash consumes it on next load
   });
-}
-
-/** Read and clear the flash cookie. Safe to call from any RSC. */
-export async function consumeFlash(): Promise<Flash | null> {
-  const c = await cookies();
-  const raw = c.get(COOKIE)?.value;
-  if (!raw) return null;
-  try {
-    const parsed = JSON.parse(raw) as Flash;
-    if (parsed && typeof parsed.title === "string") {
-      c.delete(COOKIE);
-      return parsed;
-    }
-  } catch {
-    /* malformed — fall through */
-  }
-  c.delete(COOKIE);
-  return null;
 }

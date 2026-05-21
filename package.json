@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate": "node migrations/run.js"
+    "migrate": "node migrations/run.js",
+    "seed": "node scripts/seed-demo-doctors.mjs && node scripts/seed-demo-data.mjs",
+    "unseed": "node scripts/unseed-demo.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.95.1",

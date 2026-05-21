@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { AlertTriangle, ArrowLeft, ShieldCheck, Stethoscope } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import TriageForm from "./TriageForm";
 
@@ -31,30 +32,61 @@ export default async function TriagemPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-10">
-      <div className="mb-4">
-        <Link
-          href="/painel/telemedicina"
-          className="text-sm font-medium text-muted-foreground hover:text-foreground"
-        >
-          ← Voltar
-        </Link>
+      {/* Back */}
+      <Link
+        href="/painel/telemedicina"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <ArrowLeft className="size-4" />
+        Telemedicina
+      </Link>
+
+      {/* Emergency warning — top of page so nobody misses it */}
+      <div className="mt-5 flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50/80 px-4 py-3 text-sm text-rose-900 shadow-sm">
+        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-rose-500 text-white shadow-md shadow-rose-500/30">
+          <AlertTriangle className="size-4" />
+        </span>
+        <div className="leading-relaxed">
+          <strong className="font-bold">
+            Emergência grave?
+          </strong>{" "}
+          Acidente, paragem cardíaca, hemorragia massiva —{" "}
+          <a
+            href="tel:112"
+            className="font-bold underline underline-offset-2 hover:no-underline"
+          >
+            ligue 112
+          </a>{" "}
+          imediatamente.
+        </div>
       </div>
 
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">
-        Triagem inicial
-      </h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Algumas perguntas rápidas para o médico já saber o que se passa quando
-        atender a chamada.
-      </p>
+      {/* Header */}
+      <header className="mt-7">
+        <div className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+          Telemedicina
+        </div>
+        <h1 className="mt-2 flex items-center gap-2 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+          <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-sky-500 to-emerald-500 text-white shadow-md shadow-sky-500/20">
+            <Stethoscope className="size-5" />
+          </span>
+          Como se está a sentir?
+        </h1>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          Algumas perguntas rápidas — o médico vai ver tudo antes de atender,
+          para ser mais rápido.
+        </p>
+      </header>
 
-      <div className="mt-8 rounded-xl border border-border bg-card p-6">
+      {/* Form */}
+      <div className="mt-8">
         <TriageForm />
       </div>
 
-      <p className="mt-4 text-center text-xs text-muted-foreground">
-        Em caso de emergência grave (acidente, paragem cardíaca, hemorragia
-        massiva), ligue 112 imediatamente.
+      {/* Privacy footer */}
+      <p className="mt-8 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+        <ShieldCheck className="size-3.5 text-emerald-600" />
+        Só o médico vê estas respostas.
       </p>
     </main>
   );

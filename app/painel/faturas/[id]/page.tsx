@@ -14,6 +14,7 @@ import {
   Stethoscope,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { waShareUrl, waContactUrl } from "@/lib/whatsapp";
 import {
   INVOICE_STATUS_LABELS,
   PAYMENT_METHOD_LABELS,
@@ -174,7 +175,7 @@ export default async function FaturaPage({
   const friendlyId = `LG-INV-${shortId(inv.id)}`;
 
   // WhatsApp pre-filled message
-  const waText = encodeURIComponent(
+  const waShareHref = waShareUrl(
     isPaid
       ? `Comprovativo Lunga · ${friendlyId}\n${friendlyAmount} pagos${
           inv.paid_at ? ` em ${formatDatePT(inv.paid_at)}` : ""
@@ -186,6 +187,10 @@ export default async function FaturaPage({
         }${doctor?.full_name ? `\nDr(a). ${doctor.full_name}` : ""}${
           clinic?.name ? `\n${clinic.name}` : ""
         }`
+  );
+  const waClinicHref = waContactUrl(
+    clinic?.phone ?? null,
+    `Olá, sou paciente Lunga. Tenho uma dúvida sobre a fatura ${friendlyId}.`
   );
 
   return (
@@ -411,7 +416,7 @@ export default async function FaturaPage({
           </a>
         )}
         <a
-          href={`https://wa.me/?text=${waText}`}
+          href={waShareHref}
           target="_blank"
           rel="noopener"
           className="group inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-emerald-500/40 hover:bg-emerald-50"
@@ -419,7 +424,17 @@ export default async function FaturaPage({
           <Share2 className="size-4 text-emerald-600" />
           Partilhar via WhatsApp
         </a>
-        {clinic?.phone && (
+        {waClinicHref ? (
+          <a
+            href={waClinicHref}
+            target="_blank"
+            rel="noopener"
+            className="group inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-emerald-500/40 hover:bg-emerald-50"
+          >
+            <FileText className="size-4 text-emerald-600" />
+            Falar com clínica
+          </a>
+        ) : clinic?.phone ? (
           <a
             href={`tel:${clinic.phone}`}
             className="group inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-primary/30 hover:bg-accent"
@@ -427,7 +442,7 @@ export default async function FaturaPage({
             <FileText className="size-4" />
             Contactar clínica
           </a>
-        )}
+        ) : null}
       </section>
 
       {/* ─── Help footer ─── */}

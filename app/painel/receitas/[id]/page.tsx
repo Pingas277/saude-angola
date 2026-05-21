@@ -15,6 +15,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { waShareUrl, waContactUrl } from "@/lib/whatsapp";
 import { formatDatePT, formatDateTimePT } from "@/lib/labels";
 
 export const metadata = { title: "Receita · Lunga" };
@@ -128,10 +129,14 @@ export default async function ReceitaDetailPage({
   const medsSummary = meds
     .map((m, i) => `${i + 1}. ${m.name ?? "—"}${m.dosage ? ` (${m.dosage})` : ""}`)
     .join("\n");
-  const waText = encodeURIComponent(
+  const waShareHref = waShareUrl(
     `Receita Lunga · ${friendlyId}\n${expired ? "(EXPIRADA)" : "Válida"}${
       doctor?.full_name ? `\nDr(a). ${doctor.full_name}` : ""
     }\n\n${medsSummary}\n\nQR: ${rx.qr_code}`
+  );
+  const waClinicHref = waContactUrl(
+    clinic?.phone ?? null,
+    `Olá, sou paciente Lunga. Tenho uma dúvida sobre a receita ${friendlyId}.`
   );
 
   return (
@@ -357,7 +362,7 @@ export default async function ReceitaDetailPage({
           Descarregar PDF
         </a>
         <a
-          href={`https://wa.me/?text=${waText}`}
+          href={waShareHref}
           target="_blank"
           rel="noopener"
           className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-emerald-500/40 hover:bg-emerald-50"
@@ -365,15 +370,17 @@ export default async function ReceitaDetailPage({
           <Share2 className="size-4 text-emerald-600" />
           Partilhar via WhatsApp
         </a>
-        {clinic?.phone && (
+        {waClinicHref ? (
           <a
-            href={`tel:${clinic.phone}`}
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-primary/30 hover:bg-accent"
+            href={waClinicHref}
+            target="_blank"
+            rel="noopener"
+            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:border-emerald-500/40 hover:bg-emerald-50"
           >
-            <Building2 className="size-4" />
-            Contactar clínica
+            <Building2 className="size-4 text-emerald-600" />
+            Falar com clínica
           </a>
-        )}
+        ) : null}
       </section>
 
       {/* ─── Help footer ─── */}

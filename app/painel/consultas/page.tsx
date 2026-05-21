@@ -8,9 +8,11 @@ import {
   Clock,
   History,
   Plus,
+  Share2,
   Video,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { waShareUrl } from "@/lib/whatsapp";
 import EmptyState from "@/app/_ui/EmptyState";
 import {
   APPOINTMENT_STATUS_LABELS,
@@ -446,6 +448,21 @@ function SpotlightCard({ appt }: { appt: ApptRow }) {
               <div className="mt-0.5">{clinic.address}</div>
             </div>
           ) : null}
+
+          {/* Share via WhatsApp — useful to forward to family */}
+          <a
+            href={waShareUrl(
+              `Tenho consulta na Lunga: ${dayLabel} às ${timeStr}${
+                doctor?.full_name ? ` com Dr(a). ${doctor.full_name}` : ""
+              }${clinic?.name ? ` (${clinic.name})` : ""}.`
+            )}
+            target="_blank"
+            rel="noopener"
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold text-white/90 backdrop-blur transition-colors hover:bg-white/20"
+          >
+            <Share2 className="size-3.5" />
+            Partilhar
+          </a>
         </div>
       </div>
     </section>

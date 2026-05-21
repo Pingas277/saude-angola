@@ -15,6 +15,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { BLOOD_TYPE_LABELS, formatDatePT } from "@/lib/labels";
 import MedicoHeader from "../_components/MedicoHeader";
+import { waContactUrl } from "@/lib/whatsapp";
 
 export const metadata = { title: "Pacientes · Lunga" };
 
@@ -418,9 +419,9 @@ function PatientCardComponent({ p }: { p: PatientCard }) {
           <ArrowRight className="size-3.5" />
         </Link>
       ) : (
-        p.phone && (
+        waContactUrl(p.phone, `Olá ${p.name.split(" ")[0]}, sou o seu médico na Lunga.`) && (
           <a
-            href={`https://wa.me/${p.phone.replace(/[^\d+]/g, "")}`}
+            href={waContactUrl(p.phone, `Olá ${p.name.split(" ")[0]}, sou o seu médico na Lunga.`)!}
             target="_blank"
             rel="noopener"
             className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-bold text-foreground shadow-sm transition-all hover:border-emerald-500/40 hover:bg-emerald-50"

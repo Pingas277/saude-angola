@@ -13,6 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { waShareUrl } from "@/lib/whatsapp";
 import { formatDatePT } from "@/lib/labels";
 
 export const metadata = { title: "Exames · Lunga" };
@@ -197,7 +198,7 @@ export default async function ExamesPage() {
 
 function LabCard({ row }: { row: LabRow }) {
   const friendlyId = `LG-EX-${shortId(row.id)}`;
-  const waText = encodeURIComponent(
+  const waShareHref = waShareUrl(
     `Exame Lunga · ${friendlyId}\n${row.test_name ?? "Resultado"}${
       row.lab_name ? `\n${row.lab_name}` : ""
     }${row.result_date ? `\n${formatDatePT(row.result_date)}` : ""}${
@@ -263,7 +264,7 @@ function LabCard({ row }: { row: LabRow }) {
           </span>
         )}
         <a
-          href={`https://wa.me/?text=${waText}`}
+          href={waShareHref}
           target="_blank"
           rel="noopener"
           className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3.5 py-2 text-xs font-semibold text-foreground transition-all hover:border-emerald-500/40 hover:bg-emerald-50"

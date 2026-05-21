@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { setFlash } from "@/lib/flash";
 
 export type BookingState = { error?: string } | null;
 
@@ -64,6 +65,22 @@ export async function bookAppointmentAction(
 
   if (error) return { error: error.message };
 
+  const friendlyDate = scheduledAt.toLocaleDateString("pt-PT", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+  });
+  const friendlyTime = scheduledAt.toLocaleTimeString("pt-PT", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  await setFlash({
+    kind: "success",
+    title: "Consulta marcada!",
+    desc: `${friendlyDate} às ${friendlyTime} — vai aparecer no seu painel.`,
+  });
+
   revalidatePath("/painel", "layout");
-  redirect("/painel/consultas?marcada=1");
+  redirect("/painel/consultas");
 }

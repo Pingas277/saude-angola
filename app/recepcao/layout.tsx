@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AppShell from "../_app/AppShell";
+import FlashToast from "../_ui/FlashToast";
+import RealtimeAppointments from "../_ui/RealtimeAppointments";
+import { consumeFlash } from "@/lib/flash";
 
 export default async function RecepcaoLayout({
   children,
@@ -15,7 +18,7 @@ export default async function RecepcaoLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role, avatar_url, clinic:clinics(name)")
+    .select("full_name, role, avatar_url, clinic_id, clinic:clinics(name)")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -25,6 +28,8 @@ export default async function RecepcaoLayout({
     ? profile?.clinic[0]
     : profile?.clinic;
 
+  const flash = await consumeFlash();
+
   return (
     <AppShell
       role="receptionist"
@@ -33,6 +38,10 @@ export default async function RecepcaoLayout({
       avatarUrl={profile?.avatar_url}
     >
       {children}
+      <FlashToast flash={flash} />
+      {profile?.clinic_id && (
+        <RealtimeAppointments role="clinic" filterId={profile.clinic_id} />
+      )}
     </AppShell>
   );
 }

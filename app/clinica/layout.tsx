@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AppShell from "../_app/AppShell";
+import FlashToast from "../_ui/FlashToast";
+import RealtimeAppointments from "../_ui/RealtimeAppointments";
+import { consumeFlash } from "@/lib/flash";
 
 export default async function ClinicaLayout({
   children,
@@ -15,7 +18,9 @@ export default async function ClinicaLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role, avatar_url, clinic:clinics(name, subscription_plan)")
+    .select(
+      "full_name, role, avatar_url, clinic_id, clinic:clinics(name, subscription_plan)"
+    )
     .eq("id", user.id)
     .maybeSingle();
 
@@ -28,6 +33,8 @@ export default async function ClinicaLayout({
     ? `${clinic.name}${clinic.subscription_plan ? ` · plano ${clinic.subscription_plan}` : ""}`
     : undefined;
 
+  const flash = await consumeFlash();
+
   return (
     <AppShell
       role="admin"
@@ -36,6 +43,10 @@ export default async function ClinicaLayout({
       avatarUrl={profile?.avatar_url}
     >
       {children}
+      <FlashToast flash={flash} />
+      {profile?.clinic_id && (
+        <RealtimeAppointments role="clinic" filterId={profile.clinic_id} />
+      )}
     </AppShell>
   );
 }

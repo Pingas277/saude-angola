@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { setFlash } from "@/lib/flash";
 
 export type AuthState = { error?: string } | null;
 
@@ -59,6 +60,10 @@ export async function loginAction(
   }
 
   await rememberLastUser();
+  await setFlash({
+    kind: "success",
+    title: "Bem-vindo de volta!",
+  });
   revalidatePath("/", "layout");
   redirect(redirectTo);
 }
@@ -101,8 +106,13 @@ export async function signupAction(
   }
 
   await rememberLastUser();
+  await setFlash({
+    kind: "success",
+    title: "Bem-vindo à Lunga 🎉",
+    desc: "A sua conta foi criada. Pode marcar a primeira consulta.",
+  });
   revalidatePath("/", "layout");
-  redirect("/painel?bemvindo=1");
+  redirect("/painel");
 }
 
 export async function logoutAction() {

@@ -4,6 +4,7 @@ import ThemeProvider from "./_theme/ThemeProvider";
 import { Geist } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
@@ -74,6 +75,7 @@ export default function RootLayout({
       <body className="min-h-screen antialiased">
         <ThemeProvider>
           {children}
+          <Toaster position="top-center" richColors closeButton />
           <Analytics />
           <SpeedInsights />
         </ThemeProvider>

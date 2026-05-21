@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AppShell from "../_app/AppShell";
+import FlashToast from "../_ui/FlashToast";
+import RealtimeAppointments from "../_ui/RealtimeAppointments";
+import { consumeFlash } from "@/lib/flash";
 
 export default async function MedicoLayout({
   children,
@@ -26,6 +29,8 @@ export default async function MedicoLayout({
     : profile?.clinic;
   const meta = [profile?.specialty, clinic?.name].filter(Boolean).join(" · ");
 
+  const flash = await consumeFlash();
+
   return (
     <AppShell
       role="doctor"
@@ -34,6 +39,8 @@ export default async function MedicoLayout({
       avatarUrl={profile?.avatar_url}
     >
       {children}
+      <FlashToast flash={flash} />
+      <RealtimeAppointments role="doctor" filterId={user.id} />
     </AppShell>
   );
 }

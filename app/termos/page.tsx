@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Callout, LegalLayout, Section } from "../_public/LegalLayout";
+import ContactForm from "../_public/ContactForm";
 
 export const metadata = {
   title: "Termos de Serviço",
@@ -396,6 +397,8 @@ export default function TermosPage() {
         </p>
         <p>Sede: Luanda, República de Angola.</p>
       </Section>
+
+      <ContactForm source="termos" />
     </LegalLayout>
   );
 }

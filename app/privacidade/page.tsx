@@ -5,6 +5,7 @@ import {
   LegalLayout,
   Section,
 } from "../_public/LegalLayout";
+import ContactForm from "../_public/ContactForm";
 
 export const metadata = {
   title: "Política de Privacidade",
@@ -209,19 +210,19 @@ export default function PrivacidadePage() {
           direito.
         </p>
 
-        <p className="mt-3 font-semibold text-foreground">Subcontratantes</p>
-        <p>
-          Para operar a plataforma, recorremos a:
+        <p className="mt-3">
+          Para operar a plataforma, recorremos a prestadores técnicos sob
+          contrato (alojamento, processamento de pagamentos, autenticação), que
+          atuam apenas como subcontratantes e nunca para finalidades próprias.
+          O detalhe destes prestadores pode ser pedido em{" "}
+          <a
+            href="mailto:privacidade@lunga.ao"
+            className="font-semibold text-primary hover:underline"
+          >
+            privacidade@lunga.ao
+          </a>
+          .
         </p>
-        <DataTable
-          headers={["Serviço", "Para quê", "Localização"]}
-          rows={[
-            ["Supabase", "Base de dados, autenticação, armazenamento de ficheiros", "União Europeia (Frankfurt, Alemanha)"],
-            ["Vercel", "Alojamento da aplicação", "União Europeia"],
-            ["Multicaixa Express (EMIS)", "Processamento de pagamentos", "Angola"],
-            ["Anthropic", "Triagem assistida por IA (texto descritivo apenas, sem identificação direta)", "Estados Unidos"],
-          ]}
-        />
       </Section>
 
       <Section id="transferencias" title="6. Transferências internacionais">
@@ -437,6 +438,8 @@ export default function PrivacidadePage() {
         </p>
         <p>Sede: Luanda, Angola.</p>
       </Section>
+
+      <ContactForm source="privacidade" />
     </LegalLayout>
   );
 }

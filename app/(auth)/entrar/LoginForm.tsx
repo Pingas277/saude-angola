@@ -97,7 +97,7 @@ export default function LoginForm({
 
         <div className="text-right">
           <a
-            href="mailto:suporte@saudeangola.ao?subject=Recuperar%20palavra-passe"
+            href="mailto:suporte@lunga.ao?subject=Recuperar%20palavra-passe"
             className="text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             Esqueceu a palavra-passe?
@@ -166,7 +166,7 @@ export default function LoginForm({
         />
         <div className="mt-1.5 text-right">
           <a
-            href="mailto:suporte@saudeangola.ao?subject=Recuperar%20palavra-passe"
+            href="mailto:suporte@lunga.ao?subject=Recuperar%20palavra-passe"
             className="text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             Esqueceu a palavra-passe?

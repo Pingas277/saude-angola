@@ -55,7 +55,7 @@ const CLINICS = [
     address: 'Rua Marien Ngouabi, Cabinda',
     province: 'Cabinda',
     phone: '+244 231 000 500',
-    email: 'cabinda@saudeangola.ao',
+    email: 'cabinda@lunga.ao',
   },
   {
     id: '77777777-7777-7777-7777-777777777777',
@@ -63,7 +63,7 @@ const CLINICS = [
     address: 'Av. da Independência, Kuito',
     province: 'Bie',
     phone: '+244 248 000 600',
-    email: 'bie@saudeangola.ao',
+    email: 'bie@lunga.ao',
   },
   {
     id: '88888888-8888-8888-8888-888888888888',
@@ -71,7 +71,7 @@ const CLINICS = [
     address: 'Marginal de Moçâmedes, Namibe',
     province: 'Namibe',
     phone: '+244 264 000 700',
-    email: 'namibe@saudeangola.ao',
+    email: 'namibe@lunga.ao',
   },
 ];
 
@@ -141,7 +141,7 @@ function emailFor(name) {
       .replace(/\p{Diacritic}/gu, '')
       .replace(/[^a-z\s]/g, '')
       .trim()
-      .replace(/\s+/g, '.') + '@saudeangola.local'
+      .replace(/\s+/g, '.') + '@lunga.local'
   );
 }
 
@@ -227,4 +227,4 @@ console.log('\nDone.');
 console.log(`  Clinics created: ${clinicsCreated}  (${CLINICS.length - clinicsCreated} already existed)`);
 console.log(`  Doctors created: ${doctorsCreated}  (${doctorsSkipped} already existed)`);
 console.log(`\nLogin password for any demo doctor: ${DEMO_PASSWORD}`);
-console.log('Example: ana.pinto@saudeangola.local / MedicoDemo2026!');
+console.log('Example: ana.pinto@lunga.local / MedicoDemo2026!');

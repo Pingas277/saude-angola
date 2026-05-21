@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Removes ALL demo data created by:
-//   - scripts/seed-demo-doctors.mjs (emails @saudeangola.local)
-//   - scripts/seed-demo-data.mjs    (emails @paciente.saudeangola.local)
+//   - scripts/seed-demo-doctors.mjs (emails @lunga.local)
+//   - scripts/seed-demo-data.mjs    (emails @paciente.lunga.local)
 //
 // Safe to run at any time — only touches rows whose owning auth.user
 // email matches one of those two demo domains. Real users are never
@@ -20,8 +20,15 @@ if (!DATABASE_URL) {
   process.exit(1);
 }
 
-const DOCTOR_EMAIL_DOMAIN  = "@saudeangola.local";
-const PATIENT_EMAIL_DOMAIN = "@paciente.saudeangola.local";
+// We match both the current Lunga-branded domains and the legacy
+// @saudeangola.* ones, so existing seeds from before the rename
+// still get cleaned up safely.
+const DEMO_EMAIL_DOMAINS = [
+  "@lunga.local",
+  "@paciente.lunga.local",
+  "@saudeangola.local",
+  "@paciente.saudeangola.local",
+];
 
 const pgClient = new pg.Client({
   connectionString: DATABASE_URL,
@@ -34,9 +41,8 @@ console.log("— Removing demo data —\n");
 // 1. Find all demo auth users (doctors + patients)
 const { rows: demoUsers } = await pgClient.query(
   `select id, email from auth.users
-    where lower(email) like '%' || $1
-       or lower(email) like '%' || $2`,
-  [DOCTOR_EMAIL_DOMAIN, PATIENT_EMAIL_DOMAIN]
+    where lower(email) like any (array[${DEMO_EMAIL_DOMAINS.map((_, i) => `'%' || $${i + 1}`).join(",")}])`,
+  DEMO_EMAIL_DOMAINS
 );
 const demoIds = demoUsers.map((u) => u.id);
 console.log(`  ${demoUsers.length} demo auth user(s) found`);

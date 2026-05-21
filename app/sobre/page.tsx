@@ -113,7 +113,7 @@ export default function SobrePage() {
                 <ArrowRight className="size-4" />
               </Link>
               <a
-                href="mailto:suporte@saudeangola.ao?subject=Quero%20saber%20mais%20(cl%C3%ADnica)"
+                href="mailto:suporte@lunga.ao?subject=Quero%20saber%20mais%20(cl%C3%ADnica)"
                 className="inline-flex items-center justify-center rounded-lg border border-white/30 bg-white/10 px-5 py-2.5 text-sm font-medium text-white backdrop-blur transition-colors hover:bg-white/20"
               >
                 Sou uma clínica
@@ -350,7 +350,7 @@ export default function SobrePage() {
             </div>
             <div className="space-y-3">
               <a
-                href="mailto:suporte@saudeangola.ao"
+                href="mailto:suporte@lunga.ao"
                 className="flex items-center gap-3 rounded-xl border border-border bg-card px-5 py-4 transition-colors hover:border-foreground/15"
               >
                 <span className="grid size-10 place-items-center rounded-lg bg-primary/10 text-primary">
@@ -361,12 +361,12 @@ export default function SobrePage() {
                     Suporte geral
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    suporte@saudeangola.ao
+                    suporte@lunga.ao
                   </div>
                 </div>
               </a>
               <a
-                href="mailto:suporte@saudeangola.ao?subject=Ades%C3%A3o%20de%20cl%C3%ADnica"
+                href="mailto:suporte@lunga.ao?subject=Ades%C3%A3o%20de%20cl%C3%ADnica"
                 className="flex items-center gap-3 rounded-xl border border-border bg-card px-5 py-4 transition-colors hover:border-foreground/15"
               >
                 <span className="grid size-10 place-items-center rounded-lg bg-primary/10 text-primary">
@@ -416,7 +416,7 @@ export default function SobrePage() {
                 <ArrowRight className="size-4" />
               </Link>
               <a
-                href="mailto:suporte@saudeangola.ao?subject=Quero%20saber%20mais%20(cl%C3%ADnica)"
+                href="mailto:suporte@lunga.ao?subject=Quero%20saber%20mais%20(cl%C3%ADnica)"
                 className="inline-flex items-center justify-center rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
               >
                 Sou uma clínica

@@ -380,7 +380,7 @@ export default async function ReceitaDetailPage({
       <p className="mt-8 text-center text-xs text-muted-foreground">
         A receita está protegida pelo código QR.{" "}
         <a
-          href={`mailto:suporte@saudeangola.ao?subject=Receita%20${friendlyId}`}
+          href={`mailto:suporte@lunga.ao?subject=Receita%20${friendlyId}`}
           className="font-semibold text-primary hover:underline"
         >
           Falar com o suporte

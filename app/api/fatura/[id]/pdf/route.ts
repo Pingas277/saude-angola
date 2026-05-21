@@ -538,7 +538,7 @@ export async function GET(
   );
   drawText(
     page,
-    "Para mais informações, contacte a clínica ou suporte@saudeangola.ao",
+    "Para mais informações, contacte a clínica ou suporte@lunga.ao",
     MARGIN,
     MARGIN + 12,
     fonts,

@@ -99,10 +99,10 @@ export default function TermosPage() {
         <p>
           Questões sobre estes termos:{" "}
           <a
-            href="mailto:suporte@saudeangola.ao"
+            href="mailto:suporte@lunga.ao"
             className="font-medium text-primary hover:underline"
           >
-            suporte@saudeangola.ao
+            suporte@lunga.ao
           </a>
           .
         </p>

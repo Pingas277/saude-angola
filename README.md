@@ -36,8 +36,8 @@ npm run dev
 |---|---|---|
 | Paciente | `saudeangola.qa.1778185789210@gmail.com` | `SaudeAngola2026!` |
 | Médico | `medico.silva@gmail.com` | `LARANJA2005` |
-| Recepção | `recepcao.demo@saudeangola.ao` | `LARANJA2005` |
-| Admin | `admin.demo@saudeangola.ao` | `LARANJA2005` |
+| Recepção | `recepcao.demo@lunga.ao` | `LARANJA2005` |
+| Admin | `admin.demo@lunga.ao` | `LARANJA2005` |
 
 ## Database migrations
 

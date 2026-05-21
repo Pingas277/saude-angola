@@ -9,7 +9,7 @@ values (
   'Avenida 4 de Fevereiro, Luanda',
   'Luanda',
   '+244 222 000 000',
-  'contacto@saudeangola.ao',
+  'contacto@lunga.ao',
   'standard',
   true
 )

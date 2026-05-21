@@ -16,10 +16,10 @@ export default function PrivacidadePage() {
           dados recolhemos, porquê, e quais são os seus direitos. O responsável
           pelo tratamento de dados pode ser contactado em{" "}
           <a
-            href="mailto:privacidade@saudeangola.ao"
+            href="mailto:privacidade@lunga.ao"
             className="font-medium text-primary hover:underline"
           >
-            privacidade@saudeangola.ao
+            privacidade@lunga.ao
           </a>
           .
         </p>
@@ -103,10 +103,10 @@ export default function PrivacidadePage() {
           tratamento dos seus dados, bem como à portabilidade. Para exercer
           estes direitos, contacte{" "}
           <a
-            href="mailto:privacidade@saudeangola.ao"
+            href="mailto:privacidade@lunga.ao"
             className="font-medium text-primary hover:underline"
           >
-            privacidade@saudeangola.ao
+            privacidade@lunga.ao
           </a>
           .
         </p>

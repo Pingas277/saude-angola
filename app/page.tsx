@@ -105,7 +105,7 @@ const FAQ = [
   },
   {
     q: "A minha clínica pode aderir?",
-    a: "Sim. As subscrições começam em 100.000 Kz/mês com contrato anual e setup personalizado. Contacte suporte@saudeangola.ao.",
+    a: "Sim. As subscrições começam em 100.000 Kz/mês com contrato anual e setup personalizado. Contacte suporte@lunga.ao.",
   },
 ];
 
@@ -493,7 +493,7 @@ export default function HomePage() {
               </ul>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
-                  href="mailto:suporte@saudeangola.ao?subject=Ades%C3%A3o%20de%20cl%C3%ADnica"
+                  href="mailto:suporte@lunga.ao?subject=Ades%C3%A3o%20de%20cl%C3%ADnica"
                   className={btnPrimary}
                 >
                   Falar com a equipa
@@ -564,7 +564,7 @@ export default function HomePage() {
                   ))}
                 </ul>
                 <a
-                  href={`mailto:suporte@saudeangola.ao?subject=Ades%C3%A3o%20ao%20plano%20${encodeURIComponent(p.name)}`}
+                  href={`mailto:suporte@lunga.ao?subject=Ades%C3%A3o%20ao%20plano%20${encodeURIComponent(p.name)}`}
                   className={"mt-7 w-full " + (p.highlighted ? btnPrimary : btnOutline)}
                 >
                   Falar com a equipa
@@ -666,7 +666,7 @@ export default function HomePage() {
             title="Empresa"
             links={[
               { href: "/sobre", label: "Sobre nós" },
-              { href: "mailto:suporte@saudeangola.ao", label: "Contacto" },
+              { href: "mailto:suporte@lunga.ao", label: "Contacto" },
               { href: "/sobre", label: "Imprensa" },
               { href: "/sobre", label: "Carreiras" },
             ]}

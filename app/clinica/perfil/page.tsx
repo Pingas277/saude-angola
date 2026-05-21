@@ -102,10 +102,10 @@ export default async function ClinicProfilePage() {
               O plano é gerido pela Lunga. Para alterar limites ou
               funcionalidades, contacte{" "}
               <a
-                href="mailto:suporte@saudeangola.ao"
+                href="mailto:suporte@lunga.ao"
                 className="font-medium text-primary hover:underline"
               >
-                suporte@saudeangola.ao
+                suporte@lunga.ao
               </a>
               .
             </p>

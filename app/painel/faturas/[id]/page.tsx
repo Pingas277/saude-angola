@@ -434,7 +434,7 @@ export default async function FaturaPage({
       <p className="mt-8 text-center text-xs text-muted-foreground">
         Problemas com esta fatura?{" "}
         <a
-          href={`mailto:suporte@saudeangola.ao?subject=Fatura%20${friendlyId}`}
+          href={`mailto:suporte@lunga.ao?subject=Fatura%20${friendlyId}`}
           className="font-semibold text-primary hover:underline"
         >
           Falar com o suporte

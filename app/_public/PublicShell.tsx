@@ -79,7 +79,7 @@ export default function PublicShell({
               Termos
             </Link>
             <a
-              href="mailto:suporte@saudeangola.ao"
+              href="mailto:suporte@lunga.ao"
               className="transition-colors hover:text-foreground"
             >
               Contacto

@@ -91,7 +91,7 @@ export async function registerWalkInAction(
     { auth: { persistSession: false, autoRefreshToken: false } }
   );
 
-  const placeholderEmail = `walkin.${Date.now().toString(36)}.${Math.random().toString(36).slice(2, 8)}@saudeangola.local`;
+  const placeholderEmail = `walkin.${Date.now().toString(36)}.${Math.random().toString(36).slice(2, 8)}@lunga.local`;
   const placeholderPassword = crypto.randomUUID() + "Aa9!";
   const { data: signup, error: signupErr } = await tempClient.auth.signUp({
     email: placeholderEmail,

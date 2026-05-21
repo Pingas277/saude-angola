@@ -75,7 +75,7 @@ function emailFor(name) {
       .replace(/\p{Diacritic}/gu, "")
       .replace(/[^a-z\s]/g, "")
       .trim()
-      .replace(/\s+/g, ".") + "@paciente.saudeangola.local"
+      .replace(/\s+/g, ".") + "@paciente.lunga.local"
   );
 }
 
@@ -371,4 +371,4 @@ console.log(`  Appointments : ${apptCount}`);
 console.log(`  Prescriptions: ${rxCount}`);
 console.log(`  Invoices     : ${invCount}`);
 console.log(`\nLogin password for any demo patient: ${DEMO_PASSWORD}`);
-console.log(`Example: maria.joao.cardoso@paciente.saudeangola.local / ${DEMO_PASSWORD}`);
+console.log(`Example: maria.joao.cardoso@paciente.lunga.local / ${DEMO_PASSWORD}`);

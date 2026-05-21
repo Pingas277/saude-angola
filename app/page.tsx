@@ -36,20 +36,20 @@ const STEPS = [
   {
     icon: Search,
     n: "1",
-    title: "Procure",
-    desc: "Escolha a especialidade ou o nome do médico. Veja quem está disponível em Angola.",
+    title: "Procure o médico",
+    desc: "Veja médicos por especialidade ou nome — em toda a Angola.",
   },
   {
     icon: CalendarCheck,
     n: "2",
-    title: "Marque",
-    desc: "Escolha o horário e pague no telemóvel com Multicaixa Express.",
+    title: "Marque o horário",
+    desc: "Escolha o dia e a hora. Pague com Multicaixa Express.",
   },
   {
     icon: Video,
     n: "3",
-    title: "Consulte",
-    desc: "Vai à clínica ou fala por vídeo. Recebe a receita digital no telemóvel.",
+    title: "Seja atendido",
+    desc: "Vai à clínica ou fala por vídeo. Recebe a receita no telemóvel.",
   },
 ];
 
@@ -220,26 +220,25 @@ export default function HomePage() {
                 <div className="mt-7 flex justify-center lg:justify-start">
                   <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white/70 px-3.5 py-1.5 text-xs font-semibold text-foreground shadow-sm backdrop-blur">
                     <Sparkles className="size-3.5 text-primary" />
-                    Bem-vindo à Lunga
+                    Saúde no telemóvel · Angola
                   </span>
                 </div>
               </StaggerItem>
               <StaggerItem>
                 <h1 className="mt-5 text-center text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-left lg:text-6xl">
-                  Para todos.
+                  Marque consultas
                   <br />
-                  Em{" "}
+                  com médicos.
+                  <br />
                   <span className="bg-gradient-to-r from-sky-500 to-emerald-500 bg-clip-text text-transparent">
-                    toda a Angola
+                    Pelo telemóvel.
                   </span>
-                  .
                 </h1>
               </StaggerItem>
               <StaggerItem>
                 <p className="mx-auto mt-6 max-w-xl text-center text-base leading-relaxed text-muted-foreground sm:text-lg lg:mx-0 lg:text-left">
-                  Saúde no telemóvel — de Luanda ao Cunene, da Lunda ao
-                  Namibe. Um único sítio para encontrar médico, marcar
-                  consulta e ser atendido.
+                  A Lunga liga-o aos médicos e às clínicas de Angola.
+                  Sem filas. Sem chamadas. Em qualquer telemóvel.
                 </p>
               </StaggerItem>
               <StaggerItem>
@@ -248,8 +247,8 @@ export default function HomePage() {
                     Criar conta grátis
                     <ArrowRight className="size-4" />
                   </Link>
-                  <Link href="/sobre" className={btnOutline}>
-                    Conhecer a Lunga
+                  <Link href="#como" className={btnOutline}>
+                    Ver como funciona
                   </Link>
                 </div>
               </StaggerItem>
@@ -265,7 +264,7 @@ export default function HomePage() {
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <Check className="size-3.5 text-emerald-600" />
-                    Receita válida nas farmácias
+                    Receita digital
                   </span>
                 </div>
               </StaggerItem>
@@ -279,30 +278,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ Photo band — Serra da Leba (image-only divider) ============ */}
-      <div className="relative h-56 w-full overflow-hidden sm:h-72 lg:h-80">
-        <Image
-          src="/landing/serra-leba.jpg"
-          alt="Serra da Leba, Angola"
-          fill
-          sizes="100vw"
-          className="object-cover"
-        />
-        {/* Soft fade to the surrounding sections (white above, muted below) */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/30"
-        />
-      </div>
-
-      {/* ============ Como funciona — 3 steps ============ */}
+      {/* ============ Como funciona — 3 steps (right after intro so people understand fast) ============ */}
       <section id="como" className="border-b border-border bg-muted/30">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <Reveal className="mx-auto max-w-2xl text-center">
             <SectionEyebrow>Como funciona</SectionEyebrow>
-            <SectionTitle>Três passos. Nada mais.</SectionTitle>
+            <SectionTitle>Três passos. É tudo.</SectionTitle>
             <SectionLede>
-              Sem filas, sem telefonemas, sem deslocações desnecessárias.
+              Sem filas. Sem chamadas. Sem ir a lado nenhum.
             </SectionLede>
           </Reveal>
 
@@ -331,6 +314,21 @@ export default function HomePage() {
           </Stagger>
         </div>
       </section>
+
+      {/* ============ Photo band — Serra da Leba (image-only divider) ============ */}
+      <div className="relative h-56 w-full overflow-hidden sm:h-72 lg:h-80">
+        <Image
+          src="/landing/serra-leba.jpg"
+          alt="Serra da Leba, Angola"
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/30"
+        />
+      </div>
 
       {/* ============ Procurar médico (live search) ============ */}
       <section id="procurar" className="border-b border-border">

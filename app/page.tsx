@@ -279,8 +279,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ Hero (photo-forward) — Marque consultas ============ */}
-      <section className="relative overflow-hidden">
+      {/* ============ Photo band — Serra da Leba (image-only divider) ============ */}
+      <div className="relative h-56 w-full overflow-hidden sm:h-72 lg:h-80">
         <Image
           src="/landing/serra-leba.jpg"
           alt="Serra da Leba, Angola"
@@ -288,47 +288,12 @@ export default function HomePage() {
           sizes="100vw"
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/55 to-primary/40" />
-        <div className="relative mx-auto max-w-5xl px-6 py-24 sm:py-32">
-          <Stagger>
-            <StaggerItem>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/85 backdrop-blur">
-                <CalendarCheck className="size-3.5 text-primary-foreground/90" />
-                Comece agora
-              </span>
-            </StaggerItem>
-            <StaggerItem>
-              <h2 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl">
-                Marque consultas.
-                <br />
-                Fale com médicos.
-                <br />
-                <span className="text-white/70">Tudo no telemóvel.</span>
-              </h2>
-            </StaggerItem>
-            <StaggerItem>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
-                Sem filas. Sem telefonemas. Encontre o médico certo, escolha
-                o horário e receba tudo no seu painel.
-              </p>
-            </StaggerItem>
-            <StaggerItem>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link href="/registar" className={btnPrimary}>
-                  Criar conta grátis
-                  <ArrowRight className="size-4" />
-                </Link>
-                <a
-                  href="mailto:suporte@saudeangola.ao?subject=Quero%20saber%20mais%20(cl%C3%ADnica)"
-                  className={btnOnDark}
-                >
-                  Sou uma clínica
-                </a>
-              </div>
-            </StaggerItem>
-          </Stagger>
-        </div>
-      </section>
+        {/* Soft fade to the surrounding sections (white above, muted below) */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/30"
+        />
+      </div>
 
       {/* ============ Como funciona — 3 steps ============ */}
       <section id="como" className="border-b border-border bg-muted/30">

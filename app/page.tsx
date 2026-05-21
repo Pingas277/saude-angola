@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import Logo from "./_brand/Logo";
 import DoctorSearch from "./_landing/DoctorSearch";
+import ContactForm from "./_public/ContactForm";
 import AnimatedNumber from "./_ui/AnimatedNumber";
 import PhoneMockup from "./_ui/PhoneMockup";
 import { Reveal, Stagger, StaggerItem } from "./_motion/Reveal";
@@ -633,6 +634,61 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ============ Fala connosco — contact form ============ */}
+      <section
+        id="contacto"
+        className="relative overflow-hidden border-t border-border bg-background"
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-50 via-background to-emerald-50"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-32 top-0 size-[480px] rounded-full bg-gradient-to-br from-sky-300/25 to-transparent blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-32 bottom-0 size-[480px] rounded-full bg-gradient-to-br from-emerald-300/25 to-transparent blur-3xl"
+        />
+
+        <div className="relative mx-auto max-w-4xl px-6 py-20 sm:py-24">
+          <Reveal className="flex flex-col items-center text-center">
+            <div className="rounded-2xl bg-white/95 px-6 py-4 shadow-xl shadow-black/10 ring-1 ring-white/40 backdrop-blur">
+              <Image
+                src="/brand/logo-full.png"
+                alt="lunga"
+                width={220}
+                height={112}
+                className="h-12 w-auto sm:h-14"
+              />
+            </div>
+            <div className="mt-6 text-[10px] font-bold uppercase tracking-[0.32em] text-primary">
+              Fala connosco
+            </div>
+            <h2 className="mt-3 max-w-2xl text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl">
+              Tem uma pergunta? Uma{" "}
+              <span className="bg-gradient-to-r from-sky-500 to-emerald-500 bg-clip-text text-transparent">
+                clínica para registar
+              </span>
+              ? Diga-nos.
+            </h2>
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Escreva-nos e respondemos ao seu email. Não inclua informação
+              médica sensível aqui — para isso, use o painel da sua conta.
+            </p>
+          </Reveal>
+
+          <Reveal className="mt-10">
+            <ContactForm
+              source="sobre"
+              title="Mensagem para a Lunga"
+              description="Preencha o formulário e respondemos nos próximos dias úteis."
+            />
+          </Reveal>
+        </div>
+      </section>
+
       {/* ============ Footer ============ */}
       <footer className="bg-background">
         <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 sm:grid-cols-2 lg:grid-cols-4">
@@ -666,7 +722,7 @@ export default function HomePage() {
             title="Empresa"
             links={[
               { href: "/sobre", label: "Sobre nós" },
-              { href: "mailto:suporte@lunga.ao", label: "Contacto" },
+              { href: "#contacto", label: "Contacto" },
               { href: "/sobre", label: "Imprensa" },
               { href: "/sobre", label: "Carreiras" },
             ]}

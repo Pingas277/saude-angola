@@ -667,11 +667,10 @@ export default function HomePage() {
               Fala connosco
             </div>
             <h2 className="mt-3 max-w-2xl text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl">
-              Tem uma pergunta? Uma{" "}
+              Tem uma pergunta?{" "}
               <span className="bg-gradient-to-r from-sky-500 to-emerald-500 bg-clip-text text-transparent">
-                clínica para registar
+                Diga-nos.
               </span>
-              ? Diga-nos.
             </h2>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
               Escreva-nos e respondemos ao seu email. Não inclua informação

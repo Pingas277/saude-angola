@@ -3,7 +3,6 @@ import Image from "next/image";
 import {
   ArrowRight,
   Check,
-  ChevronDown,
   Video,
   FileText,
   Pill,
@@ -188,105 +187,146 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* ============ Hero (photo-forward) ============ */}
-      <section className="relative overflow-hidden">
-        <Image
-          src="/landing/serra-leba.jpg"
-          alt="Serra da Leba, Angola"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
+      {/* ============ Intro hero — what is Lunga (NEW, top) ============ */}
+      <section className="relative overflow-hidden border-b border-border bg-background">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-50 via-background to-emerald-50"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/55 to-primary/40" />
-        <div className="relative mx-auto max-w-6xl px-6 py-16 sm:py-24 lg:py-32">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-32 -top-32 size-[520px] rounded-full bg-gradient-to-br from-sky-300/30 to-transparent blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-40 -right-32 size-[520px] rounded-full bg-gradient-to-br from-emerald-300/30 to-transparent blur-3xl"
+        />
+
+        <div className="relative mx-auto max-w-6xl px-6 py-16 sm:py-20 lg:py-24">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+            {/* Left: brand intro */}
             <Stagger>
-              {/* Mobile-only welcome splash — first thing on phones */}
-              <StaggerItem className="lg:hidden">
-                <div className="mb-10 flex flex-col items-center text-center">
-                  <div className="rounded-3xl bg-white/95 px-7 py-5 shadow-2xl shadow-black/40 ring-1 ring-white/20 backdrop-blur">
-                    <Image
-                      src="/brand/logo-full.png"
-                      alt="lunga"
-                      width={220}
-                      height={112}
-                      className="h-14 w-auto"
-                      priority
-                    />
-                  </div>
-                  <div className="mt-6 text-[10px] font-bold uppercase tracking-[0.32em] text-white/85">
+              <StaggerItem className="flex justify-center lg:justify-start">
+                <Image
+                  src="/brand/logo-full.png"
+                  alt="lunga"
+                  width={420}
+                  height={214}
+                  priority
+                  className="h-16 w-auto sm:h-20"
+                />
+              </StaggerItem>
+              <StaggerItem>
+                <div className="mt-7 flex justify-center lg:justify-start">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white/70 px-3.5 py-1.5 text-xs font-semibold text-foreground shadow-sm backdrop-blur">
+                    <Sparkles className="size-3.5 text-primary" />
                     Bem-vindo à Lunga
-                  </div>
-                  <p className="mt-2 max-w-xs text-base font-medium leading-relaxed text-white">
-                    Encontre a consulta que precisa,{" "}
-                    <span className="text-white/75">em segundos.</span>
-                  </p>
-                  <div className="mt-5 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/55">
-                    <span>Veja como</span>
-                    <ChevronDown className="size-3.5 animate-bounce" />
-                  </div>
+                  </span>
                 </div>
               </StaggerItem>
-
               <StaggerItem>
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/85 backdrop-blur">
-                  <span className="size-1.5 rounded-full bg-primary" />
-                  Saúde digital · Angola
-                </span>
-              </StaggerItem>
-              <StaggerItem>
-                <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl">
-                  Marque consultas.
+                <h1 className="mt-5 text-center text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl lg:text-left lg:text-6xl">
+                  Para todos.
                   <br />
-                  Fale com médicos.
-                  <br />
-                  <span className="text-white/70">Tudo no telemóvel.</span>
+                  Em{" "}
+                  <span className="bg-gradient-to-r from-sky-500 to-emerald-500 bg-clip-text text-transparent">
+                    toda a Angola
+                  </span>
+                  .
                 </h1>
               </StaggerItem>
               <StaggerItem>
-                <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
-                  A Lunga liga pacientes, médicos e clínicas privadas em
-                  Angola. Sem filas. Sem telefonemas.
+                <p className="mx-auto mt-6 max-w-xl text-center text-base leading-relaxed text-muted-foreground sm:text-lg lg:mx-0 lg:text-left">
+                  Saúde no telemóvel — de Luanda ao Cunene, da Lunda ao
+                  Namibe. Um único sítio para encontrar médico, marcar
+                  consulta e ser atendido.
                 </p>
               </StaggerItem>
               <StaggerItem>
-                <div className="mt-9 flex flex-wrap gap-3">
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
                   <Link href="/registar" className={btnPrimary}>
                     Criar conta grátis
                     <ArrowRight className="size-4" />
                   </Link>
-                  <a
-                    href="mailto:suporte@saudeangola.ao?subject=Quero%20saber%20mais%20(cl%C3%ADnica)"
-                    className={btnOnDark}
-                  >
-                    Sou uma clínica
-                  </a>
+                  <Link href="/sobre" className={btnOutline}>
+                    Conhecer a Lunga
+                  </Link>
                 </div>
               </StaggerItem>
               <StaggerItem>
-                <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-white/80">
-                  <span className="inline-flex items-center gap-2">
-                    <Check className="size-4 text-primary-foreground/90" />
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-muted-foreground lg:justify-start">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Check className="size-3.5 text-emerald-600" />
                     Grátis para pacientes
                   </span>
-                  <span className="inline-flex items-center gap-2">
-                    <Check className="size-4 text-primary-foreground/90" />
+                  <span className="inline-flex items-center gap-1.5">
+                    <Check className="size-3.5 text-emerald-600" />
                     21 províncias
                   </span>
-                  <span className="inline-flex items-center gap-2">
-                    <Check className="size-4 text-primary-foreground/90" />
+                  <span className="inline-flex items-center gap-1.5">
+                    <Check className="size-3.5 text-emerald-600" />
                     Receita válida nas farmácias
                   </span>
                 </div>
               </StaggerItem>
             </Stagger>
 
-            {/* Phone mockup — shows what the app actually looks like */}
+            {/* Right: phone mockup — what the app actually looks like */}
             <Reveal className="hidden lg:flex lg:justify-center">
               <PhoneMockup />
             </Reveal>
           </div>
+        </div>
+      </section>
+
+      {/* ============ Hero (photo-forward) — Marque consultas ============ */}
+      <section className="relative overflow-hidden">
+        <Image
+          src="/landing/serra-leba.jpg"
+          alt="Serra da Leba, Angola"
+          fill
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/55 to-primary/40" />
+        <div className="relative mx-auto max-w-5xl px-6 py-24 sm:py-32">
+          <Stagger>
+            <StaggerItem>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/85 backdrop-blur">
+                <CalendarCheck className="size-3.5 text-primary-foreground/90" />
+                Comece agora
+              </span>
+            </StaggerItem>
+            <StaggerItem>
+              <h2 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl">
+                Marque consultas.
+                <br />
+                Fale com médicos.
+                <br />
+                <span className="text-white/70">Tudo no telemóvel.</span>
+              </h2>
+            </StaggerItem>
+            <StaggerItem>
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
+                Sem filas. Sem telefonemas. Encontre o médico certo, escolha
+                o horário e receba tudo no seu painel.
+              </p>
+            </StaggerItem>
+            <StaggerItem>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link href="/registar" className={btnPrimary}>
+                  Criar conta grátis
+                  <ArrowRight className="size-4" />
+                </Link>
+                <a
+                  href="mailto:suporte@saudeangola.ao?subject=Quero%20saber%20mais%20(cl%C3%ADnica)"
+                  className={btnOnDark}
+                >
+                  Sou uma clínica
+                </a>
+              </div>
+            </StaggerItem>
+          </Stagger>
         </div>
       </section>
 
@@ -342,48 +382,6 @@ export default function HomePage() {
             <DoctorSearch />
           </Reveal>
         </div>
-      </section>
-
-      {/* ============ Brand statement (big logo) ============ */}
-      <section className="relative overflow-hidden border-b border-border bg-background">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-100/40 via-background to-emerald-100/40 dark:from-sky-500/10 dark:to-emerald-500/10"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 size-[600px] rounded-full bg-gradient-to-br from-sky-300/20 to-emerald-300/20 blur-3xl"
-        />
-        <Reveal className="relative mx-auto max-w-4xl px-6 py-24 text-center sm:py-28">
-          <Image
-            src="/brand/logo-full.png"
-            alt="lunga"
-            width={520}
-            height={264}
-            priority
-            className="mx-auto h-auto w-[260px] sm:w-[360px] md:w-[440px]"
-          />
-          <h2 className="mt-8 text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-5xl">
-            Para todos. Em{" "}
-            <span className="bg-gradient-to-r from-sky-500 to-emerald-500 bg-clip-text text-transparent">
-              toda a Angola
-            </span>
-            .
-          </h2>
-          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Saúde no telemóvel — de Luanda ao Cunene, da Lunda ao Namibe. Um
-            único sítio para encontrar, marcar e ser atendido.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/registar" className={btnPrimary}>
-              Criar conta grátis
-              <ArrowRight className="size-4" />
-            </Link>
-            <Link href="/sobre" className={btnOutline}>
-              Conhecer a lunga
-            </Link>
-          </div>
-        </Reveal>
       </section>
 
       {/* ============ Stats band (animated, on photo) ============ */}

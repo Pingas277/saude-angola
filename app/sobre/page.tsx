@@ -29,7 +29,7 @@ export const metadata = {
 
 const IMPACT = [
   { value: "500+", label: "Clínicas privadas em Angola" },
-  { value: "21 / 21", label: "Províncias no nosso alcance" },
+  { value: "21 / 21", label: "Províncias onde chegamos" },
   { value: "≈ 3 min", label: "Até falar com um médico" },
   { value: "5", label: "Perfis: paciente, médico, enfermagem, recepção, admin" },
 ];
@@ -37,18 +37,18 @@ const IMPACT = [
 const VALUES = [
   {
     icon: HeartPulse,
-    title: "Acesso para todos",
-    desc: "Saúde de qualidade não devia depender de onde se vive. Funciona em 3G, em qualquer telemóvel.",
+    title: "Para todos",
+    desc: "Cuidar da saúde não devia depender de onde se vive. A Lunga funciona em 3G e em qualquer telemóvel.",
   },
   {
     icon: ShieldCheck,
-    title: "Privacidade a sério",
-    desc: "Cada utilizador acede apenas aos seus dados. Conformidade RGPD desde o primeiro dia.",
+    title: "Os seus dados são seus",
+    desc: "Só você acede ao seu histórico. Protegidos pela lei desde o primeiro dia.",
   },
   {
     icon: Building2,
     title: "Feito em Angola",
-    desc: "Pensado para a realidade angolana — do Multicaixa Express às 21 províncias.",
+    desc: "Pensado para Angola — Multicaixa Express, 21 províncias, redes lentas.",
   },
 ];
 
@@ -135,10 +135,9 @@ export default function SobrePage() {
                 Missão
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Tornar o acesso a cuidados de saúde de qualidade simples e
-                disponível para qualquer angolano — onde quer que esteja, no
-                telemóvel que já tem — e dar às clínicas as ferramentas
-                digitais para crescerem e cuidarem melhor.
+                Tornar a saúde mais fácil para qualquer angolano — no
+                telemóvel que já tem, onde quer que esteja. E dar às clínicas
+                ferramentas simples para cuidarem melhor.
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-8">
@@ -149,9 +148,9 @@ export default function SobrePage() {
                 Visão
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Ser a porta de entrada digital para a saúde em Angola — onde
-                qualquer pessoa encontra, marca e é atendida, e onde cada
-                clínica trabalha sem papel, das marcações à farmácia.
+                Ser o sítio onde toda a gente em Angola encontra médico,
+                marca consulta e é atendida — e onde cada clínica trabalha
+                sem papel, das marcações à farmácia.
               </p>
             </div>
           </div>
@@ -206,10 +205,10 @@ export default function SobrePage() {
               O que prometemos
             </div>
             <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-              O nosso compromisso consigo.
+              O que pode esperar de nós.
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Quatro promessas que orientam tudo o que construímos.
+              Quatro promessas simples.
             </p>
           </div>
 
@@ -217,26 +216,26 @@ export default function SobrePage() {
             <CommitCard
               gradient="from-sky-500 to-blue-600"
               icon={<Smartphone className="size-5" />}
-              title="Sempre acessível"
-              desc="Funciona em qualquer telemóvel — Android ou iPhone — e em redes 3G. Saúde no bolso, mesmo na província."
+              title="Funciona em qualquer telemóvel"
+              desc="Android, iPhone, redes 3G. Mesmo na província."
             />
             <CommitCard
               gradient="from-emerald-500 to-teal-600"
               icon={<ShieldCheck className="size-5" />}
-              title="Privacidade primeiro"
-              desc="Cada utilizador acede apenas aos seus dados. Conformidade RGPD desde o primeiro dia."
+              title="Os seus dados são seus"
+              desc="Só você acede. Protegidos pela lei desde o primeiro dia."
             />
             <CommitCard
               gradient="from-rose-500 to-pink-600"
               icon={<HandHeart className="size-5" />}
-              title="Sem barreiras"
-              desc="Os pacientes nunca pagam para usar a Lunga. Marcar, falar com médico e ver receitas é grátis."
+              title="Grátis para pacientes"
+              desc="Marcar, falar com médico e ver receitas — sem pagar nada."
             />
             <CommitCard
               gradient="from-amber-500 to-orange-600"
               icon={<Users className="size-5" />}
               title="Feito com quem cuida"
-              desc="Construído com médicos, enfermeiros e clínicas angolanas — para a realidade angolana, não a copiar de fora."
+              desc="Construído com médicos, enfermeiros e clínicas angolanas. Não foi copiado de fora."
             />
           </div>
 

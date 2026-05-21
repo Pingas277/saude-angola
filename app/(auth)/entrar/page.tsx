@@ -38,12 +38,12 @@ export default async function EntrarPage({
 
   return (
     <AuthShell
-      eyebrow={lastUser ? "Bem-vindo" : "Bem-vindo de volta"}
+      eyebrow={lastUser ? "Olá, de novo" : "Bem-vindo de volta"}
       title={lastUser && firstName ? `Olá, ${firstName}` : "Entrar"}
       subtitle={
         lastUser
           ? "Coloque a sua palavra-passe para continuar."
-          : "Aceda à sua conta para continuar."
+          : "Entre com o seu email e palavra-passe."
       }
       compact={!!lastUser}
       footer={

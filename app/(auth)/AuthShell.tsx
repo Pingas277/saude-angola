@@ -6,23 +6,23 @@ import Logo from "../_brand/Logo";
 const FEATURES = [
   {
     icon: Video,
-    title: "Telemedicina por vídeo",
-    desc: "Fale com um médico licenciado em minutos.",
+    title: "Fale por vídeo",
+    desc: "Com um médico em minutos, sem sair de casa.",
   },
   {
     icon: FileText,
-    title: "Receitas digitais com QR",
-    desc: "Válidas em farmácias parceiras.",
+    title: "Receita no telemóvel",
+    desc: "Mostre o QR na farmácia. É só isso.",
   },
   {
     icon: CreditCard,
-    title: "Multicaixa Express",
-    desc: "Pague e receba o comprovativo na hora.",
+    title: "Pague com Multicaixa",
+    desc: "Multicaixa Express. Recibo automático.",
   },
   {
     icon: ShieldCheck,
-    title: "Dados protegidos",
-    desc: "Conformidade RGPD, acesso só seu.",
+    title: "Os seus dados são seus",
+    desc: "Só você acede. Protegidos pela lei.",
   },
 ];
 
@@ -62,15 +62,15 @@ export default function AuthShell({
 
           <div className="max-w-md">
             <div className="text-xs font-medium uppercase tracking-wider text-white/80">
-              Plataforma de saúde · Angola
+              Saúde no telemóvel · Angola
             </div>
             <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">
-              Toda a sua saúde,{" "}
-              <span className="text-white/70">num só sítio</span>.
+              Marque consultas{" "}
+              <span className="text-white/70">com médicos</span>.
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-white/75">
-              Marque com qualquer médico, consulte por vídeo e guarde o seu
-              histórico clínico — de Luanda ao Cunene.
+              Encontre um médico, escolha o horário e fale por vídeo ou vá à
+              clínica. Tudo pelo telemóvel.
             </p>
 
             {!compact && (

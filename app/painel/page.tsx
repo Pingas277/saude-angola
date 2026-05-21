@@ -65,12 +65,7 @@ function one<T>(v: T | T[] | null): T | null {
   return Array.isArray(v) ? (v[0] ?? null) : v;
 }
 
-export default async function PainelPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ bemvindo?: string; perfil?: string }>;
-}) {
-  const { bemvindo, perfil: perfilOk } = await searchParams;
+export default async function PainelPage() {
   const supabase = await createClient();
 
   const {
@@ -188,11 +183,6 @@ export default async function PainelPage({
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-8">
-      {bemvindo === "1" && (
-        <Banner>Conta criada com sucesso. Bem-vindo à Lunga!</Banner>
-      )}
-      {perfilOk === "ok" && <Banner>Perfil atualizado com sucesso.</Banner>}
-
       {/* Header */}
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
@@ -597,15 +587,6 @@ function Quick({
       </span>
       <span className="text-sm font-medium text-foreground">{label}</span>
     </Link>
-  );
-}
-
-function Banner({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="mb-6 flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary">
-      <CheckCircle2 className="size-4 shrink-0" />
-      {children}
-    </div>
   );
 }
 

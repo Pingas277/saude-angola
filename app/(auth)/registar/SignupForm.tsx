@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useState } from "react";
 import {
   User,
@@ -140,16 +141,19 @@ export default function SignupForm() {
 
       <p className="text-center text-xs leading-relaxed text-muted-foreground">
         Ao criar conta, aceita os{" "}
-        <a href="/termos" className="font-medium text-primary hover:underline">
+        <Link
+          href="/termos"
+          className="font-medium text-primary hover:underline"
+        >
           Termos de Serviço
-        </a>{" "}
+        </Link>{" "}
         e a{" "}
-        <a
+        <Link
           href="/privacidade"
           className="font-medium text-primary hover:underline"
         >
           Política de Privacidade
-        </a>
+        </Link>
         .
       </p>
     </form>

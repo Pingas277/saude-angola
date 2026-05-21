@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { setFlash } from "@/lib/flash";
 
 export type ProfileState = { error?: string; ok?: boolean } | null;
 
@@ -68,6 +69,11 @@ export async function savePatientProfileAction(
 
   if (patientErr) return { error: patientErr.message };
 
+  await setFlash({
+    kind: "success",
+    title: "Perfil atualizado!",
+    desc: "As suas alterações foram guardadas.",
+  });
   revalidatePath("/", "layout");
-  redirect("/painel?perfil=ok");
+  redirect("/painel");
 }

@@ -193,89 +193,81 @@ function drawHeaderBand(
   pageNumber: number,
   totalPages: number
 ) {
-  // Thin brand accent at the very top
-  page.drawRectangle({ x: 0, y: A4.h - 4, width: A4.w, height: 4, color: EMERALD_DARK });
+  // Thin brand accent bar across the very top.
+  page.drawRectangle({ x: 0, y: A4.h - 6, width: A4.w, height: 6, color: EMERALD });
 
-  // Main brand band
-  page.drawRectangle({
-    x: 0,
-    y: A4.h - 4 - HEADER_BAND_H,
-    width: A4.w,
-    height: HEADER_BAND_H,
-    color: EMERALD,
-  });
-
-  const bandTop = A4.h - 4;
-  const cy = bandTop - HEADER_BAND_H / 2; // vertical centre of the band
-
-  // Brand mark — logo on a white rounded plate, vertically centred
-  const plate = 56;
+  // Full Lunga logo (transparent PNG) — drawn directly on white, no plate.
   const logoRatio = logo.width / logo.height;
   const logoH = 30;
   const logoW = logoH * logoRatio;
-  page.drawRectangle({
-    x: MARGIN,
-    y: cy - plate / 2,
-    width: plate,
-    height: plate,
-    color: WHITE,
-  });
   page.drawImage(logo, {
-    x: MARGIN + (plate - logoW) / 2,
-    y: cy - logoH / 2,
+    x: MARGIN,
+    y: A4.h - 48 - logoH,
     width: logoW,
     height: logoH,
   });
-
-  // Wordmark + subtitle, vertically centred against the plate
-  const tx = MARGIN + plate + 16;
-  drawText(page, "Lunga", tx, cy + 8, fonts, "bold", 17, WHITE);
   drawText(
     page,
-    "Receita Médica  ·  Medical Prescription",
-    tx,
-    cy - 9,
+    "Receita médica · documento clínico",
+    MARGIN,
+    A4.h - 48 - logoH - 13,
     fonts,
     "regular",
-    10,
-    rgb(0.88, 0.93, 0.99)
-  );
-  drawText(
-    page,
-    "Documento clínico oficial",
-    tx,
-    cy - 23,
-    fonts,
-    "italic",
-    8.5,
-    rgb(0.82, 0.89, 0.98)
+    8,
+    SLATE_500
   );
 
-  // QR code top-right on a white plate, vertically centred
-  const qrSize = 58;
+  // QR code top-right — on a bordered white plate so it always scans.
+  const qrSize = 56;
   const qrX = A4.w - MARGIN - qrSize;
-  const qrY = cy - qrSize / 2;
+  const qrY = A4.h - 42 - qrSize;
   page.drawRectangle({
-    x: qrX - 5,
-    y: qrY - 5,
-    width: qrSize + 10,
-    height: qrSize + 10,
+    x: qrX - 6,
+    y: qrY - 6,
+    width: qrSize + 12,
+    height: qrSize + 12,
     color: WHITE,
+    borderColor: SLATE_200,
+    borderWidth: 0.8,
   });
   page.drawImage(qrImage, { x: qrX, y: qrY, width: qrSize, height: qrSize });
-
-  if (totalPages > 1) {
+  {
+    const cap = "Ler na farmácia";
+    const cw = fonts.regular.widthOfTextAtSize(cap, 6.5);
     drawText(
       page,
-      `Página ${pageNumber} de ${totalPages}`,
-      qrX - 4,
+      cap,
+      qrX + qrSize / 2 - cw / 2,
       qrY - 14,
       fonts,
       "regular",
-      7.5,
-      rgb(0.88, 0.93, 0.99)
+      6.5,
+      SLATE_500
     );
   }
+
+  if (totalPages > 1) {
+    const pg = `Página ${pageNumber} de ${totalPages}`;
+    const pw = fonts.regular.widthOfTextAtSize(pg, 7.5);
+    drawText(
+      page,
+      pg,
+      qrX + qrSize / 2 - pw / 2,
+      qrY - 24,
+      fonts,
+      "regular",
+      7.5,
+      SLATE_500
+    );
+  }
+
+  // Hairline under the header.
+  page.drawLine({
+    start: { x: MARGIN, y: A4.h - 104 },
+    end: { x: A4.w - MARGIN, y: A4.h - 104 },
+    thickness: 0.8,
+    color: SLATE_200,
+  });
 }
 
 function drawIdentityBlock(

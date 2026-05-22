@@ -128,6 +128,21 @@ function drawText(
   page.drawText(text, { x, y, font: fonts[weight], size, color });
 }
 
+/** Draw text right-aligned to xRight. */
+function drawRight(
+  page: PDFPage,
+  text: string,
+  xRight: number,
+  y: number,
+  fonts: PdfFonts,
+  weight: "regular" | "bold" | "italic",
+  size: number,
+  color = SLATE_900
+) {
+  const w = fonts[weight].widthOfTextAtSize(text, size);
+  page.drawText(text, { x: xRight - w, y, font: fonts[weight], size, color });
+}
+
 // Official-looking rubber stamp: two rings + angled label + sub line.
 function drawStamp(
   page: PDFPage,
@@ -233,88 +248,73 @@ export async function GET(
   const logoImage = await pdf.embedPng(loadLogoBytes());
   const page = pdf.addPage([A4.w, A4.h]);
 
-  // ===== Brand header band =====
-  page.drawRectangle({ x: 0, y: A4.h - 4, width: A4.w, height: 4, color: EMERALD_DARK });
-  page.drawRectangle({
-    x: 0,
-    y: A4.h - 4 - HEADER_BAND_H,
-    width: A4.w,
-    height: HEADER_BAND_H,
-    color: EMERALD,
-  });
+  // ===== Brand header — light, logo-forward =====
+  // Thin brand accent bar across the very top.
+  page.drawRectangle({ x: 0, y: A4.h - 6, width: A4.w, height: 6, color: EMERALD });
 
-  const cy = A4.h - 4 - HEADER_BAND_H / 2; // vertical centre of the band
-
-  // Brand mark — logo on a white plate, vertically centred
-  const plate = 56;
+  // Full Lunga logo (transparent PNG) — drawn directly on white, no plate.
   const logoRatio = logoImage.width / logoImage.height;
   const logoH = 30;
   const logoW = logoH * logoRatio;
-  page.drawRectangle({
-    x: MARGIN,
-    y: cy - plate / 2,
-    width: plate,
-    height: plate,
-    color: WHITE,
-  });
   page.drawImage(logoImage, {
-    x: MARGIN + (plate - logoW) / 2,
-    y: cy - logoH / 2,
+    x: MARGIN,
+    y: A4.h - 48 - logoH,
     width: logoW,
     height: logoH,
   });
-
-  const tx = MARGIN + plate + 16;
-  drawText(page, "Lunga", tx, cy + 8, fonts, "bold", 17, WHITE);
   drawText(
     page,
-    isPaid
-      ? "Comprovativo de Pagamento  ·  Receipt"
-      : "Fatura  ·  Invoice",
-    tx,
-    cy - 9,
-    fonts,
-    "regular",
-    10,
-    BAND_SUB
-  );
-  drawText(
-    page,
-    "Documento contabilístico oficial",
-    tx,
-    cy - 23,
-    fonts,
-    "italic",
-    8.5,
-    BAND_SUB
-  );
-
-  // Reference block top-right, vertically centred against the plate
-  const refX = A4.w - MARGIN - 170;
-  drawText(page, "REFERÊNCIA", refX, cy + 8, fonts, "bold", 8, BAND_SUB);
-  drawText(
-    page,
-    inv.payment_reference ?? inv.id.slice(0, 8).toUpperCase(),
-    refX,
-    cy - 9,
-    fonts,
-    "bold",
-    11,
-    WHITE
-  );
-  drawText(
-    page,
-    `Emitida ${fmtDateTimePT(inv.created_at)}`,
-    refX,
-    cy - 23,
+    "Saúde digital · Angola",
+    MARGIN,
+    A4.h - 48 - logoH - 13,
     fonts,
     "regular",
     8,
-    BAND_SUB
+    SLATE_500
   );
 
+  // Document type + reference — right-aligned.
+  drawRight(
+    page,
+    isPaid ? "COMPROVATIVO" : "FATURA",
+    A4.w - MARGIN,
+    A4.h - 52,
+    fonts,
+    "bold",
+    18,
+    EMERALD_DARK
+  );
+  drawRight(
+    page,
+    `N.º ${(inv.payment_reference ?? inv.id.slice(0, 8)).toUpperCase()}`,
+    A4.w - MARGIN,
+    A4.h - 70,
+    fonts,
+    "bold",
+    9.5,
+    SLATE_800
+  );
+  drawRight(
+    page,
+    `Emitida em ${fmtDateTimePT(inv.created_at)}`,
+    A4.w - MARGIN,
+    A4.h - 83,
+    fonts,
+    "regular",
+    8.5,
+    SLATE_500
+  );
+
+  // Hairline under the header.
+  page.drawLine({
+    start: { x: MARGIN, y: A4.h - 100 },
+    end: { x: A4.w - MARGIN, y: A4.h - 100 },
+    thickness: 0.8,
+    color: SLATE_200,
+  });
+
   // ===== Two-column identity =====
-  let cursorY = A4.h - HEADER_BAND_H - 50;
+  let cursorY = A4.h - HEADER_BAND_H - 44;
   const colW = (A4.w - MARGIN * 2 - 16) / 2;
 
   // EMITIDO POR

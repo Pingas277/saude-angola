@@ -12,6 +12,7 @@ import {
   ScanLine,
   Sparkles,
   Trash2,
+  UserRound,
 } from "lucide-react";
 import { issuePrescriptionAction, type RxState } from "./actions";
 
@@ -21,6 +22,8 @@ export type Encounter = {
   kind: "appointment" | "consultation";
   id: string;
 };
+
+export type PatientOption = { id: string; name: string };
 
 // Frequently prescribed in Angola — one tap adds a pre-filled row.
 const COMMON_MEDS = [
@@ -42,8 +45,12 @@ const VALIDITY_OPTIONS = [
 
 export default function PrescriptionForm({
   encounter,
+  patients,
 }: {
-  encounter: Encounter;
+  /** Issued from a consultation page — ties the rx to the encounter. */
+  encounter?: Encounter;
+  /** Issued "quick" — the doctor picks the patient from this list. */
+  patients?: PatientOption[];
 }) {
   const [state, formAction, isPending] = useActionState<RxState, FormData>(
     issuePrescriptionAction,
@@ -68,7 +75,11 @@ export default function PrescriptionForm({
   }, [state]);
 
   const hiddenName =
-    encounter.kind === "appointment" ? "appointment_id" : "consultation_id";
+    encounter?.kind === "appointment"
+      ? "appointment_id"
+      : encounter?.kind === "consultation"
+        ? "consultation_id"
+        : null;
 
   function addRow(presetName?: string) {
     setRows((prev) => [...prev, { key: nextKey.current++, presetName }]);
@@ -79,8 +90,44 @@ export default function PrescriptionForm({
 
   return (
     <form ref={formRef} action={formAction} className="space-y-5">
-      <input type="hidden" name={hiddenName} value={encounter.id} />
+      {encounter && hiddenName && (
+        <input type="hidden" name={hiddenName} value={encounter.id} />
+      )}
       <input type="hidden" name="expires_in_days" value={validity} />
+
+      {/* ─── Patient picker (quick mode only) ─── */}
+      {patients && (
+        <div>
+          <label
+            htmlFor="rx_patient"
+            className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground"
+          >
+            <UserRound className="size-3" />
+            Paciente
+          </label>
+          <select
+            id="rx_patient"
+            name="patient_id"
+            required
+            defaultValue=""
+            className="block w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          >
+            <option value="" disabled>
+              Escolha um paciente…
+            </option>
+            {patients.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+          {patients.length === 0 && (
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              Ainda não tem pacientes — só pode receitar a quem já consultou.
+            </p>
+          )}
+        </div>
+      )}
 
       {/* ─── Quick-add common meds ─── */}
       <div>

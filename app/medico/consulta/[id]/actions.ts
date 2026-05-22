@@ -144,9 +144,6 @@ export async function issuePrescriptionAction(
   _prev: RxState,
   formData: FormData
 ): Promise<RxState> {
-  const ref = readEncounter(formData);
-  if (!ref) return { error: "Consulta inválida." };
-
   const notes = String(formData.get("notes") ?? "").trim();
   const expiresInDays = Number(formData.get("expires_in_days") ?? "30");
 
@@ -168,8 +165,50 @@ export async function issuePrescriptionAction(
     return { error: "Adicione pelo menos um medicamento." };
   }
 
-  const loaded = await loadEncounterForDoctor(ref);
-  if ("error" in loaded) return { error: loaded.error };
+  // The prescription can be tied to an encounter (from a consultation page)
+  // OR issued "quick" against a patient the doctor has already seen.
+  const ref = readEncounter(formData);
+  let patientId: string;
+  let doctorId: string;
+  let revalidate: string[];
+  let encounterKind: "appointment" | "consultation" | null = null;
+  let encounterId: string | null = null;
+
+  if (ref) {
+    const loaded = await loadEncounterForDoctor(ref);
+    if ("error" in loaded) return { error: loaded.error };
+    patientId = loaded.encounter.patient_id;
+    doctorId = loaded.userId;
+    encounterKind = loaded.encounter.kind;
+    encounterId = loaded.encounter.id;
+    revalidate = pathsForEncounter(loaded.encounter);
+  } else {
+    // Quick prescription — patient picked directly.
+    const pid = String(formData.get("patient_id") ?? "").trim();
+    if (!pid) return { error: "Escolha um paciente." };
+
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) redirect("/entrar");
+
+    // Security: only allow prescribing to a patient this doctor has seen.
+    const { data: link } = await supabase
+      .from("appointments")
+      .select("id")
+      .eq("doctor_id", user.id)
+      .eq("patient_id", pid)
+      .limit(1)
+      .maybeSingle();
+    if (!link) {
+      return { error: "Só pode emitir receitas para os seus pacientes." };
+    }
+
+    patientId = pid;
+    doctorId = user.id;
+    revalidate = ["/medico/receita", "/painel/receitas"];
+  }
 
   const supabase = await createClient();
 
@@ -187,17 +226,17 @@ export async function issuePrescriptionAction(
       : null;
 
   const insertRow: Record<string, unknown> = {
-    patient_id: loaded.encounter.patient_id,
-    doctor_id: loaded.userId,
+    patient_id: patientId,
+    doctor_id: doctorId,
     medications: meds,
     qr_code: qrCode,
     notes: notes || null,
     expires_at: expiresAt,
   };
-  if (loaded.encounter.kind === "appointment") {
-    insertRow.appointment_id = loaded.encounter.id;
-  } else {
-    insertRow.consultation_id = loaded.encounter.id;
+  if (encounterKind === "appointment") {
+    insertRow.appointment_id = encounterId;
+  } else if (encounterKind === "consultation") {
+    insertRow.consultation_id = encounterId;
   }
 
   const { data: inserted, error } = await supabase
@@ -208,7 +247,7 @@ export async function issuePrescriptionAction(
 
   if (error) return { error: error.message };
 
-  for (const p of pathsForEncounter(loaded.encounter)) revalidatePath(p);
+  for (const p of revalidate) revalidatePath(p);
   return { ok: true, prescriptionId: inserted.id };
 }
 

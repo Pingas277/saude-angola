@@ -7,7 +7,9 @@ import {
   CalendarCheck,
   CalendarClock,
   CalendarDays,
+  CalendarRange,
   CheckCircle2,
+  ClipboardCheck,
   ClipboardList,
   Clock,
   FileText,
@@ -125,6 +127,15 @@ export default async function MedicoHomePage() {
     return d;
   })();
 
+  // Start of the current week (Monday 00:00).
+  const weekStart = (() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    const dow = (d.getDay() + 6) % 7; // Mon = 0
+    d.setDate(d.getDate() - dow);
+    return d;
+  })();
+
   const [
     { data: today },
     { count: upcomingCount },
@@ -132,6 +143,9 @@ export default async function MedicoHomePage() {
     { count: recordCount },
     { count: teleWaitingCount },
     { data: appts14 },
+    { data: toClose },
+    { count: weekConsultas },
+    { count: weekRx },
   ] = await Promise.all([
     supabase
       .from("appointments")
@@ -164,6 +178,28 @@ export default async function MedicoHomePage() {
       .select("scheduled_at, status")
       .eq("doctor_id", user.id)
       .gte("scheduled_at", start14.toISOString()),
+    // Past appointments still open (paperwork reminder).
+    supabase
+      .from("appointments")
+      .select(baseSelect)
+      .eq("doctor_id", user.id)
+      .lt("scheduled_at", nowIso)
+      .in("status", ["scheduled", "confirmed", "in_progress"])
+      .order("scheduled_at", { ascending: false })
+      .limit(8),
+    // This week's consultas (excluding cancelled/no-show).
+    supabase
+      .from("appointments")
+      .select("id", { count: "exact", head: true })
+      .eq("doctor_id", user.id)
+      .gte("scheduled_at", weekStart.toISOString())
+      .not("status", "in", "(cancelled,no_show)"),
+    // This week's prescriptions.
+    supabase
+      .from("prescriptions")
+      .select("id", { count: "exact", head: true })
+      .eq("doctor_id", user.id)
+      .gte("issued_at", weekStart.toISOString()),
   ]);
 
   // 14-day series for the chart
@@ -201,6 +237,8 @@ export default async function MedicoHomePage() {
       a.scheduled_at >= nowIso &&
       !["completed", "cancelled", "no_show"].includes(a.status)
   );
+
+  const toCloseList = (toClose as ApptRow[] | null) ?? [];
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-8">
@@ -255,6 +293,95 @@ export default async function MedicoHomePage() {
           color="from-indigo-500 to-purple-600"
         />
       </section>
+
+      {/* ─── Resumo da semana ─── */}
+      <section className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-2xl border border-border bg-card px-5 py-3.5 shadow-sm">
+        <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
+          <CalendarRange className="size-3.5" />
+          Esta semana
+        </span>
+        <WeekStat
+          label="Consultas"
+          value={weekConsultas ?? 0}
+          icon={CalendarCheck}
+        />
+        <WeekStat label="Receitas" value={weekRx ?? 0} icon={Pill} />
+        <WeekStat
+          label="Por concluir"
+          value={toCloseList.length}
+          icon={ClipboardCheck}
+          warn={toCloseList.length > 0}
+        />
+      </section>
+
+      {/* ─── Por concluir (paperwork reminder) ─── */}
+      {toCloseList.length > 0 && (
+        <section className="mt-4 overflow-hidden rounded-3xl border border-amber-200 bg-amber-50/60 shadow-sm">
+          <div className="flex items-center justify-between border-b border-amber-200/70 px-5 py-3">
+            <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-amber-700">
+              <ClipboardCheck className="size-3.5" />
+              Consultas por concluir
+              <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                {toCloseList.length}
+              </span>
+            </h2>
+          </div>
+          <p className="px-5 pt-3 text-xs text-amber-800/90">
+            Consultas que já passaram mas ainda não foram marcadas como
+            concluídas. Abra cada uma para finalizar o registo.
+          </p>
+          <ul className="divide-y divide-amber-200/60">
+            {toCloseList.map((a) => {
+              const p = patientFrom(a.patient);
+              const d = new Date(a.scheduled_at);
+              return (
+                <li key={a.id}>
+                  <Link
+                    href={`/medico/consulta/${a.id}`}
+                    className="group flex items-center gap-3 px-5 py-3 transition-colors hover:bg-amber-100/40"
+                  >
+                    <div className="shrink-0 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 p-0.5">
+                      <div className="grid size-9 place-items-center overflow-hidden rounded-[6px] bg-card text-[10px] font-bold text-foreground">
+                        {p.avatarUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={p.avatarUrl}
+                            alt={p.name}
+                            className="size-full object-cover"
+                          />
+                        ) : (
+                          initials(p.name)
+                        )}
+                      </div>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-semibold text-foreground">
+                        {p.name}
+                      </div>
+                      <div className="text-xs text-amber-700/90">
+                        {d.toLocaleDateString("pt-PT", {
+                          day: "2-digit",
+                          month: "short",
+                        })}{" "}
+                        ·{" "}
+                        {d.toLocaleTimeString("pt-PT", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                        {a.reason ? ` · ${a.reason}` : ""}
+                      </div>
+                    </div>
+                    <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-amber-500 px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm">
+                      Finalizar
+                      <ArrowRight className="size-3" />
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       {/* ─── Telemedicina banner ─── */}
       {waiting > 0 ? (
@@ -379,6 +506,13 @@ export default async function MedicoHomePage() {
           </h2>
           <div className="mt-3 space-y-2.5">
             <Shortcut
+              href="/medico/receita"
+              icon={Pill}
+              title="Receita rápida"
+              desc="Emitir sem abrir consulta"
+              color="from-amber-500 to-orange-600"
+            />
+            <Shortcut
               href="/medico/agenda"
               icon={CalendarDays}
               title="Agenda completa"
@@ -414,6 +548,37 @@ export default async function MedicoHomePage() {
 }
 
 /* ─────────────────────────── pieces ─────────────────────────── */
+
+function WeekStat({
+  label,
+  value,
+  icon: Icon,
+  warn,
+}: {
+  label: string;
+  value: number;
+  icon: React.ComponentType<{ className?: string }>;
+  warn?: boolean;
+}) {
+  return (
+    <span className="inline-flex items-center gap-1.5 text-sm">
+      <Icon
+        className={
+          "size-4 " + (warn ? "text-amber-600" : "text-muted-foreground")
+        }
+      />
+      <strong
+        className={
+          "font-bold tabular-nums " +
+          (warn ? "text-amber-700" : "text-foreground")
+        }
+      >
+        {value}
+      </strong>
+      <span className="text-xs text-muted-foreground">{label}</span>
+    </span>
+  );
+}
 
 function StatTile({
   icon: Icon,

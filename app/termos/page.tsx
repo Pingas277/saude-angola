@@ -379,12 +379,12 @@ export default function TermosPage() {
         </p>
         <p>
           <strong className="text-foreground">Adesão de clínica</strong> —{" "}
-          <a
-            href="mailto:suporte@lunga.ao?subject=Ades%C3%A3o%20de%20cl%C3%ADnica"
+          <Link
+            href="/parceria"
             className="font-semibold text-primary hover:underline"
           >
-            suporte@lunga.ao
-          </a>
+            preencher o formulário de parceria
+          </Link>
         </p>
         <p>
           <strong className="text-foreground">Privacidade</strong> —{" "}

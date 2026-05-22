@@ -493,13 +493,10 @@ export default function HomePage() {
                 ))}
               </ul>
               <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href="mailto:suporte@lunga.ao?subject=Ades%C3%A3o%20de%20cl%C3%ADnica"
-                  className={btnPrimary}
-                >
+                <Link href="/parceria" className={btnPrimary}>
                   Falar com a equipa
                   <ArrowRight className="size-4" />
-                </a>
+                </Link>
                 <Link href="#precos" className={btnOutline}>
                   Ver preços
                 </Link>
@@ -564,13 +561,13 @@ export default function HomePage() {
                     </li>
                   ))}
                 </ul>
-                <a
-                  href={`mailto:suporte@lunga.ao?subject=Ades%C3%A3o%20ao%20plano%20${encodeURIComponent(p.name)}`}
+                <Link
+                  href="/parceria"
                   className={"mt-7 w-full " + (p.highlighted ? btnPrimary : btnOutline)}
                 >
                   Falar com a equipa
                   <ArrowRight className="size-4" />
-                </a>
+                </Link>
               </StaggerItem>
             ))}
           </Stagger>

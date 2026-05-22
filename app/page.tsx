@@ -571,6 +571,16 @@ export default function HomePage() {
               </StaggerItem>
             ))}
           </Stagger>
+
+          <div className="mt-10 text-center">
+            <Link
+              href="/precos"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
+            >
+              Ver comparação completa e perguntas frequentes
+              <ArrowRight className="size-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -710,7 +720,7 @@ export default function HomePage() {
             links={[
               { href: "#como", label: "Como funciona" },
               { href: "#procurar", label: "Procurar médico" },
-              { href: "#precos", label: "Preços" },
+              { href: "/precos", label: "Preços" },
               { href: "/registar", label: "Criar conta" },
             ]}
           />

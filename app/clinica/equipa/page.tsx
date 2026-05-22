@@ -2,8 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
   Activity,
+  ArrowRight,
   BadgeCheck,
   Building2,
+  CalendarClock,
   Mail,
   Phone,
   Search,
@@ -91,6 +93,27 @@ export default async function EquipaPage({
   }
 
   const byRole = (r: string) => staff.filter((s) => s.role === r).length;
+
+  // Per-doctor appointment counts (total + this month) for the clinic.
+  const monthStart = new Date();
+  monthStart.setDate(1);
+  monthStart.setHours(0, 0, 0, 0);
+
+  const { data: clinicAppts } = await supabase
+    .from("appointments")
+    .select("doctor_id, scheduled_at, status")
+    .eq("clinic_id", admin.clinic_id);
+
+  const apptStats = new Map<string, { total: number; month: number }>();
+  for (const a of (clinicAppts as
+    | { doctor_id: string; scheduled_at: string; status: string }[]
+    | null) ?? []) {
+    if (!a.doctor_id) continue;
+    const s = apptStats.get(a.doctor_id) ?? { total: 0, month: 0 };
+    s.total += 1;
+    if (new Date(a.scheduled_at) >= monthStart) s.month += 1;
+    apptStats.set(a.doctor_id, s);
+  }
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-8">
@@ -201,6 +224,8 @@ export default async function EquipaPage({
               const name = s.full_name ?? s.email ?? "—";
               const Icon = ROLE_ICON[s.role] ?? Users;
               const ringColor = ROLE_TILE[s.role] ?? "from-slate-500 to-slate-700";
+              const isDoctor = s.role === "doctor";
+              const stats = apptStats.get(s.id);
               return (
                 <li
                   key={s.id}
@@ -262,6 +287,19 @@ export default async function EquipaPage({
                         </span>
                       )}
                     </div>
+
+                    {/* Doctor activity chips */}
+                    {isDoctor && (
+                      <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-sky-700 ring-1 ring-sky-200">
+                          <CalendarClock className="size-2.5" />
+                          {stats?.total ?? 0} consultas
+                        </span>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-emerald-200">
+                          {stats?.month ?? 0} este mês
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Role pill */}
@@ -271,6 +309,17 @@ export default async function EquipaPage({
                     <Icon className="size-3" />
                     {ROLE_LABELS[s.role] ?? s.role}
                   </span>
+
+                  {/* Doctor activity link */}
+                  {isDoctor && (
+                    <Link
+                      href={`/clinica/equipa/${s.id}`}
+                      className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 px-3.5 py-2 text-xs font-bold text-white shadow-md shadow-sky-500/20 transition-all hover:shadow-lg"
+                    >
+                      Ver atividade
+                      <ArrowRight className="size-3.5" />
+                    </Link>
+                  )}
 
                   {/* Actions */}
                   {s.id !== user.id && (

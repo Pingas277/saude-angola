@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { setFlash } from "@/lib/flash";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 export type BookingState = { error?: string } | null;
 
@@ -21,6 +22,14 @@ export async function bookAppointmentAction(
   if (!date || !time) return { error: "Escolha a data e a hora da consulta." };
   if (type !== "in_person" && type !== "telemedicine") {
     return { error: "Tipo de consulta inválido." };
+  }
+
+  // Throttle booking spam: 15 bookings per 10 min per IP.
+  const ip = await clientIp();
+  if (!(await rateLimit(`book:${ip}`, 15, 600))) {
+    return {
+      error: "Demasiados pedidos seguidos. Aguarde alguns minutos.",
+    };
   }
 
   const scheduledAt = new Date(`${date}T${time}:00`);

@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { setFlash } from "@/lib/flash";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 
 export type AuthState = { error?: string } | null;
 
@@ -52,6 +53,15 @@ export async function loginAction(
     return { error: "Por favor, preencha o email e a palavra-passe." };
   }
 
+  // Throttle brute-force attempts: 8 tries per 10 min per IP.
+  const ip = await clientIp();
+  if (!(await rateLimit(`login:${ip}`, 8, 600))) {
+    return {
+      error:
+        "Demasiadas tentativas. Aguarde alguns minutos antes de tentar de novo.",
+    };
+  }
+
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
@@ -86,6 +96,15 @@ export async function signupAction(
   }
   if (password !== confirm) {
     return { error: "As palavras-passe não coincidem." };
+  }
+
+  // Throttle mass account creation: 5 signups per hour per IP.
+  const ip = await clientIp();
+  if (!(await rateLimit(`signup:${ip}`, 5, 3600))) {
+    return {
+      error:
+        "Demasiados registos a partir deste dispositivo. Tente mais tarde.",
+    };
   }
 
   const supabase = await createClient();

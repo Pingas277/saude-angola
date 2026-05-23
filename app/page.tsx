@@ -40,18 +40,21 @@ const STEPS = [
     n: "1",
     title: "Procure o médico",
     desc: "Veja médicos por especialidade ou nome — em toda a Angola.",
+    chip: { icon: Stethoscope, label: "500+ médicos em rede" },
   },
   {
     icon: CalendarCheck,
     n: "2",
     title: "Marque o horário",
     desc: "Escolha o dia e a hora. Pague com Multicaixa Express.",
+    chip: { icon: CreditCard, label: "Multicaixa Express" },
   },
   {
     icon: Video,
     n: "3",
     title: "Seja atendido",
     desc: "Vai à clínica ou fala por vídeo. Recebe a receita no telemóvel.",
+    chip: { icon: FileText, label: "Receita no telemóvel" },
   },
 ];
 
@@ -284,9 +287,26 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ Como funciona — 3 steps (right after intro so people understand fast) ============ */}
-      <section id="como" className="border-b border-border bg-muted/30">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+      {/* ============ Como funciona — 3-step process flow ============ */}
+      <section
+        id="como"
+        className="relative overflow-hidden border-b border-border bg-muted/30"
+      >
+        {/* Decorative background — subtle brand-tinted ambience */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-50/50 via-transparent to-emerald-50/50"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-32 top-1/2 size-[480px] -translate-y-1/2 rounded-full bg-gradient-to-br from-sky-200/20 to-emerald-200/15 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-32 top-1/3 size-[400px] rounded-full bg-gradient-to-br from-emerald-200/15 to-transparent blur-3xl"
+        />
+
+        <div className="relative mx-auto max-w-6xl px-6 py-20 sm:py-24">
           <Reveal className="mx-auto max-w-2xl text-center">
             <SectionEyebrow>Como funciona</SectionEyebrow>
             <SectionTitle>Três passos. É tudo.</SectionTitle>
@@ -295,29 +315,52 @@ export default function HomePage() {
             </SectionLede>
           </Reveal>
 
-          <Stagger className="mt-14 grid gap-6 md:grid-cols-3">
-            {STEPS.map((s) => (
-              <StaggerItem
-                key={s.n}
-                className="relative rounded-2xl border border-border bg-card p-7 shadow-sm transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="grid size-11 place-items-center rounded-xl bg-primary/10 text-primary">
-                    <s.icon className="size-5" />
-                  </span>
-                  <span className="text-3xl font-extrabold tracking-tight text-primary/20">
-                    {s.n}
-                  </span>
-                </div>
-                <h3 className="mt-5 text-lg font-semibold text-foreground">
-                  {s.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {s.desc}
-                </p>
-              </StaggerItem>
-            ))}
-          </Stagger>
+          {/* Process flow with connecting line */}
+          <div className="relative mt-20">
+            {/* Horizontal connector line — passes behind the icon badges (md+ only) */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute left-[16.66%] right-[16.66%] top-[78px] hidden h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent md:block"
+            />
+
+            <Stagger className="grid gap-14 md:grid-cols-3 md:gap-8">
+              {STEPS.map((s) => {
+                const ChipIcon = s.chip.icon;
+                return (
+                  <StaggerItem
+                    key={s.n}
+                    className="group relative flex flex-col items-center text-center"
+                  >
+                    {/* Step label */}
+                    <div className="text-[10px] font-bold uppercase tracking-[0.32em] text-primary">
+                      Passo {s.n}
+                    </div>
+
+                    {/* Icon badge — anchors on the connecting line */}
+                    <div className="relative mt-4 grid size-20 place-items-center rounded-2xl bg-gradient-to-br from-sky-500 to-emerald-600 text-white shadow-xl shadow-primary/30 ring-4 ring-muted/30 transition-transform duration-200 ease-out group-hover:scale-105">
+                      <s.icon className="size-8" strokeWidth={2} />
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="mt-6 text-xl font-semibold tracking-tight text-foreground">
+                      {s.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted-foreground">
+                      {s.desc}
+                    </p>
+
+                    {/* Concrete-value chip */}
+                    <div className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-[transform,box-shadow] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:shadow-md">
+                      <ChipIcon className="size-3.5 text-primary" />
+                      {s.chip.label}
+                    </div>
+                  </StaggerItem>
+                );
+              })}
+            </Stagger>
+          </div>
         </div>
       </section>
 

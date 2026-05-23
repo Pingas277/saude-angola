@@ -177,6 +177,7 @@ export default function HomePage() {
             <NavLink href="#como">Como funciona</NavLink>
             <NavLink href="#procurar">Procurar médico</NavLink>
             <NavLink href="#precos">Preços</NavLink>
+            <NavLink href="/sobre">Sobre nós</NavLink>
             <NavLink href="#faq">Perguntas</NavLink>
           </nav>
           <div className="flex items-center gap-2">

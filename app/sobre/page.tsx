@@ -123,66 +123,143 @@ export default function SobrePage() {
         }
       />
 
-      {/* ===== Missão & Visão ===== */}
+      {/* ===== Quem somos (intro narrativo) ===== */}
       <section className="border-b border-border">
-        <div className="mx-auto max-w-5xl px-6 py-20">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="rounded-2xl border border-border bg-card p-8">
-              <span className="grid size-10 place-items-center rounded-lg bg-primary/10 text-primary">
-                <Target className="size-5" />
-              </span>
-              <h2 className="mt-5 text-xl font-semibold tracking-tight text-foreground">
-                Missão
+        <div className="mx-auto max-w-5xl px-6 py-20 sm:py-24">
+          <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+            {/* Foto vertical, com cartão de stat flutuante */}
+            <div className="relative">
+              <ImageSlot
+                src="landing/medico"
+                alt="Profissional de saúde a usar a Lunga"
+                caption=""
+                className="aspect-[4/5] w-full overflow-hidden rounded-3xl shadow-xl"
+              />
+              <div className="pointer-events-none absolute -bottom-6 -right-6 hidden rounded-2xl border border-border bg-card p-5 shadow-xl ring-1 ring-black/5 sm:block">
+                <div className="text-3xl font-bold tracking-tight text-foreground">
+                  21<span className="text-muted-foreground/50"> / 21</span>
+                </div>
+                <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                  Províncias de Angola
+                </div>
+              </div>
+            </div>
+
+            {/* Narrativa */}
+            <div>
+              <div className="text-xs font-bold uppercase tracking-[0.22em] text-primary">
+                Quem somos
+              </div>
+              <h2 className="mt-4 text-3xl font-semibold leading-[1.15] tracking-tight text-foreground sm:text-4xl lg:text-[2.5rem]">
+                A Lunga nasceu de um problema simples:{" "}
+                <span className="bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+                  a saúde devia ser fácil.
+                </span>
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Tornar a saúde mais fácil para qualquer angolano — no
-                telemóvel que já tem, onde quer que esteja. E dar às clínicas
-                ferramentas simples para cuidarem melhor.
+              <div className="mt-7 space-y-4 text-base leading-relaxed text-muted-foreground">
+                <p>
+                  Em Angola, há centenas de clínicas privadas a gerir marcações
+                  em papel — e milhões de pacientes sem um sítio único para
+                  encontrar o médico certo e ser atendidos.
+                </p>
+                <p>
+                  Construímos a Lunga para mudar isto: uma só plataforma onde o
+                  paciente marca, paga e fala com o médico; e onde a clínica
+                  deixa o papel para trás — da recepção à farmácia.
+                </p>
+                <p className="text-foreground">
+                  <strong className="font-semibold">
+                    Feito em Angola, para Angola.
+                  </strong>{" "}
+                  Funciona em 3G, em qualquer telemóvel, com Multicaixa Express.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Missão & Visão (editorial — sem cards) ===== */}
+      <section className="border-b border-border bg-muted/30">
+        <div className="mx-auto max-w-5xl px-6 py-20 sm:py-24">
+          <div className="grid gap-12 md:grid-cols-2 md:gap-16">
+            {/* Missão */}
+            <div>
+              <div className="flex items-center gap-3">
+                <span className="grid size-11 place-items-center rounded-xl bg-gradient-to-br from-sky-500 to-sky-600 text-white shadow-md shadow-sky-500/30">
+                  <Target className="size-5" />
+                </span>
+                <div className="text-xs font-bold uppercase tracking-[0.22em] text-sky-700 dark:text-sky-400">
+                  Missão
+                </div>
+              </div>
+              <h2 className="mt-6 text-2xl font-semibold leading-snug tracking-tight text-foreground sm:text-3xl">
+                Tornar a saúde mais fácil para qualquer angolano.
+              </h2>
+              <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+                No telemóvel que já tem, onde quer que esteja. E dar às
+                clínicas ferramentas simples para cuidarem melhor.
               </p>
             </div>
-            <div className="rounded-2xl border border-border bg-card p-8">
-              <span className="grid size-10 place-items-center rounded-lg bg-primary/10 text-primary">
-                <Compass className="size-5" />
-              </span>
-              <h2 className="mt-5 text-xl font-semibold tracking-tight text-foreground">
-                Visão
+
+            {/* Visão */}
+            <div className="md:border-l md:border-border md:pl-16">
+              <div className="flex items-center gap-3">
+                <span className="grid size-11 place-items-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-md shadow-emerald-500/30">
+                  <Compass className="size-5" />
+                </span>
+                <div className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-400">
+                  Visão
+                </div>
+              </div>
+              <h2 className="mt-6 text-2xl font-semibold leading-snug tracking-tight text-foreground sm:text-3xl">
+                Onde toda a gente em Angola encontra médico.
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                Ser o sítio onde toda a gente em Angola encontra médico,
-                marca consulta e é atendida — e onde cada clínica trabalha
-                sem papel, das marcações à farmácia.
+              <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+                Marca consulta, é atendida — e cada clínica trabalha sem
+                papel, das marcações à farmácia.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== Valores ===== */}
-      <section className="border-b border-border bg-muted/30">
-        <div className="mx-auto max-w-5xl px-6 py-20">
+      {/* ===== Valores (numerados, editorial) ===== */}
+      <section className="border-b border-border">
+        <div className="mx-auto max-w-5xl px-6 py-20 sm:py-24">
           <div className="max-w-2xl">
-            <div className="text-xs font-medium uppercase tracking-wider text-primary">
+            <div className="text-xs font-bold uppercase tracking-[0.22em] text-primary">
               O que nos move
             </div>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
               Os nossos valores
             </h2>
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+              Três princípios que orientam tudo o que fazemos.
+            </p>
           </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {VALUES.map((v) => (
-              <div
-                key={v.title}
-                className="rounded-2xl border border-border bg-card p-7"
-              >
-                <span className="grid size-10 place-items-center rounded-lg bg-primary/10 text-primary">
-                  <v.icon className="size-5" />
-                </span>
-                <h3 className="mt-5 text-base font-semibold text-foreground">
-                  {v.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {v.desc}
-                </p>
+
+          <div className="mt-14 grid gap-12 md:grid-cols-3 md:gap-10">
+            {VALUES.map((v, i) => (
+              <div key={v.title} className="relative">
+                {/* Número grande de fundo */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -top-4 left-0 select-none text-[5.5rem] font-bold leading-none tracking-tight text-primary/10"
+                >
+                  0{i + 1}
+                </div>
+                <div className="relative pt-8">
+                  <span className="grid size-12 place-items-center rounded-xl bg-gradient-to-br from-sky-500/15 to-emerald-500/15 text-primary ring-1 ring-primary/20">
+                    <v.icon className="size-6" />
+                  </span>
+                  <h3 className="mt-6 text-xl font-semibold tracking-tight text-foreground">
+                    {v.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {v.desc}
+                  </p>
+                </div>
               </div>
             ))}
           </div>

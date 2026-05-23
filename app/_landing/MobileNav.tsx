@@ -129,14 +129,14 @@ export default function MobileNav() {
                     </button>
                   </div>
 
-                  {/* Links — all caps, bold, dark on white, separators */}
+                  {/* Links — all caps, semibold, comfortable weight */}
                   <nav className="flex-1 overflow-y-auto px-2 pt-2">
                     {ITEMS.map((item) => (
                       <Link
                         key={item.href}
                         href={item.href}
                         onClick={(e) => handleAnchorClick(e, item.href)}
-                        className="block border-b border-border px-3 py-4 text-sm font-bold uppercase tracking-[0.12em] text-foreground transition-[background-color,color,transform] duration-150 ease-out hover:bg-accent hover:text-primary active:scale-[0.99] active:bg-accent"
+                        className="block border-b border-border px-3 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-foreground/85 transition-[background-color,color,transform] duration-150 ease-out hover:bg-accent hover:text-primary active:scale-[0.99] active:bg-accent"
                       >
                         {item.label}
                       </Link>

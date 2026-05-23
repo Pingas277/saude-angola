@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import Logo from "./_brand/Logo";
 import DoctorSearch from "./_landing/DoctorSearch";
+import MobileNav from "./_landing/MobileNav";
 import ContactForm from "./_public/ContactForm";
 import AnimatedNumber from "./_ui/AnimatedNumber";
 import PhoneMockup from "./_ui/PhoneMockup";
@@ -151,21 +152,23 @@ const PLANS = [
   },
 ];
 
+// Explicit transition-property lists (Emil: never `transition-all`); press
+// feedback (active:scale) makes every CTA feel tappable on mobile + desktop.
 const btnPrimary =
-  "inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-[background-color,transform,box-shadow] duration-150 ease-out hover:bg-primary/90 hover:shadow-md hover:shadow-primary/20 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 const btnOutline =
-  "inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent hover:text-accent-foreground";
+  "inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-[background-color,color,transform,border-color] duration-150 ease-out hover:bg-accent hover:text-accent-foreground hover:border-foreground/20 active:scale-[0.97]";
 
 const btnOnDark =
-  "inline-flex items-center justify-center gap-2 rounded-lg border border-white/30 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur transition-colors hover:bg-white/20";
+  "inline-flex items-center justify-center gap-2 rounded-lg border border-white/30 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur transition-[background-color,transform,border-color] duration-150 ease-out hover:bg-white/20 hover:border-white/50 active:scale-[0.97]";
 
 export default function HomePage() {
   return (
     <main className="bg-background text-foreground">
       {/* ============ Top nav ============ */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
           <Logo size="md" />
           <nav className="hidden items-center gap-1 md:flex">
             <NavLink href="#como">Como funciona</NavLink>
@@ -176,14 +179,16 @@ export default function HomePage() {
           <div className="flex items-center gap-2">
             <Link
               href="/entrar"
-              className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
+              className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground md:inline-flex"
             >
               Entrar
             </Link>
-            <Link href="/registar" className={btnPrimary}>
+            <Link href="/registar" className={`${btnPrimary} hidden sm:inline-flex`}>
               Criar conta
               <ArrowRight className="size-4" />
             </Link>
+            {/* Mobile: 3-dot menu, shown < md. Sheet contains all nav + auth. */}
+            <MobileNav />
           </div>
         </div>
       </header>
@@ -294,7 +299,7 @@ export default function HomePage() {
             {STEPS.map((s) => (
               <StaggerItem
                 key={s.n}
-                className="relative rounded-2xl border border-border bg-card p-7 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+                className="relative rounded-2xl border border-border bg-card p-7 shadow-sm transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
               >
                 <div className="flex items-center justify-between">
                   <span className="grid size-11 place-items-center rounded-xl bg-primary/10 text-primary">
@@ -421,7 +426,7 @@ export default function HomePage() {
             {FEATURES.map((f, i) => (
               <StaggerItem
                 key={f.title}
-                className="group rounded-2xl border border-border bg-card p-7 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+                className="group rounded-2xl border border-border bg-card p-7 shadow-sm transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
               >
                 <span
                   className="grid size-11 place-items-center rounded-xl"
@@ -525,7 +530,7 @@ export default function HomePage() {
               <StaggerItem
                 key={p.name}
                 className={
-                  "relative rounded-2xl border bg-card p-8 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md " +
+                  "relative rounded-2xl border bg-card p-8 shadow-sm transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md " +
                   (p.highlighted
                     ? "border-primary ring-1 ring-primary/20"
                     : "border-border")

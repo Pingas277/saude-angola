@@ -209,10 +209,10 @@ function Cover() {
         <div className="flex flex-col items-center gap-5">
           <div className="rounded-2xl bg-white/95 px-5 py-3 shadow-2xl shadow-black/40 ring-1 ring-amber-200/30">
             <Image
-              src="/brand/logo-full.png"
+              src="/brand/logo-full.svg"
               alt="lunga"
               width={180}
-              height={92}
+              height={90}
               className="h-12 w-auto sm:h-14"
               priority
             />
@@ -341,10 +341,10 @@ function DataPage({
           <div className="flex items-center gap-2">
             <div className="rounded-lg bg-white/95 px-3 py-1.5 shadow-sm">
               <Image
-                src="/brand/logo-full.png"
+                src="/brand/logo-full.svg"
                 alt="lunga"
                 width={88}
-                height={45}
+                height={44}
                 className="h-7 w-auto"
               />
             </div>

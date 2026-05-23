@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
     "/api/receita/[id]/pdf": ["./lib/fonts/**", "./public/brand/**"],
     "/api/fatura/[id]/pdf": ["./lib/fonts/**", "./public/brand/**"],
   },
+  // Allow next/image to render SVGs (logo). Sandboxed via CSP so any
+  // inline scripts inside an SVG (even one we control) can't execute.
+  images: {
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy:
+      "default-src 'self'; script-src 'none'; sandbox;",
+  },
 };
 
 // Wrap with Sentry. When SENTRY_ORG/SENTRY_PROJECT/SENTRY_AUTH_TOKEN are not

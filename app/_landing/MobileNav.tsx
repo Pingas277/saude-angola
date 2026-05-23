@@ -101,7 +101,7 @@ export default function MobileNav() {
                   className="fixed inset-0 z-40 cursor-default bg-black/50 md:hidden"
                 />
 
-                {/* Right-side drawer — brand-color gradient, full height. */}
+                {/* Right-side drawer — clean white, brand accents only. */}
                 <motion.div
                   key="drawer"
                   id="mobile-nav-drawer"
@@ -112,31 +112,31 @@ export default function MobileNav() {
                   animate={{ x: 0 }}
                   exit={{ x: "100%" }}
                   transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-                  className="fixed inset-y-0 right-0 z-50 flex w-[78%] max-w-[340px] flex-col bg-gradient-to-br from-sky-600 via-sky-700 to-emerald-700 text-white shadow-2xl md:hidden"
+                  className="fixed inset-y-0 right-0 z-50 flex w-[78%] max-w-[340px] flex-col border-l border-border bg-background text-foreground shadow-2xl md:hidden"
                 >
                   {/* Top bar with close button */}
-                  <div className="flex h-16 items-center justify-between px-4">
-                    <span className="text-[10px] font-bold uppercase tracking-[0.32em] text-white/70">
+                  <div className="flex h-16 items-center justify-between border-b border-border px-4">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.32em] text-muted-foreground">
                       Menu
                     </span>
                     <button
                       type="button"
                       onClick={() => setOpen(false)}
                       aria-label="Fechar menu"
-                      className="grid size-10 place-items-center rounded-lg text-white transition-[background-color,transform] duration-150 ease-out hover:bg-white/15 active:scale-90"
+                      className="grid size-10 place-items-center rounded-lg text-foreground transition-[background-color,transform] duration-150 ease-out hover:bg-accent active:scale-90"
                     >
                       <X className="size-5" />
                     </button>
                   </div>
 
-                  {/* Links — all caps, bold, white-on-brand, separators */}
+                  {/* Links — all caps, bold, dark on white, separators */}
                   <nav className="flex-1 overflow-y-auto px-2 pt-2">
                     {ITEMS.map((item) => (
                       <Link
                         key={item.href}
                         href={item.href}
                         onClick={(e) => handleAnchorClick(e, item.href)}
-                        className="block border-b border-white/10 px-3 py-4 text-sm font-bold uppercase tracking-[0.12em] text-white transition-[background-color,transform] duration-150 ease-out hover:bg-white/10 active:scale-[0.99] active:bg-white/15"
+                        className="block border-b border-border px-3 py-4 text-sm font-bold uppercase tracking-[0.12em] text-foreground transition-[background-color,color,transform] duration-150 ease-out hover:bg-accent hover:text-primary active:scale-[0.99] active:bg-accent"
                       >
                         {item.label}
                       </Link>
@@ -144,19 +144,19 @@ export default function MobileNav() {
                   </nav>
 
                   {/* Auth row — pinned to bottom of drawer */}
-                  <div className="border-t border-white/15 bg-black/10 p-3">
+                  <div className="border-t border-border bg-muted/30 p-3">
                     <div className="flex flex-col gap-2">
                       <Link
                         href="/entrar"
                         onClick={() => setOpen(false)}
-                        className="block rounded-lg border border-white/30 bg-white/5 px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.16em] text-white shadow-sm transition-[background-color,border-color,transform] duration-150 ease-out hover:border-white/60 hover:bg-white/15 active:scale-[0.97]"
+                        className="block rounded-lg border border-border bg-background px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.16em] text-foreground shadow-sm transition-[background-color,border-color,transform] duration-150 ease-out hover:border-foreground/30 hover:bg-accent active:scale-[0.97]"
                       >
                         Entrar
                       </Link>
                       <Link
                         href="/registar"
                         onClick={() => setOpen(false)}
-                        className="block rounded-lg bg-white px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.16em] text-sky-700 shadow-md transition-[background-color,transform,box-shadow] duration-150 ease-out hover:bg-white/95 hover:shadow-lg active:scale-[0.97]"
+                        className="block rounded-lg bg-gradient-to-br from-sky-600 to-emerald-600 px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.16em] text-white shadow-md shadow-primary/20 transition-[transform,box-shadow] duration-150 ease-out hover:shadow-lg hover:shadow-primary/30 active:scale-[0.97]"
                       >
                         Criar conta
                       </Link>

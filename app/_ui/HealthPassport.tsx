@@ -94,6 +94,7 @@ export default function HealthPassport({
             issuedAt={issuedAt}
             isOpen={open}
             onClose={() => setOpen(false)}
+            reducedMotion={reducedMotion}
           />
 
           {/* Cover — flips open from the left hinge */}
@@ -151,7 +152,7 @@ export default function HealthPassport({
 
 function Cover() {
   return (
-    <div className="relative size-full overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-sky-950 to-emerald-950 text-white transition-transform duration-150 ease-out group-active:scale-[0.985] motion-reduce:!scale-100 motion-reduce:transition-none">
+    <div className="relative size-full overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-sky-950 to-emerald-950 text-white transition-transform duration-300 ease-out [@media(hover:hover)]:group-hover:scale-[1.015] group-active:!scale-[0.985] motion-reduce:!scale-100 motion-reduce:transition-none">
       {/* Embossed dot pattern */}
       <svg
         aria-hidden
@@ -259,6 +260,7 @@ function DataPage({
   issuedAt,
   isOpen,
   onClose,
+  reducedMotion,
 }: {
   name: string;
   age: number | null;
@@ -268,7 +270,22 @@ function DataPage({
   issuedAt?: string;
   isOpen: boolean;
   onClose: () => void;
+  reducedMotion: boolean;
 }) {
+  // Stagger reveal — each section fades + rises into place after the cover
+  // has rotated past edge-on (~350ms in). Closing snaps everything back fast.
+  const reveal = (delay: number): React.CSSProperties => {
+    if (reducedMotion) return {};
+    return {
+      opacity: isOpen ? 1 : 0,
+      transform: isOpen ? "translateY(0)" : "translateY(14px)",
+      transition: isOpen
+        ? `opacity 520ms cubic-bezier(0.2, 0.8, 0.2, 1) ${delay}ms, transform 520ms cubic-bezier(0.2, 0.8, 0.2, 1) ${delay}ms`
+        : "opacity 140ms ease-out, transform 140ms ease-out",
+      willChange: "opacity, transform",
+    };
+  };
+
   return (
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky-500 via-sky-600 to-emerald-600 text-white shadow-2xl shadow-sky-500/30">
       {/* Decorative pattern */}
@@ -309,7 +326,10 @@ function DataPage({
 
       <div className="relative p-6 sm:p-8">
         {/* Top band */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div
+          className="flex flex-wrap items-center justify-between gap-3"
+          style={reveal(280)}
+        >
           <div>
             <div className="text-[10px] font-bold uppercase tracking-[0.28em] text-white/85">
               Passaporte de Saúde
@@ -342,7 +362,10 @@ function DataPage({
         </div>
 
         {/* Photo + identity */}
-        <div className="mt-7 flex flex-wrap items-start gap-5">
+        <div
+          className="mt-7 flex flex-wrap items-start gap-5"
+          style={reveal(380)}
+        >
           <div className="relative">
             <div className="grid size-24 place-items-center overflow-hidden rounded-2xl border-4 border-white/90 bg-white text-2xl font-bold text-sky-700 shadow-xl">
               {profile.avatar_url ? (
@@ -409,7 +432,10 @@ function DataPage({
 
         {/* Allergies (only if any) */}
         {patient?.allergies && patient.allergies.length > 0 && (
-          <div className="relative mt-6 rounded-xl border border-white/20 bg-white/10 p-3 backdrop-blur">
+          <div
+            className="relative mt-6 rounded-xl border border-white/20 bg-white/10 p-3 backdrop-blur"
+            style={reveal(480)}
+          >
             <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-white/85">
               ⚠ Alergias
             </div>
@@ -427,7 +453,10 @@ function DataPage({
         )}
 
         {/* Machine-readable footer */}
-        <div className="mt-7 border-t border-white/20 pt-4">
+        <div
+          className="mt-7 border-t border-white/20 pt-4"
+          style={reveal(560)}
+        >
           <div className="flex flex-wrap items-end justify-between gap-2">
             <div className="font-mono text-[10px] tracking-[0.2em] text-white/65">
               {`AO<<LUNGA<<${(profile.full_name ?? "")

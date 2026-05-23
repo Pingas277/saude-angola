@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ChevronRight, X } from "lucide-react";
 import { BLOOD_TYPE_LABELS, formatDatePT } from "@/lib/labels";
@@ -57,10 +57,28 @@ export default function HealthPassport({
   issuedAt,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   const name = (profile.full_name ?? "—").toUpperCase();
   const age = ageFromDob(patient?.date_of_birth ?? null);
   const id = shortId(userId);
+
+  // iOS-weighted easing — heavier start, soft landing — fits the booklet
+  // gesture better than a symmetric ease. Asymmetric duration: opening is
+  // the reveal moment so it's deliberate; closing snappy. (Emil's rule.)
+  const flipTransition = reducedMotion
+    ? "opacity 180ms ease-out"
+    : open
+      ? "transform 1.05s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 500ms cubic-bezier(0.4, 0, 0.2, 1)"
+      : "transform 700ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 400ms cubic-bezier(0.4, 0, 0.2, 1)";
 
   return (
     <div className="select-none">
@@ -83,12 +101,16 @@ export default function HealthPassport({
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Fechar passaporte" : "Abrir passaporte"}
-            className="absolute inset-0 cursor-pointer overflow-hidden rounded-3xl border-0 bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-amber-300/50"
+            className="group absolute inset-0 cursor-pointer overflow-hidden rounded-3xl border-0 bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-amber-300/50"
             style={{
               transformOrigin: "left center",
-              transform: open ? "rotateY(-170deg)" : "rotateY(0deg)",
-              transition:
-                "transform 1.15s cubic-bezier(0.65, 0, 0.35, 1), box-shadow 0.6s ease",
+              transform: reducedMotion
+                ? "none"
+                : open
+                  ? "rotateY(-170deg)"
+                  : "rotateY(0deg)",
+              opacity: reducedMotion && open ? 0 : 1,
+              transition: flipTransition,
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
               pointerEvents: open ? "none" : "auto",
@@ -109,7 +131,7 @@ export default function HealthPassport({
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs font-medium text-muted-foreground shadow-sm transition-colors hover:bg-accent hover:text-foreground"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs font-medium text-muted-foreground shadow-sm transition-[background-color,color,transform] duration-150 ease-out hover:bg-accent hover:text-foreground active:scale-[0.97]"
           >
             <X className="size-3.5" />
             Fechar passaporte
@@ -117,7 +139,7 @@ export default function HealthPassport({
         ) : (
           <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
             Toque no passaporte para abrir
-            <ChevronRight className="size-3.5 animate-pulse" />
+            <ChevronRight className="size-3.5 motion-safe:animate-pulse" />
           </span>
         )}
       </div>
@@ -129,7 +151,7 @@ export default function HealthPassport({
 
 function Cover() {
   return (
-    <div className="relative size-full overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-sky-950 to-emerald-950 text-white">
+    <div className="relative size-full overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-sky-950 to-emerald-950 text-white transition-transform duration-150 ease-out group-active:scale-[0.985] motion-reduce:!scale-100 motion-reduce:transition-none">
       {/* Embossed dot pattern */}
       <svg
         aria-hidden
@@ -311,7 +333,7 @@ function DataPage({
                 type="button"
                 onClick={onClose}
                 aria-label="Fechar passaporte"
-                className="grid size-9 place-items-center rounded-full bg-white/15 text-white backdrop-blur transition-colors hover:bg-white/25"
+                className="grid size-9 place-items-center rounded-full bg-white/15 text-white backdrop-blur transition-[background-color,transform] duration-150 ease-out hover:bg-white/25 active:scale-95"
               >
                 <X className="size-4" />
               </button>

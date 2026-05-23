@@ -16,7 +16,7 @@ type LogoProps = {
   markOnly?: boolean;
 };
 
-const RATIO = 913 / 464; // intrinsic aspect of the lunga lockup
+const RATIO = 150 / 75; // intrinsic aspect of the lunga SVG lockup (2:1)
 const SIZES = {
   sm: { h: 22, subSize: "text-[9px]" },
   md: { h: 30, subSize: "text-[10px]" },
@@ -40,7 +40,7 @@ export default function Logo({
   const Inner = (
     <div className="flex flex-col items-start leading-none">
       <Image
-        src="/brand/logo-full.png"
+        src="/brand/logo-full.svg"
         alt="lunga"
         width={w}
         height={h}

@@ -209,10 +209,10 @@ export default function HomePage() {
             <Stagger>
               <StaggerItem className="flex justify-center lg:justify-start">
                 <Image
-                  src="/brand/logo-full.png"
+                  src="/brand/logo-full.svg"
                   alt="lunga"
                   width={420}
-                  height={214}
+                  height={210}
                   priority
                   className="h-16 w-auto sm:h-20"
                 />
@@ -663,10 +663,10 @@ export default function HomePage() {
           <Reveal className="flex flex-col items-center text-center">
             <div className="rounded-2xl bg-white/95 px-6 py-4 shadow-xl shadow-black/10 ring-1 ring-white/40 backdrop-blur">
               <Image
-                src="/brand/logo-full.png"
+                src="/brand/logo-full.svg"
                 alt="lunga"
                 width={220}
-                height={112}
+                height={110}
                 className="h-12 w-auto sm:h-14"
               />
             </div>

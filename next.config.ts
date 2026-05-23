@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -10,4 +11,11 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Wrap with Sentry. When SENTRY_ORG/SENTRY_PROJECT/SENTRY_AUTH_TOKEN are not
+// set, the wrapper still works for runtime capture; the source-map upload
+// step is just skipped. In dev or without a DSN it's effectively a no-op.
+export default withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: !process.env.CI,
+});

@@ -124,17 +124,88 @@ export default function SobrePage() {
       />
 
       {/* ===== Quem somos (intro narrativo) ===== */}
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-5xl px-6 py-20 sm:py-24">
+      <section className="relative overflow-hidden border-b border-border">
+        {/* Section background — soft brand wash + corner orbs */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-50/70 via-background to-emerald-50/70"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-40 top-0 size-[480px] rounded-full bg-gradient-to-br from-sky-300/15 to-transparent blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-40 bottom-0 size-[480px] rounded-full bg-gradient-to-br from-emerald-300/15 to-transparent blur-3xl"
+        />
+
+        <div className="relative mx-auto max-w-5xl px-6 py-20 sm:py-24">
           <div className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-            {/* Foto vertical, com cartão de stat flutuante */}
+            {/* Brand showcase card (substitui a foto do médico) */}
             <div className="relative">
-              <ImageSlot
-                src="landing/medico"
-                alt="Profissional de saúde a usar a Lunga"
-                caption=""
-                className="aspect-[4/5] w-full overflow-hidden rounded-3xl shadow-xl"
-              />
+              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl bg-gradient-to-br from-sky-100 via-white to-emerald-100 shadow-xl ring-1 ring-border">
+                {/* Inner glow orbs */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -left-16 -top-16 size-72 rounded-full bg-gradient-to-br from-sky-400/30 to-transparent blur-3xl"
+                />
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -bottom-16 -right-16 size-72 rounded-full bg-gradient-to-br from-emerald-400/30 to-transparent blur-3xl"
+                />
+                {/* Dot pattern texture */}
+                <svg
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 size-full text-foreground opacity-[0.06]"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <pattern
+                      id="sobre-card-dots"
+                      x="0"
+                      y="0"
+                      width="20"
+                      height="20"
+                      patternUnits="userSpaceOnUse"
+                    >
+                      <circle cx="1" cy="1" r="1" fill="currentColor" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#sobre-card-dots)" />
+                </svg>
+
+                {/* Centered logo + brand atmosphere */}
+                <div className="relative flex h-full flex-col items-center justify-center px-8 py-12">
+                  <Image
+                    src="/brand/logo-full.svg"
+                    alt="Lunga"
+                    width={300}
+                    height={150}
+                    priority
+                    className="h-20 w-auto sm:h-24"
+                  />
+                  <div className="mt-6 text-[10px] font-bold uppercase tracking-[0.32em] text-muted-foreground">
+                    Saúde · Angola
+                  </div>
+
+                  {/* Subtle divider */}
+                  <div className="mt-8 h-px w-12 bg-gradient-to-r from-transparent via-border to-transparent" />
+
+                  {/* Bandeira angolana — pequeno toque de identidade */}
+                  <div className="mt-8 flex items-center gap-2.5 text-xs font-medium text-muted-foreground">
+                    <Image
+                      src="/brand/angola-flag.png"
+                      alt=""
+                      width={26}
+                      height={17}
+                      className="rounded-[2px] shadow-sm ring-1 ring-border"
+                    />
+                    <span>República de Angola</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 21/21 floating card (mantido) */}
               <div className="pointer-events-none absolute -bottom-6 -right-6 hidden rounded-2xl border border-border bg-card p-5 shadow-xl ring-1 ring-black/5 sm:block">
                 <div className="text-3xl font-bold tracking-tight text-foreground">
                   21<span className="text-muted-foreground/50"> / 21</span>
@@ -225,8 +296,16 @@ export default function SobrePage() {
       </section>
 
       {/* ===== Valores (numerados, editorial) ===== */}
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-5xl px-6 py-20 sm:py-24">
+      <section className="relative overflow-hidden border-b border-border">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-background via-background to-emerald-50/50"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-32 top-1/3 size-[420px] rounded-full bg-gradient-to-br from-emerald-300/15 to-sky-300/10 blur-3xl"
+        />
+        <div className="relative mx-auto max-w-5xl px-6 py-20 sm:py-24">
           <div className="max-w-2xl">
             <div className="text-xs font-bold uppercase tracking-[0.22em] text-primary">
               O que nos move
@@ -329,8 +408,16 @@ export default function SobrePage() {
       </section>
 
       {/* ===== A Nossa História ===== */}
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-5xl px-6 py-20">
+      <section className="relative overflow-hidden border-b border-border">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-bl from-sky-50/50 via-background to-background"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-32 bottom-0 size-[420px] rounded-full bg-gradient-to-br from-sky-300/15 to-transparent blur-3xl"
+        />
+        <div className="relative mx-auto max-w-5xl px-6 py-20">
           <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
               <div className="text-xs font-medium uppercase tracking-wider text-primary">
@@ -373,8 +460,16 @@ export default function SobrePage() {
       </section>
 
       {/* ===== Angola band ===== */}
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-5xl px-6 py-20">
+      <section className="relative overflow-hidden border-b border-border">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-background via-background to-emerald-50/40"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-32 top-0 size-[420px] rounded-full bg-gradient-to-br from-emerald-300/15 to-transparent blur-3xl"
+        />
+        <div className="relative mx-auto max-w-5xl px-6 py-20">
           <div className="grid items-center gap-10 md:grid-cols-2">
             <ImageSlot
               src="sobre/angola"

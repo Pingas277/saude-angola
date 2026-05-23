@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import {
   MoreVertical,
@@ -67,6 +68,12 @@ const HEADER_OFFSET = 80;
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
+  // We portal the sheet to <body> because the header has `backdrop-blur`
+  // which creates a containing block for `position: fixed` descendants —
+  // rendering the sheet inside would collapse it to the header's height.
+  // `mounted` gates the portal so SSR doesn't crash on `document`.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   // Body scroll lock, Escape closes, auto-close on resize past md.
   useEffect(() => {
@@ -148,23 +155,25 @@ export default function MobileNav() {
         </AnimatePresence>
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            key="sheet"
-            id="mobile-nav-sheet"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menu de navegação"
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{
-              duration: open ? 0.32 : 0.2,
-              ease: EASE_SHEET,
-            }}
-            className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto md:hidden"
-          >
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                key="sheet"
+                id="mobile-nav-sheet"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Menu de navegação"
+                initial={{ opacity: 0, y: -16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{
+                  duration: open ? 0.32 : 0.2,
+                  ease: EASE_SHEET,
+                }}
+                className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto md:hidden"
+              >
             {/* Background — brand-toned gradient + dot pattern + soft orbs */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-50 via-background to-emerald-50" />
             <div
@@ -284,11 +293,13 @@ export default function MobileNav() {
                     Criar conta
                   </Link>
                 </div>
+                  </motion.div>
+                </div>
               </motion.div>
-            </div>
-          </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </>
   );
 }

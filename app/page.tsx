@@ -61,33 +61,45 @@ const STEPS = [
 const FEATURES = [
   {
     icon: Search,
+    gradient: "from-sky-500 to-blue-600",
     title: "Encontre o seu médico",
     desc: "Procure por especialidade, clínica, província ou nome. Marque em segundos.",
+    chip: "Por especialidade ou nome",
   },
   {
     icon: Video,
+    gradient: "from-emerald-500 to-teal-600",
     title: "Consulta por vídeo",
     desc: "Sem deslocações. Fale com um médico licenciado em minutos.",
+    chip: "Pronta em ≈ 3 min",
   },
   {
     icon: FileText,
+    gradient: "from-rose-500 to-pink-600",
     title: "Receita no telemóvel",
     desc: "Com código QR, válida nas farmácias. Sempre consigo.",
+    chip: "QR para a farmácia",
   },
   {
     icon: Pill,
+    gradient: "from-amber-500 to-orange-600",
     title: "Tudo num só sítio",
     desc: "Consultas, receitas, exames e faturas — sempre acessíveis.",
+    chip: "Histórico clínico",
   },
   {
     icon: CreditCard,
+    gradient: "from-violet-500 to-purple-600",
     title: "Multicaixa Express",
     desc: "Pague no telemóvel. Recebe o comprovativo automaticamente.",
+    chip: "Pagamento instantâneo",
   },
   {
     icon: Stethoscope,
+    gradient: "from-indigo-500 to-sky-600",
     title: "Sistema para clínicas",
     desc: "Equipa, agenda, faturação e farmácia — substitua o papel.",
+    chip: "Equipa + agenda + farmácia",
   },
 ];
 
@@ -455,8 +467,22 @@ export default function HomePage() {
       </section>
 
       {/* ============ Features grid ============ */}
-      <section className="border-b border-border">
-        <div className="mx-auto max-w-6xl px-6 py-24">
+      <section className="relative overflow-hidden border-b border-border">
+        {/* Decorative section background — same vocabulary as Como funciona */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-50/40 via-transparent to-emerald-50/40"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-32 top-1/4 size-[460px] rounded-full bg-gradient-to-br from-sky-200/15 to-transparent blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-32 bottom-1/4 size-[420px] rounded-full bg-gradient-to-br from-emerald-200/15 to-violet-200/10 blur-3xl"
+        />
+
+        <div className="relative mx-auto max-w-6xl px-6 py-24">
           <Reveal className="mx-auto max-w-2xl text-center">
             <SectionEyebrow>O que recebe</SectionEyebrow>
             <SectionTitle>Tudo o que precisa.</SectionTitle>
@@ -467,26 +493,35 @@ export default function HomePage() {
           </Reveal>
 
           <Stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((f, i) => (
+            {FEATURES.map((f) => (
               <StaggerItem
                 key={f.title}
-                className="group rounded-2xl border border-border bg-card p-7 shadow-sm transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
+                className="group relative flex flex-col rounded-2xl border border-border bg-card p-7 shadow-sm transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg"
               >
+                {/* Gradient icon tile — unique per feature */}
                 <span
-                  className="grid size-11 place-items-center rounded-xl"
-                  style={{
-                    background: i % 2 === 0 ? "rgba(47,116,196,0.12)" : "rgba(224,138,75,0.15)",
-                    color: i % 2 === 0 ? "#2F74C4" : "#E08A4B",
-                  }}
+                  className={`grid size-12 place-items-center rounded-xl bg-gradient-to-br ${f.gradient} text-white shadow-md shadow-black/5 ring-1 ring-white/20 transition-transform duration-200 ease-out group-hover:scale-105`}
                 >
-                  <f.icon className="size-5" />
+                  <f.icon className="size-6" strokeWidth={2} />
                 </span>
-                <h3 className="mt-5 text-base font-semibold text-foreground">
+
+                <h3 className="mt-5 text-base font-semibold tracking-tight text-foreground">
                   {f.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {f.desc}
                 </p>
+
+                {/* Concrete-value chip at the bottom — gives each card its
+                    own tagline + visual differentiator beyond the gradient. */}
+                <div className="mt-5 flex-1" />
+                <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-border bg-background/60 px-2.5 py-1 text-[11px] font-medium text-muted-foreground backdrop-blur-sm">
+                  <Check
+                    className="size-3 text-emerald-600 dark:text-emerald-400"
+                    strokeWidth={3}
+                  />
+                  {f.chip}
+                </div>
               </StaggerItem>
             ))}
           </Stagger>

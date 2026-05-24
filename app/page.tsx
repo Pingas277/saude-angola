@@ -15,8 +15,10 @@ import {
   CalendarCheck,
   Sparkles,
   MapPin,
+  Clock,
 } from "lucide-react";
 import Logo from "./_brand/Logo";
+import ActivityFeed from "./_landing/ActivityFeed";
 import DoctorSearch from "./_landing/DoctorSearch";
 import MobileNav from "./_landing/MobileNav";
 import ContactForm from "./_public/ContactForm";
@@ -392,7 +394,44 @@ export default function HomePage() {
           </Reveal>
 
           <Reveal className="mx-auto mt-12 max-w-3xl">
+            {/* Live-activity badge above the widget — pulsing green dot
+                + animated counter + three concrete mini-stats. */}
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-x-5 gap-y-3 rounded-2xl border border-border bg-card px-5 py-3.5 shadow-sm">
+              <div className="flex items-center gap-3">
+                <span
+                  aria-hidden
+                  className="relative inline-flex size-2.5 items-center justify-center"
+                >
+                  <span className="absolute inset-0 animate-ping rounded-full bg-emerald-500/50" />
+                  <span className="relative size-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50" />
+                </span>
+                <span className="text-sm font-semibold text-foreground">
+                  <AnimatedNumber value={500} />+ médicos disponíveis em Angola
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock className="size-3.5 text-primary" />≈ 3 min para marcar
+                </span>
+                <span aria-hidden className="text-border">
+                  ·
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <MapPin className="size-3.5 text-primary" />
+                  21 províncias
+                </span>
+                <span aria-hidden className="text-border">
+                  ·
+                </span>
+                <span className="font-semibold text-foreground">24/7</span>
+              </div>
+            </div>
+
             <DoctorSearch />
+
+            {/* Social-proof activity feed — cycles a fresh booking every
+                ~4s. Pauses when the tab is hidden. */}
+            <ActivityFeed />
           </Reveal>
         </div>
       </section>

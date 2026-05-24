@@ -6,7 +6,6 @@ import {
   Video,
   FileText,
   Pill,
-  ShieldCheck,
   Stethoscope,
   CreditCard,
   Search,
@@ -928,19 +927,19 @@ function DashboardMockup() {
           <span className="size-2.5 rounded-full bg-muted-foreground/30" />
           <span className="size-2.5 rounded-full bg-muted-foreground/30" />
           <span className="ml-2 truncate text-[10px] text-muted-foreground">
-            saude-angola.vercel.app/painel
+            lunga.ao/painel
           </span>
         </div>
 
         <div className="p-5">
-          {/* Mini header */}
+          {/* Mini header — mirrors the real /painel layout */}
           <div className="flex items-center justify-between">
             <div>
               <div className="text-[10px] font-medium uppercase tracking-wider text-primary">
                 Bom dia, Maria
               </div>
               <div className="mt-0.5 text-base font-semibold text-foreground">
-                O seu painel
+                O seu painel de saúde
               </div>
             </div>
             <span className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-2.5 py-1.5 text-[11px] font-semibold text-primary-foreground">
@@ -949,17 +948,47 @@ function DashboardMockup() {
             </span>
           </div>
 
-          {/* KPI tiles */}
-          <div className="mt-4 grid grid-cols-3 gap-2.5">
-            <MiniKpi color="primary" label="Próx." value="14:30" />
-            <MiniKpi color="amber" label="Receitas" value="3" />
-            <MiniKpi color="sky" label="Exames" value="2" />
+          {/* Mini Passaporte de Saúde — centerpiece of the real /painel
+              (HealthPassport component). Tiny version of the booklet cover. */}
+          <div className="relative mt-4 overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 via-sky-950 to-emerald-950 p-3.5 text-white shadow-lg">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-8 -top-8 size-24 rounded-full bg-white/10 blur-2xl"
+            />
+            <div className="pointer-events-none absolute inset-2 rounded-lg border border-amber-200/20" />
+            <div className="relative flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="text-[8px] font-bold uppercase tracking-[0.22em] text-amber-100/85">
+                  República de Angola
+                </div>
+                <div className="mt-1 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-amber-100/95">
+                  Passaporte de Saúde
+                </div>
+                <div className="mt-2.5 font-mono text-sm font-bold uppercase tracking-wide">
+                  Maria F.
+                </div>
+                <div className="mt-0.5 text-[9px] text-white/55">
+                  Tipo sang. <strong className="text-white">O+</strong> · 21 anos
+                </div>
+              </div>
+              <div className="shrink-0 rounded-md bg-white/95 px-2 py-1 font-mono text-[8px] font-black uppercase tracking-wider text-slate-900">
+                lunga
+              </div>
+            </div>
           </div>
 
-          {/* Next appointment card */}
+          {/* Next appointment — same layout as the spotlight on real /painel */}
           <div className="mt-3 rounded-xl border border-border bg-background p-3.5">
-            <div className="flex items-center gap-3">
-              <span className="grid size-9 place-items-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+            <div className="flex items-center justify-between">
+              <span className="text-[9px] font-medium uppercase tracking-wider text-primary">
+                Próxima consulta
+              </span>
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-semibold text-primary">
+                Confirmada
+              </span>
+            </div>
+            <div className="mt-2.5 flex items-center gap-3">
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
                 MS
               </span>
               <div className="min-w-0 flex-1">
@@ -971,35 +1000,29 @@ function DashboardMockup() {
                   Clínica Demo · Luanda
                 </div>
               </div>
-              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                Confirmada
+              <span className="shrink-0 text-[11px] font-medium text-muted-foreground tabular-nums">
+                Hoje · 14:30
               </span>
             </div>
           </div>
 
-          {/* Mini chart */}
-          <div className="mt-3 rounded-xl border border-border bg-background p-3.5">
-            <div className="flex items-center justify-between">
-              <div className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-                Atividade · 7 dias
-              </div>
-              <ShieldCheck className="size-3.5 text-primary" />
-            </div>
-            <div className="mt-2 flex h-14 items-end gap-1.5">
-              {[40, 70, 30, 90, 55, 80, 65].map((h, i) => (
-                <div
-                  key={i}
-                  className="flex-1 rounded-t"
-                  style={{
-                    height: `${h}%`,
-                    background:
-                      i === 5
-                        ? "linear-gradient(180deg, #2F74C4, #5C9CE0)"
-                        : "rgba(47,116,196,0.35)",
-                  }}
-                />
-              ))}
-            </div>
+          {/* Stat cards row — mirrors GradientStatCard used on real /painel */}
+          <div className="mt-3 grid grid-cols-3 gap-2.5">
+            <MiniStat
+              gradient="from-sky-500 to-blue-600"
+              label="Próximas"
+              value="2"
+            />
+            <MiniStat
+              gradient="from-rose-500 to-pink-600"
+              label="Receitas"
+              value="3"
+            />
+            <MiniStat
+              gradient="from-emerald-500 to-teal-600"
+              label="Exames"
+              value="2"
+            />
           </div>
         </div>
       </div>
@@ -1007,27 +1030,27 @@ function DashboardMockup() {
   );
 }
 
-function MiniKpi({
-  color,
+function MiniStat({
+  gradient,
   label,
   value,
 }: {
-  color: "primary" | "amber" | "sky";
+  gradient: string;
   label: string;
   value: string;
 }) {
-  const styles =
-    color === "primary"
-      ? "bg-primary/10 text-primary"
-      : color === "amber"
-        ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
-        : "bg-sky-500/10 text-sky-600 dark:text-sky-400";
   return (
-    <div className="rounded-lg border border-border bg-background p-2.5">
-      <div className={"text-[9px] font-medium uppercase tracking-wider " + styles}>
+    <div
+      className={`relative overflow-hidden rounded-lg bg-gradient-to-br ${gradient} p-2.5 text-white shadow-sm`}
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-4 -top-4 size-10 rounded-full bg-white/20 blur-xl"
+      />
+      <div className="relative text-[8px] font-semibold uppercase tracking-wider text-white/85">
         {label}
       </div>
-      <div className="mt-1 text-base font-semibold text-foreground tabular-nums">
+      <div className="relative mt-1 text-lg font-bold tabular-nums">
         {value}
       </div>
     </div>

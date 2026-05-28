@@ -6,9 +6,21 @@ import { createClient } from "@/lib/supabase/server";
 
 export type PayState = { error?: string } | null;
 
-// Mock Multicaixa Express callback. In production this would be hit by the
-// EMIS payment gateway after the user authorizes on their phone. For dev we
-// flip the invoice straight to paid and record a fake reference.
+// ⚠️ MOCK — DO NOT SHIP TO REAL PATIENTS AS-IS.
+//
+// This flips the invoice straight to "paid" with a fake reference. No money
+// actually moves. Fine for demos, but the moment a real patient pays a real
+// clinic, the "PAGO" status + the comprovativo PDF (/api/fatura/[id]/pdf)
+// would be asserting a payment that never happened — a real accounting/legal
+// problem for the clinic and for us.
+//
+// Before the first real payment, replace the body below with a REAL
+// confirmation. Lunga must NOT touch the money (we are not a PSP) — money
+// flows patient → gateway → the CLINIC's own account. Two acceptable paths:
+//   (A) Manual: clinic/reception confirms receipt, then status flips to paid.
+//   (B) Proxypay/EMIS webhook per clinic confirms settlement, then it flips.
+// Only set status="paid" + paid_at after a confirmed real settlement.
+// See launch_checklist: "Real Multicaixa Express integration".
 export async function mockPayMulticaixaAction(
   _prev: PayState,
   formData: FormData

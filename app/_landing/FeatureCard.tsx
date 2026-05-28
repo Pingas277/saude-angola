@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useInView } from "motion/react";
 import { Check } from "lucide-react";
 import { LiveIcon, type LiveIconHandle } from "@/components/ui/live-icon";
 
-// Landing 'Tudo o que precisa' card. Hovering anywhere on the card plays
-// the animated icon (not just hovering the icon itself).
+// Landing 'Tudo o que precisa' card. The animated icon draws itself once
+// when the card scrolls into view (visible on mobile too), and replays on
+// hover on desktop.
 export default function FeatureCard({
   iconName,
   gradient,
@@ -20,9 +22,18 @@ export default function FeatureCard({
   chip: string;
 }) {
   const icon = useRef<LiveIconHandle>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(cardRef, { once: true, margin: "-15%" });
+
+  useEffect(() => {
+    if (!inView) return;
+    const t = setTimeout(() => icon.current?.startAnimation(), 150);
+    return () => clearTimeout(t);
+  }, [inView]);
 
   return (
     <div
+      ref={cardRef}
       onMouseEnter={() => icon.current?.startAnimation()}
       onMouseLeave={() => icon.current?.stopAnimation()}
       className="group flex h-full flex-col rounded-2xl border border-border bg-card p-7 shadow-sm transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg"

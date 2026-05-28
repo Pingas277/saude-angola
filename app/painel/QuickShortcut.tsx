@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useInView } from "motion/react";
 import { LiveIcon, type LiveIconHandle } from "@/components/ui/live-icon";
 
-// Painel 'Atalhos' shortcut. Same visual as before, but hovering the
-// button plays the animated icon.
+// Painel 'Atalhos' shortcut. The icon draws itself once when the shortcut
+// scrolls into view (mobile too) and replays on hover on desktop.
 export default function QuickShortcut({
   href,
   iconName,
@@ -16,9 +17,18 @@ export default function QuickShortcut({
   label: string;
 }) {
   const icon = useRef<LiveIconHandle>(null);
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  const inView = useInView(linkRef, { once: true, margin: "-15%" });
+
+  useEffect(() => {
+    if (!inView) return;
+    const t = setTimeout(() => icon.current?.startAnimation(), 150);
+    return () => clearTimeout(t);
+  }, [inView]);
 
   return (
     <Link
+      ref={linkRef}
       href={href}
       onMouseEnter={() => icon.current?.startAnimation()}
       onMouseLeave={() => icon.current?.stopAnimation()}

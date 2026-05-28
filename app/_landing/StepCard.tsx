@@ -1,10 +1,12 @@
 "use client";
 
-import { useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
+import { useInView } from "motion/react";
 import { LiveIcon, type LiveIconHandle } from "@/components/ui/live-icon";
 
-// Landing 'Como funciona' step. Hovering the column plays the animated
-// badge icon. The bottom chip keeps a static icon (too small to animate).
+// Landing 'Como funciona' step. The badge icon draws itself once when the
+// step scrolls into view (mobile too) and replays on hover on desktop.
+// The bottom chip keeps a static icon (too small to animate).
 export default function StepCard({
   n,
   iconName,
@@ -21,9 +23,18 @@ export default function StepCard({
   chipLabel: string;
 }) {
   const icon = useRef<LiveIconHandle>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(cardRef, { once: true, margin: "-15%" });
+
+  useEffect(() => {
+    if (!inView) return;
+    const t = setTimeout(() => icon.current?.startAnimation(), 150);
+    return () => clearTimeout(t);
+  }, [inView]);
 
   return (
     <div
+      ref={cardRef}
       onMouseEnter={() => icon.current?.startAnimation()}
       onMouseLeave={() => icon.current?.stopAnimation()}
       className="group relative flex flex-col items-center text-center"

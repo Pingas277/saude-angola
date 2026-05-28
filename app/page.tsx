@@ -596,7 +596,7 @@ export default function HomePage() {
                 enfermagem e administração — com agenda, faturação Multicaixa
                 Express e farmácia.
               </p>
-              <ul className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <ul className="mt-6 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                 {[
                   "Marcações online",
                   "Receitas digitais",
@@ -607,9 +607,11 @@ export default function HomePage() {
                 ].map((b) => (
                   <li
                     key={b}
-                    className="inline-flex items-center gap-2 text-sm text-foreground"
+                    className="inline-flex items-center gap-2.5 rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm font-medium text-foreground shadow-sm transition-[transform,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/30"
                   >
-                    <Check className="size-4 text-primary" />
+                    <span className="grid size-6 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+                      <Check className="size-3.5" strokeWidth={3} />
+                    </span>
                     {b}
                   </li>
                 ))}
@@ -629,8 +631,19 @@ export default function HomePage() {
       </section>
 
       {/* ============ Pricing ============ */}
-      <section id="precos" className="border-b border-border bg-muted/30">
-        <div className="mx-auto max-w-6xl px-6 py-24">
+      <section
+        id="precos"
+        className="relative overflow-hidden border-b border-border bg-muted/30"
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-br from-sky-50/40 via-transparent to-emerald-50/40"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-0 size-[520px] -translate-x-1/2 rounded-full bg-gradient-to-br from-sky-200/15 to-emerald-200/10 blur-3xl"
+        />
+        <div className="relative mx-auto max-w-6xl px-6 py-24">
           <Reveal className="mx-auto max-w-2xl text-center">
             <SectionEyebrow>Preços para clínicas</SectionEyebrow>
             <SectionTitle>A partir de 100.000 Kz / mês.</SectionTitle>
@@ -647,10 +660,10 @@ export default function HomePage() {
               <StaggerItem
                 key={p.name}
                 className={
-                  "relative rounded-2xl border bg-card p-8 shadow-sm transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md " +
+                  "relative rounded-2xl border p-8 shadow-sm transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg " +
                   (p.highlighted
-                    ? "border-primary ring-1 ring-primary/20"
-                    : "border-border")
+                    ? "border-primary bg-gradient-to-b from-primary/[0.06] to-card ring-1 ring-primary/20"
+                    : "border-border bg-card")
                 }
               >
                 {p.highlighted && (
@@ -707,8 +720,16 @@ export default function HomePage() {
       </section>
 
       {/* ============ FAQ ============ */}
-      <section id="faq" className="border-b border-border">
-        <div className="mx-auto max-w-3xl px-6 py-24">
+      <section id="faq" className="relative overflow-hidden border-b border-border">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-32 top-1/2 size-[420px] -translate-y-1/2 rounded-full bg-gradient-to-br from-sky-100/40 to-transparent blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-32 top-1/3 size-[380px] rounded-full bg-gradient-to-br from-emerald-100/40 to-transparent blur-3xl"
+        />
+        <div className="relative mx-auto max-w-3xl px-6 py-24">
           <Reveal className="text-center">
             <SectionEyebrow>Perguntas frequentes</SectionEyebrow>
             <SectionTitle>O que precisa de saber.</SectionTitle>

@@ -12,6 +12,38 @@ const PROVINCES = new Set([
   "Namibe","Uige","Zaire",
 ]);
 
+type DayHours = { open: string; close: string } | null;
+const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
+
+// Validate the working_hours JSON from the form. Returns the normalised
+// object, or null if anything is malformed (open >= close, bad time, etc.).
+function validateWorkingHours(raw: string): Record<string, DayHours> | null {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+  if (!parsed || typeof parsed !== "object") return null;
+  const obj = parsed as Record<string, unknown>;
+  const out: Record<string, DayHours> = {};
+  for (let d = 0; d <= 6; d++) {
+    const key = String(d);
+    const day = obj[key];
+    if (day == null) {
+      out[key] = null;
+      continue;
+    }
+    if (typeof day !== "object") return null;
+    const dd = day as Record<string, unknown>;
+    if (typeof dd.open !== "string" || typeof dd.close !== "string") return null;
+    if (!TIME_RE.test(dd.open) || !TIME_RE.test(dd.close)) return null;
+    if (dd.open >= dd.close) return null; // zero-padded HH:MM compares lexically
+    out[key] = { open: dd.open, close: dd.close };
+  }
+  return out;
+}
+
 export async function saveClinicProfileAction(
   _prev: ClinicProfileState,
   formData: FormData
@@ -26,6 +58,19 @@ export async function saveClinicProfileAction(
   if (!name) return { error: "O nome da clínica é obrigatório." };
   if (province && !PROVINCES.has(province)) {
     return { error: "Província inválida." };
+  }
+
+  const rawHours = String(formData.get("working_hours") ?? "").trim();
+  let workingHours: Record<string, DayHours> | undefined;
+  if (rawHours) {
+    const valid = validateWorkingHours(rawHours);
+    if (!valid) {
+      return {
+        error:
+          "Horários inválidos — verifique que a hora de abertura é antes da de fecho.",
+      };
+    }
+    workingHours = valid;
   }
 
   const supabase = await createClient();
@@ -52,6 +97,7 @@ export async function saveClinicProfileAction(
       phone: phone || null,
       email: email || null,
       logo_url: logoUrl || null,
+      ...(workingHours !== undefined ? { working_hours: workingHours } : {}),
     })
     .eq("id", admin.clinic_id);
 

@@ -25,10 +25,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/lib/supabase/client";
-import { generateSlots, timeToMinutes } from "@/lib/slots";
+import { coerceWorkingHours, slotsForDate, timeToMinutes } from "@/lib/slots";
 import { bookAppointmentAction, type BookingState } from "./actions";
-
-const ALL_SLOTS = generateSlots();
 
 const PT_WEEKDAY_SHORT = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 const PT_MONTH_SHORT = [
@@ -79,6 +77,7 @@ export default function BookingSheet({
   doctorSpecialty,
   doctorAvatarUrl,
   clinicName,
+  clinicHours,
   defaultDate,
   triggerVariant = "primary",
 }: {
@@ -87,6 +86,8 @@ export default function BookingSheet({
   doctorSpecialty: string | null;
   doctorAvatarUrl?: string | null;
   clinicName: string | null;
+  /** Raw clinics.working_hours JSONB; coerced + used to build the slot grid. */
+  clinicHours?: unknown;
   defaultDate: string;
   /** Visual variant of the trigger button. */
   triggerVariant?: "primary" | "compact";
@@ -104,6 +105,18 @@ export default function BookingSheet({
 
   const days = useMemo(() => build14Days(defaultDate), [defaultDate]);
   const selectedDay = days.find((d) => d.iso === date) ?? days[0];
+
+  // Clinic working hours → slots for the selected weekday. Empty when the
+  // clinic is closed that day.
+  const workingHours = useMemo(
+    () => coerceWorkingHours(clinicHours),
+    [clinicHours]
+  );
+  const daySlots = useMemo(() => {
+    const [y, m, d] = date.split("-").map(Number);
+    return slotsForDate(workingHours, new Date(y, m - 1, d));
+  }, [workingHours, date]);
+  const clinicClosed = daySlots.length === 0;
 
   const isToday = useMemo(() => date === defaultDate, [date, defaultDate]);
   const nowMinutes = useMemo(() => {
@@ -136,37 +149,38 @@ export default function BookingSheet({
     };
   }, [doctorId, date, open]);
 
-  // Group slots by period
+  // Group the day's slots by period (only periods with slots survive).
   const periods = useMemo(
-    () => [
-      {
-        label: "Manhã",
-        icon: Sunrise,
-        slots: ALL_SLOTS.filter((s) => timeToMinutes(s) < 12 * 60),
-      },
-      {
-        label: "Tarde",
-        icon: Sun,
-        slots: ALL_SLOTS.filter(
-          (s) => timeToMinutes(s) >= 12 * 60 && timeToMinutes(s) < 17 * 60
-        ),
-      },
-      {
-        label: "Noite",
-        icon: Moon,
-        slots: ALL_SLOTS.filter((s) => timeToMinutes(s) >= 17 * 60),
-      },
-    ],
-    []
+    () =>
+      [
+        {
+          label: "Manhã",
+          icon: Sunrise,
+          slots: daySlots.filter((s) => timeToMinutes(s) < 12 * 60),
+        },
+        {
+          label: "Tarde",
+          icon: Sun,
+          slots: daySlots.filter(
+            (s) => timeToMinutes(s) >= 12 * 60 && timeToMinutes(s) < 17 * 60
+          ),
+        },
+        {
+          label: "Noite",
+          icon: Moon,
+          slots: daySlots.filter((s) => timeToMinutes(s) >= 17 * 60),
+        },
+      ].filter((p) => p.slots.length > 0),
+    [daySlots]
   );
 
   const availableCount = useMemo(() => {
-    return ALL_SLOTS.filter((s) => {
+    return daySlots.filter((s) => {
       if (busySlots.includes(s)) return false;
       if (isToday && timeToMinutes(s) <= nowMinutes) return false;
       return true;
     }).length;
-  }, [busySlots, isToday, nowMinutes]);
+  }, [daySlots, busySlots, isToday, nowMinutes]);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -298,6 +312,8 @@ export default function BookingSheet({
                       <Loader2 className="size-3 animate-spin" />
                       A carregar…
                     </>
+                  ) : clinicClosed ? (
+                    <span className="text-muted-foreground">Fechado</span>
                   ) : availableCount > 0 ? (
                     <>
                       <span className="size-1.5 rounded-full bg-emerald-500" />
@@ -310,6 +326,16 @@ export default function BookingSheet({
                 </div>
               </div>
 
+              {clinicClosed ? (
+                <div className="rounded-xl border border-border bg-muted/30 px-4 py-8 text-center">
+                  <p className="text-sm font-medium text-foreground">
+                    Clínica fechada neste dia
+                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Escolha outro dia com horário disponível.
+                  </p>
+                </div>
+              ) : (
               <div className="space-y-4">
                 {periods.map((p) => {
                   const free = p.slots.filter(
@@ -359,6 +385,7 @@ export default function BookingSheet({
                   );
                 })}
               </div>
+              )}
             </section>
 
             {/* ───────── TYPE PICKER ───────── */}

@@ -8,9 +8,6 @@ import {
   FlaskConical,
   Video,
   Stethoscope,
-  FileText,
-  Receipt,
-  User,
   ArrowRight,
   MapPin,
   CheckCircle2,
@@ -29,6 +26,7 @@ import {
 } from "@/lib/labels";
 import GradientStatCard from "../_ui/GradientStatCard";
 import HealthPassport from "../_ui/HealthPassport";
+import QuickShortcut from "./QuickShortcut";
 
 export const metadata = { title: "Painel · Lunga" };
 
@@ -536,20 +534,32 @@ export default async function PainelPage() {
             Atalhos
           </h2>
           <div className="mt-3 grid grid-cols-2 gap-3">
-            <Quick href="/painel/marcar" icon={CalendarPlus} label="Marcar" />
-            <Quick
+            <QuickShortcut
+              href="/painel/marcar"
+              iconName="calendar-check"
+              label="Marcar"
+            />
+            <QuickShortcut
               href="/painel/consultas"
-              icon={Stethoscope}
+              iconName="stethoscope"
               label="Consultas"
             />
-            <Quick href="/painel/receitas" icon={FileText} label="Receitas" />
-            <Quick href="/painel/faturas" icon={Receipt} label="Faturas" />
-            <Quick
+            <QuickShortcut
+              href="/painel/receitas"
+              iconName="file-text"
+              label="Receitas"
+            />
+            <QuickShortcut
+              href="/painel/faturas"
+              iconName="receipt"
+              label="Faturas"
+            />
+            <QuickShortcut
               href="/painel/exames"
-              icon={FlaskConical}
+              iconName="flask-conical"
               label="Exames"
             />
-            <Quick href="/perfil" icon={User} label="Perfil" />
+            <QuickShortcut href="/perfil" iconName="user" label="Perfil" />
           </div>
         </div>
       </section>
@@ -565,28 +575,6 @@ function Metric({ label, value }: { label: string; value: string }) {
       </dt>
       <dd className="mt-0.5 text-sm font-semibold text-foreground">{value}</dd>
     </div>
-  );
-}
-
-function Quick({
-  href,
-  icon: Icon,
-  label,
-}: {
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group flex flex-col items-start gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:border-foreground/15 hover:bg-accent/40"
-    >
-      <span className="grid size-9 place-items-center rounded-lg bg-muted text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
-        <Icon className="size-4" />
-      </span>
-      <span className="text-sm font-medium text-foreground">{label}</span>
-    </Link>
   );
 }
 

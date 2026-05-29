@@ -3,12 +3,9 @@ import Image from "next/image";
 import {
   ArrowRight,
   Check,
-  Video,
   FileText,
-  Pill,
   Stethoscope,
   CreditCard,
-  Search,
   Smartphone,
   Building2,
   CalendarCheck,
@@ -19,6 +16,8 @@ import {
 import Logo from "./_brand/Logo";
 import ActivityFeed from "./_landing/ActivityFeed";
 import DoctorSearch from "./_landing/DoctorSearch";
+import FeatureCard from "./_landing/FeatureCard";
+import StepCard from "./_landing/StepCard";
 import MobileNav from "./_landing/MobileNav";
 import ContactForm from "./_public/ContactForm";
 import AnimatedNumber from "./_ui/AnimatedNumber";
@@ -37,21 +36,21 @@ import {
 
 const STEPS = [
   {
-    icon: Search,
+    iconName: "search",
     n: "1",
     title: "Procure o médico",
     desc: "Veja médicos por especialidade ou nome — em toda a Angola.",
     chip: { icon: Stethoscope, label: "500+ médicos em rede" },
   },
   {
-    icon: CalendarCheck,
+    iconName: "calendar-check",
     n: "2",
     title: "Marque o horário",
     desc: "Escolha o dia e a hora. Pague com Multicaixa Express.",
     chip: { icon: CreditCard, label: "Multicaixa Express" },
   },
   {
-    icon: Video,
+    iconName: "video",
     n: "3",
     title: "Seja atendido",
     desc: "Vai à clínica ou fala por vídeo. Recebe a receita no telemóvel.",
@@ -61,42 +60,42 @@ const STEPS = [
 
 const FEATURES = [
   {
-    icon: Search,
+    iconName: "search",
     gradient: "from-sky-500 to-blue-600",
     title: "Encontre o seu médico",
     desc: "Procure por especialidade, clínica, província ou nome. Marque em segundos.",
     chip: "Por especialidade ou nome",
   },
   {
-    icon: Video,
+    iconName: "video",
     gradient: "from-emerald-500 to-teal-600",
     title: "Consulta por vídeo",
     desc: "Sem deslocações. Fale com um médico licenciado em minutos.",
     chip: "Pronta em ≈ 3 min",
   },
   {
-    icon: FileText,
+    iconName: "file-text",
     gradient: "from-rose-500 to-pink-600",
     title: "Receita no telemóvel",
     desc: "Com código QR, válida nas farmácias. Sempre consigo.",
     chip: "QR para a farmácia",
   },
   {
-    icon: Pill,
+    iconName: "layers",
     gradient: "from-amber-500 to-orange-600",
     title: "Tudo num só sítio",
     desc: "Consultas, receitas, exames e faturas — sempre acessíveis.",
     chip: "Histórico clínico",
   },
   {
-    icon: CreditCard,
+    iconName: "credit-card",
     gradient: "from-violet-500 to-purple-600",
     title: "Multicaixa Express",
     desc: "Pague no telemóvel. Recebe o comprovativo automaticamente.",
     chip: "Pagamento instantâneo",
   },
   {
-    icon: Stethoscope,
+    iconName: "stethoscope",
     gradient: "from-indigo-500 to-sky-600",
     title: "Sistema para clínicas",
     desc: "Equipa, agenda, faturação e farmácia — substitua o papel.",
@@ -341,35 +340,15 @@ export default function HomePage() {
               {STEPS.map((s) => {
                 const ChipIcon = s.chip.icon;
                 return (
-                  <StaggerItem
-                    key={s.n}
-                    className="group relative flex flex-col items-center text-center"
-                  >
-                    {/* Step label */}
-                    <div className="text-[10px] font-bold uppercase tracking-[0.32em] text-primary">
-                      Passo {s.n}
-                    </div>
-
-                    {/* Icon badge — anchors on the connecting line */}
-                    <div className="relative mt-4 grid size-20 place-items-center rounded-2xl bg-gradient-to-br from-sky-500 to-emerald-600 text-white shadow-xl shadow-primary/30 ring-4 ring-muted/30 transition-transform duration-200 ease-out group-hover:scale-105">
-                      <s.icon className="size-8" strokeWidth={2} />
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="mt-6 text-xl font-semibold tracking-tight text-foreground">
-                      {s.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted-foreground">
-                      {s.desc}
-                    </p>
-
-                    {/* Concrete-value chip */}
-                    <div className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground shadow-sm transition-[transform,box-shadow] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:shadow-md">
-                      <ChipIcon className="size-3.5 text-primary" />
-                      {s.chip.label}
-                    </div>
+                  <StaggerItem key={s.n}>
+                    <StepCard
+                      n={s.n}
+                      iconName={s.iconName}
+                      title={s.title}
+                      desc={s.desc}
+                      chipIcon={<ChipIcon className="size-3.5 text-primary" />}
+                      chipLabel={s.chip.label}
+                    />
                   </StaggerItem>
                 );
               })}
@@ -532,34 +511,14 @@ export default function HomePage() {
 
           <Stagger className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((f) => (
-              <StaggerItem
-                key={f.title}
-                className="group relative flex flex-col rounded-2xl border border-border bg-card p-7 shadow-sm transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg"
-              >
-                {/* Gradient icon tile — unique per feature */}
-                <span
-                  className={`grid size-12 place-items-center rounded-xl bg-gradient-to-br ${f.gradient} text-white shadow-md shadow-black/5 ring-1 ring-white/20 transition-transform duration-200 ease-out group-hover:scale-105`}
-                >
-                  <f.icon className="size-6" strokeWidth={2} />
-                </span>
-
-                <h3 className="mt-5 text-base font-semibold tracking-tight text-foreground">
-                  {f.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {f.desc}
-                </p>
-
-                {/* Concrete-value chip at the bottom — gives each card its
-                    own tagline + visual differentiator beyond the gradient. */}
-                <div className="mt-5 flex-1" />
-                <div className="inline-flex w-fit items-center gap-1.5 rounded-full border border-border bg-background/60 px-2.5 py-1 text-[11px] font-medium text-muted-foreground backdrop-blur-sm">
-                  <Check
-                    className="size-3 text-emerald-600 dark:text-emerald-400"
-                    strokeWidth={3}
-                  />
-                  {f.chip}
-                </div>
+              <StaggerItem key={f.title} className="h-full">
+                <FeatureCard
+                  iconName={f.iconName}
+                  gradient={f.gradient}
+                  title={f.title}
+                  desc={f.desc}
+                  chip={f.chip}
+                />
               </StaggerItem>
             ))}
           </Stagger>

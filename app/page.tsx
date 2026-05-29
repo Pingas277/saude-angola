@@ -810,8 +810,6 @@ export default function HomePage() {
             links={[
               { href: "/sobre", label: "Sobre nós" },
               { href: "#contacto", label: "Contacto" },
-              { href: "/sobre", label: "Imprensa" },
-              { href: "/sobre", label: "Carreiras" },
             ]}
           />
           <FooterCol

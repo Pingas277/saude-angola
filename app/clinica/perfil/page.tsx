@@ -29,7 +29,7 @@ export default async function ClinicProfilePage() {
   const { data: clinic } = await supabase
     .from("clinics")
     .select(
-      "id, name, address, province, phone, email, logo_url, subscription_plan"
+      "id, name, address, province, phone, email, logo_url, subscription_plan, working_hours"
     )
     .eq("id", admin.clinic_id)
     .maybeSingle();
@@ -72,6 +72,7 @@ export default async function ClinicProfilePage() {
                 email: clinic?.email ?? null,
                 logo_url: clinic?.logo_url ?? null,
                 subscription_plan: clinic?.subscription_plan ?? null,
+                working_hours: clinic?.working_hours ?? null,
               }}
             />
           </div>

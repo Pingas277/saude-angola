@@ -11,6 +11,7 @@ import {
   UserPlus,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { coerceWorkingHours, openStatus } from "@/lib/slots";
 
 type Doc = {
   id: string;
@@ -18,6 +19,7 @@ type Doc = {
   specialty: string | null;
   clinic_name: string | null;
   province: string | null;
+  working_hours: unknown;
 };
 
 const REGISTER_HREF = "/registar?redirect=%2Fpainel%2Fmarcar";
@@ -126,7 +128,9 @@ export default function DoctorSearch() {
           </div>
         ) : (
           <ul className="divide-y divide-border">
-            {docs.slice(0, 8).map((d) => (
+            {docs.slice(0, 8).map((d) => {
+              const status = openStatus(coerceWorkingHours(d.working_hours));
+              return (
               <li
                 key={d.id}
                 className="group flex flex-wrap items-center gap-4 px-5 py-4 transition-colors hover:bg-accent/40"
@@ -162,6 +166,27 @@ export default function DoctorSearch() {
                         </span>
                       </>
                     )}
+                    <span aria-hidden className="text-border">
+                      ·
+                    </span>
+                    <span
+                      className={
+                        "inline-flex items-center gap-1 font-medium " +
+                        (status.open
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-muted-foreground")
+                      }
+                    >
+                      <span
+                        className={
+                          "size-1.5 rounded-full " +
+                          (status.open
+                            ? "bg-emerald-500"
+                            : "bg-muted-foreground/40")
+                        }
+                      />
+                      {status.label}
+                    </span>
                   </div>
                 </div>
                 <Link
@@ -172,7 +197,8 @@ export default function DoctorSearch() {
                   <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
               </li>
-            ))}
+              );
+            })}
           </ul>
         )}
       </div>

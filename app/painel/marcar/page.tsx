@@ -3,12 +3,14 @@ import { redirect } from "next/navigation";
 import {
   Building2,
   CheckCircle2,
+  Clock,
   MapPin,
   Search,
   Stethoscope,
   Video,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { coerceWorkingHours, formatWeekSchedule } from "@/lib/slots";
 import PageHeading from "@/app/_ui/PageHeading";
 import EmptyState from "@/app/_ui/EmptyState";
 import BookingSheet from "./BookingSheet";
@@ -26,11 +28,13 @@ type DoctorRow = {
         name: string | null;
         province: string | null;
         address: string | null;
+        working_hours: unknown;
       }
     | {
         name: string | null;
         province: string | null;
         address: string | null;
+        working_hours: unknown;
       }[]
     | null;
 };
@@ -84,7 +88,7 @@ export default async function MarcarPage({
   const { data: rawDoctors } = await supabase
     .from("profiles")
     .select(
-      "id, full_name, specialty, medical_license, avatar_url, clinic:clinics(name, province, address)"
+      "id, full_name, specialty, medical_license, avatar_url, clinic:clinics(name, province, address, working_hours)"
     )
     .eq("role", "doctor")
     .order("full_name", { ascending: true });
@@ -336,6 +340,12 @@ export default async function MarcarPage({
                       )}
                     </div>
 
+                    {/* Working hours */}
+                    <div className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Clock className="size-3.5 shrink-0 text-primary" />
+                      {formatWeekSchedule(coerceWorkingHours(c?.working_hours))}
+                    </div>
+
                     {/* Type chips */}
                     <div className="mt-2.5 flex flex-wrap gap-1.5">
                       <ConsultTypePill icon={Building2}>
@@ -351,6 +361,7 @@ export default async function MarcarPage({
                     doctorSpecialty={d.specialty}
                     doctorAvatarUrl={d.avatar_url}
                     clinicName={c?.name ?? null}
+                    clinicHours={c?.working_hours ?? null}
                     defaultDate={today}
                   />
                 </div>

@@ -334,3 +334,92 @@ export async function updateAppointmentStatusAction(formData: FormData) {
   revalidatePath("/medico");
   revalidatePath("/medico/agenda");
 }
+
+// =============================================================================
+// Exam upload — doctor attaches a lab/exam result file to the patient
+// =============================================================================
+
+export type ExamUploadState =
+  | { error?: string; ok?: boolean; labResultId?: string }
+  | null;
+
+const ALLOWED_EXAM_TYPES = new Set([
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+]);
+const MAX_EXAM_BYTES = 10 * 1024 * 1024; // 10 MB
+
+export async function uploadExamAction(
+  _prev: ExamUploadState,
+  formData: FormData
+): Promise<ExamUploadState> {
+  const ref = readEncounter(formData);
+  if (!ref) return { error: "Consulta inválida." };
+
+  const loaded = await loadEncounterForDoctor(ref);
+  if ("error" in loaded) return { error: loaded.error };
+  const { encounter } = loaded;
+
+  const labName = String(formData.get("lab_name") ?? "").trim();
+  if (!labName) return { error: "Indique o laboratório que emitiu o exame." };
+
+  const testName = String(formData.get("test_name") ?? "").trim();
+  const resultDate = String(formData.get("result_date") ?? "").trim();
+  const summary = String(formData.get("result_summary") ?? "").trim();
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: "Anexe um ficheiro (PDF ou imagem)." };
+  }
+  if (file.size > MAX_EXAM_BYTES) {
+    return { error: "Ficheiro demasiado grande (máx 10 MB)." };
+  }
+  if (file.type && !ALLOWED_EXAM_TYPES.has(file.type)) {
+    return { error: "Formato não suportado. Use PDF, JPG, PNG ou WEBP." };
+  }
+
+  const supabase = await createClient();
+
+  // Object key: <patient_id>/<timestamp>-<sanitised-name>. The patient prefix
+  // is what the storage RLS uses to gate read/write access (see migration 025).
+  const original = file.name || "result";
+  const safeBase = original
+    .replace(/[^a-zA-Z0-9._-]/g, "_")
+    .slice(0, 80) || "result";
+  const path = `${encounter.patient_id}/${Date.now()}-${safeBase}`;
+
+  const buffer = await file.arrayBuffer();
+  const { error: upErr } = await supabase.storage
+    .from("lab-files")
+    .upload(path, buffer, {
+      contentType: file.type || "application/octet-stream",
+      upsert: false,
+    });
+  if (upErr) return { error: `Falha ao carregar: ${upErr.message}` };
+
+  const { data: row, error: insErr } = await supabase
+    .from("lab_results")
+    .insert({
+      patient_id: encounter.patient_id,
+      lab_name: labName,
+      test_name: testName || null,
+      file_url: path, // path inside lab-files bucket, NOT a public URL
+      result_summary: summary || null,
+      result_date: resultDate || null,
+      uploaded_by: loaded.userId,
+    })
+    .select("id")
+    .single();
+
+  if (insErr) {
+    // Roll back the orphaned upload so we don't leak storage.
+    await supabase.storage.from("lab-files").remove([path]);
+    return { error: insErr.message };
+  }
+
+  revalidatePath(`/medico/consulta/${ref.id}`);
+  revalidatePath("/painel/exames");
+  return { ok: true, labResultId: row.id };
+}

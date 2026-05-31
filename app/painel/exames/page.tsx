@@ -26,6 +26,9 @@ type LabRow = {
   result_summary: string | null;
   result_date: string | null;
   created_at: string;
+  /** Resolved download URL: a signed lab-files URL for storage paths, the
+   * original URL for legacy http(s) entries, null when no file. */
+  downloadUrl: string | null;
 };
 
 const PT_MONTHS = [
@@ -80,7 +83,36 @@ export default async function ExamesPage() {
     .eq("patient_id", patient.id)
     .order("result_date", { ascending: false, nullsFirst: false });
 
-  const list = (rows as LabRow[] | null) ?? [];
+  const rawList =
+    ((rows as Omit<LabRow, "downloadUrl">[] | null) ?? []);
+
+  // Resolve signed URLs for any file_url that's a lab-files storage path.
+  // Legacy entries that already contain a full http(s) URL are passed through.
+  const HTTP_RE = /^https?:\/\//i;
+  const storagePaths = rawList
+    .filter(
+      (r): r is typeof r & { file_url: string } =>
+        !!r.file_url && !HTTP_RE.test(r.file_url)
+    )
+    .map((r) => r.file_url);
+  const signedMap = new Map<string, string>();
+  if (storagePaths.length > 0) {
+    const { data: signed } = await supabase.storage
+      .from("lab-files")
+      .createSignedUrls(storagePaths, 60 * 30); // 30 min
+    for (const s of signed ?? []) {
+      if (s.signedUrl && s.path) signedMap.set(s.path, s.signedUrl);
+    }
+  }
+  const list: LabRow[] = rawList.map((r) => ({
+    ...r,
+    downloadUrl: !r.file_url
+      ? null
+      : HTTP_RE.test(r.file_url)
+        ? r.file_url
+        : (signedMap.get(r.file_url) ?? null),
+  }));
+
   const labCount = new Set(list.map((r) => r.lab_name)).size;
   const latest = list.find((r) => r.result_date);
 
@@ -246,9 +278,9 @@ function LabCard({ row }: { row: LabRow }) {
 
       {/* Actions */}
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4">
-        {row.file_url ? (
+        {row.downloadUrl ? (
           <a
-            href={row.file_url}
+            href={row.downloadUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-sky-500 to-emerald-500 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition-all hover:shadow-md"

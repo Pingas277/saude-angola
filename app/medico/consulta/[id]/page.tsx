@@ -11,6 +11,7 @@ import {
 import MedicalRecordForm from "./MedicalRecordForm";
 import PrescriptionForm from "./PrescriptionForm";
 import InvoiceForm from "./InvoiceForm";
+import ExamUploadForm from "./ExamUploadForm";
 import { updateAppointmentStatusAction } from "./actions";
 
 export const metadata = { title: "Consulta · Lunga" };
@@ -456,6 +457,21 @@ export default async function ConsultaPage({
             </p>
             <div className="mt-4">
               <InvoiceForm encounter={{ kind: "appointment", id: appt.id }} />
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-border bg-card p-6">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Carregar exame
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Anexe o resultado de um exame ao histórico do paciente. Aparece
+              em /painel/exames com um link assinado.
+            </p>
+            <div className="mt-4">
+              <ExamUploadForm
+                encounter={{ kind: "appointment", id: appt.id }}
+              />
             </div>
           </div>
         </div>

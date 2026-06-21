@@ -14,6 +14,7 @@ import {
 import { createClient } from "@/lib/supabase/server";
 import { waShareUrl } from "@/lib/whatsapp";
 import EmptyState from "@/app/_ui/EmptyState";
+import AppointmentActions from "./AppointmentActions";
 import {
   APPOINTMENT_STATUS_LABELS,
   APPOINTMENT_TYPE_LABELS,
@@ -77,7 +78,11 @@ type Doctor = {
   specialty: string | null;
   avatar_url: string | null;
 };
-type Clinic = { name: string | null; address: string | null };
+type Clinic = {
+  name: string | null;
+  address: string | null;
+  working_hours: unknown;
+};
 
 type ApptRow = {
   id: string;
@@ -86,6 +91,7 @@ type ApptRow = {
   status: string;
   appointment_type: string;
   reason: string | null;
+  doctor_id: string;
   doctor: Doctor | Doctor[] | null;
   clinic: Clinic | Clinic[] | null;
 };
@@ -144,7 +150,7 @@ export default async function ConsultasPage() {
   const nowIso = new Date().toISOString();
 
   const baseSelect =
-    "id, scheduled_at, duration_minutes, status, appointment_type, reason, doctor:profiles!appointments_doctor_id_fkey(full_name, specialty, avatar_url), clinic:clinics(name, address)";
+    "id, scheduled_at, duration_minutes, status, appointment_type, reason, doctor_id, doctor:profiles!appointments_doctor_id_fkey(full_name, specialty, avatar_url), clinic:clinics(name, address, working_hours)";
 
   const [{ data: upcomingRaw }, { data: pastRaw }] = await Promise.all([
     supabase
@@ -544,6 +550,18 @@ function ApptCard({
         <span className={`size-1.5 rounded-full ${status.dot}`} />
         {APPOINTMENT_STATUS_LABELS[appt.status] ?? appt.status}
       </span>
+
+      {/* Upcoming + still active → patient can reschedule / cancel */}
+      {!historical &&
+        (appt.status === "scheduled" || appt.status === "confirmed") && (
+          <AppointmentActions
+            appointmentId={appt.id}
+            doctorId={appt.doctor_id}
+            doctorName={doctor?.full_name ?? "Médico"}
+            currentScheduledAt={appt.scheduled_at}
+            clinicHours={clinic?.working_hours ?? null}
+          />
+        )}
     </div>
   );
 }

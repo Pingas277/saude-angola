@@ -7,6 +7,7 @@ import {
   Mail,
   Phone,
   Lock,
+  IdCard,
   ArrowRight,
   Loader2,
   AlertCircle,
@@ -64,6 +65,18 @@ export default function SignupForm() {
         autoComplete="tel"
         optional
         placeholder="+244 9XX XXX XXX"
+      />
+
+      <AuthField
+        id="id_number"
+        name="id_number"
+        label="Bilhete de Identidade"
+        icon={IdCard}
+        required
+        placeholder="Ex.: 001234567LA040"
+        hint="Aparece no Passaporte de Saúde e em receitas / faturas."
+        autoCapitalize="characters"
+        inputMode="text"
       />
 
       <div>

@@ -85,11 +85,29 @@ export async function signupAction(
   const fullName = String(formData.get("full_name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const phone = String(formData.get("phone") ?? "").trim();
+  // Bilhete de Identidade — required for patient signups so the Passaporte
+  // de Saúde, prescriptions and invoices carry a real identity, not a
+  // placeholder. Normalised: spaces stripped, uppercased.
+  const idNumber = String(formData.get("id_number") ?? "")
+    .replace(/\s+/g, "")
+    .toUpperCase();
   const password = String(formData.get("password") ?? "");
   const confirm = String(formData.get("confirm") ?? "");
 
   if (!fullName || !email || !password) {
     return { error: "Nome completo, email e palavra-passe são obrigatórios." };
+  }
+  if (!idNumber) {
+    return { error: "Indique o seu Bilhete de Identidade." };
+  }
+  // Pragmatic format check: 8–16 alphanumeric chars. Covers Angolan BI
+  // patterns (e.g. 001234567LA040) and old/regional variants without being
+  // overly strict. Real identity verification is a separate concern.
+  if (!/^[A-Z0-9]{8,16}$/.test(idNumber)) {
+    return {
+      error:
+        "BI inválido. Use 8–16 caracteres (letras e dígitos), sem espaços.",
+    };
   }
   if (password.length < 8) {
     return { error: "A palavra-passe deve ter pelo menos 8 caracteres." };
@@ -116,6 +134,9 @@ export async function signupAction(
         full_name: fullName,
         phone: phone || null,
         role: "patient",
+        // Picked up by handle_new_user (migration 029) to stamp the
+        // patients row at the same moment it's created.
+        id_number: idNumber,
       },
     },
   });

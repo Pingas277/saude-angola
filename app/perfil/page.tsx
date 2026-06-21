@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import Logo from "../_brand/Logo";
 import AvatarUpload from "../_app/AvatarUpload";
 import PerfilForm from "./PerfilForm";
+import DependentsSection, { type Dependent } from "./DependentsSection";
 
 export const metadata = { title: "Perfil · Lunga" };
 
@@ -27,6 +28,16 @@ export default async function PerfilPage() {
     )
     .eq("profile_id", user.id)
     .maybeSingle();
+
+  const { data: dependentsRaw } = await supabase
+    .from("patients")
+    .select(
+      "id, full_name, relationship, date_of_birth, gender, blood_type, id_number"
+    )
+    .eq("guardian_profile_id", user.id)
+    .is("profile_id", null)
+    .order("created_at", { ascending: true });
+  const dependents: Dependent[] = (dependentsRaw as Dependent[] | null) ?? [];
 
   return (
     <main className="min-h-screen bg-muted/40">
@@ -82,6 +93,8 @@ export default async function PerfilPage() {
             }}
           />
         </div>
+
+        <DependentsSection initial={dependents} />
       </div>
     </main>
   );

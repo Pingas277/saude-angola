@@ -46,11 +46,33 @@ export async function bookAppointmentAction(
   } = await supabase.auth.getUser();
   if (!user) redirect("/entrar");
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("id")
-    .eq("profile_id", user.id)
-    .maybeSingle();
+  // The form passes patient_id explicitly: it's either the user's own row
+  // or one of their dependents (chosen in the BookingSheet 'Para quem'
+  // selector). Empty falls back to the user's own patient row.
+  const submittedPatientId = String(formData.get("patient_id") ?? "").trim();
+  let patient: { id: string } | null = null;
+  if (submittedPatientId) {
+    const { data } = await supabase
+      .from("patients")
+      .select("id, profile_id, guardian_profile_id")
+      .eq("id", submittedPatientId)
+      .maybeSingle();
+    if (
+      data &&
+      (data.profile_id === user.id || data.guardian_profile_id === user.id)
+    ) {
+      patient = { id: data.id };
+    } else {
+      return { error: "Paciente inválido para esta conta." };
+    }
+  } else {
+    const { data: own } = await supabase
+      .from("patients")
+      .select("id")
+      .eq("profile_id", user.id)
+      .maybeSingle();
+    patient = own;
+  }
   if (!patient) redirect("/perfil?onboarding=1");
 
   const { data: doctor } = await supabase

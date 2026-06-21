@@ -14,6 +14,7 @@ import { coerceWorkingHours, formatWeekSchedule } from "@/lib/slots";
 import PageHeading from "@/app/_ui/PageHeading";
 import EmptyState from "@/app/_ui/EmptyState";
 import BookingSheet from "./BookingSheet";
+import { loadPatientFamily } from "@/app/_app/family";
 
 export const metadata = { title: "Marcar consulta · Lunga" };
 
@@ -78,12 +79,8 @@ export default async function MarcarPage({
   } = await supabase.auth.getUser();
   if (!user) redirect("/entrar");
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("id")
-    .eq("profile_id", user.id)
-    .maybeSingle();
-  if (!patient) redirect("/perfil?onboarding=1");
+  const family = await loadPatientFamily(supabase, user.id);
+  if (!family.ownPatientId) redirect("/perfil?onboarding=1");
 
   const { data: rawDoctors } = await supabase
     .from("profiles")
@@ -363,6 +360,7 @@ export default async function MarcarPage({
                     clinicName={c?.name ?? null}
                     clinicHours={c?.working_hours ?? null}
                     defaultDate={today}
+                    bookingPersons={family.persons}
                   />
                 </div>
               </li>

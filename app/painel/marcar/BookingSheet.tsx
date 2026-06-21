@@ -71,6 +71,25 @@ function initials(name: string): string {
   return ((p[0]?.[0] ?? "") + (p[p.length - 1]?.[0] ?? "")).toUpperCase();
 }
 
+export type BookingPerson = {
+  patient_id: string;
+  name: string;
+  isSelf: boolean;
+  relationship: string | null;
+};
+
+const REL_LABEL: Record<string, string> = {
+  filho: "filho",
+  filha: "filha",
+  mae: "mãe",
+  pai: "pai",
+  irmao: "irmão",
+  irma: "irmã",
+  conjuge: "cônjuge",
+  tutelado: "tutelado",
+  outro: "familiar",
+};
+
 export default function BookingSheet({
   doctorId,
   doctorName,
@@ -80,6 +99,7 @@ export default function BookingSheet({
   clinicHours,
   defaultDate,
   triggerVariant = "primary",
+  bookingPersons,
 }: {
   doctorId: string;
   doctorName: string;
@@ -91,10 +111,15 @@ export default function BookingSheet({
   defaultDate: string;
   /** Visual variant of the trigger button. */
   triggerVariant?: "primary" | "compact";
+  /** Self + dependents the guardian can book FOR. Self comes first. */
+  bookingPersons: BookingPerson[];
 }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(defaultDate);
   const [time, setTime] = useState<string | null>(null);
+  const [patientId, setPatientId] = useState<string>(
+    bookingPersons[0]?.patient_id ?? ""
+  );
   const [type, setType] = useState<"in_person" | "telemedicine">("in_person");
   const [busySlots, setBusySlots] = useState<string[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
@@ -238,6 +263,49 @@ export default function BookingSheet({
             <input type="hidden" name="time" value={time ?? ""} />
             <input type="hidden" name="date" value={date} />
             <input type="hidden" name="appointment_type" value={type} />
+            <input type="hidden" name="patient_id" value={patientId} />
+
+            {/* ───────── FOR WHOM ───────── */}
+            {bookingPersons.length > 1 && (
+              <section>
+                <label className="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                  Para quem
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {bookingPersons.map((p) => {
+                    const selected = p.patient_id === patientId;
+                    const sub = p.isSelf
+                      ? "Eu"
+                      : p.relationship
+                        ? REL_LABEL[p.relationship] ?? p.relationship
+                        : "dependente";
+                    return (
+                      <button
+                        key={p.patient_id}
+                        type="button"
+                        onClick={() => setPatientId(p.patient_id)}
+                        className={
+                          "inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-left text-sm transition-all " +
+                          (selected
+                            ? "border-primary bg-primary/10 text-foreground ring-1 ring-primary/30"
+                            : "border-border bg-card text-foreground hover:border-primary/40")
+                        }
+                      >
+                        <span className="grid size-7 place-items-center rounded-full bg-primary/15 text-[10px] font-bold text-primary">
+                          {p.isSelf ? "Eu" : initials(p.name)}
+                        </span>
+                        <span className="flex flex-col leading-tight">
+                          <span className="text-xs font-semibold">{p.name}</span>
+                          <span className="text-[10px] text-muted-foreground">
+                            {sub}
+                          </span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
 
             {/* ───────── DATE STRIP ───────── */}
             <section>

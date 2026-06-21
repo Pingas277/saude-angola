@@ -39,20 +39,23 @@ async function loadOwnAppointment(
   } = await supabase.auth.getUser();
   if (!user) redirect("/entrar");
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("id")
-    .eq("profile_id", user.id)
-    .maybeSingle();
-  if (!patient) return { error: "Perfil incompleto." };
-
+  // Pull the appointment with its patient row joined so we can confirm
+  // the current user controls that patient — either as themselves
+  // (profile_id) or as guardian of a dependent (guardian_profile_id).
   const { data: appt } = await supabase
     .from("appointments")
-    .select("patient_id, doctor_id, scheduled_at, status")
+    .select(
+      "patient_id, doctor_id, scheduled_at, status, patient:patients!appointments_patient_id_fkey(profile_id, guardian_profile_id)"
+    )
     .eq("id", appointmentId)
     .maybeSingle();
   if (!appt) return { error: "Consulta não encontrada." };
-  if (appt.patient_id !== patient.id) {
+
+  const p = Array.isArray(appt.patient) ? appt.patient[0] : appt.patient;
+  if (
+    !p ||
+    (p.profile_id !== user.id && p.guardian_profile_id !== user.id)
+  ) {
     return { error: "Sem permissão para alterar esta consulta." };
   }
   if (!ACTIVE_STATUSES.has(appt.status)) {

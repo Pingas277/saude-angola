@@ -16,6 +16,11 @@ import { waShareUrl } from "@/lib/whatsapp";
 import EmptyState from "@/app/_ui/EmptyState";
 import AppointmentActions from "./AppointmentActions";
 import {
+  familyLookup,
+  loadPatientFamily,
+  RELATIONSHIP_LABEL,
+} from "@/app/_app/family";
+import {
   APPOINTMENT_STATUS_LABELS,
   APPOINTMENT_TYPE_LABELS,
 } from "@/lib/labels";
@@ -86,6 +91,7 @@ type Clinic = {
 
 type ApptRow = {
   id: string;
+  patient_id: string;
   scheduled_at: string;
   duration_minutes: number;
   status: string;
@@ -140,29 +146,26 @@ export default async function ConsultasPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/entrar");
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("id")
-    .eq("profile_id", user.id)
-    .maybeSingle();
-  if (!patient) redirect("/perfil?onboarding=1");
+  const family = await loadPatientFamily(supabase, user.id);
+  if (!family.ownPatientId) redirect("/perfil?onboarding=1");
+  const personByPatient = familyLookup(family.persons);
 
   const nowIso = new Date().toISOString();
 
   const baseSelect =
-    "id, scheduled_at, duration_minutes, status, appointment_type, reason, doctor_id, doctor:profiles!appointments_doctor_id_fkey(full_name, specialty, avatar_url), clinic:clinics(name, address, working_hours)";
+    "id, patient_id, scheduled_at, duration_minutes, status, appointment_type, reason, doctor_id, doctor:profiles!appointments_doctor_id_fkey(full_name, specialty, avatar_url), clinic:clinics(name, address, working_hours)";
 
   const [{ data: upcomingRaw }, { data: pastRaw }] = await Promise.all([
     supabase
       .from("appointments")
       .select(baseSelect)
-      .eq("patient_id", patient.id)
+      .in("patient_id", family.patientIds)
       .gte("scheduled_at", nowIso)
       .order("scheduled_at", { ascending: true }),
     supabase
       .from("appointments")
       .select(baseSelect)
-      .eq("patient_id", patient.id)
+      .in("patient_id", family.patientIds)
       .lt("scheduled_at", nowIso)
       .order("scheduled_at", { ascending: false })
       .limit(20),
@@ -242,7 +245,9 @@ export default async function ConsultasPage() {
       )}
 
       {/* ─── Spotlight (next appointment) ─── */}
-      {spotlight && <SpotlightCard appt={spotlight} />}
+      {spotlight && (
+        <SpotlightCard appt={spotlight} personByPatient={personByPatient} />
+      )}
 
       {/* ─── Empty (no upcoming, no past) ─── */}
       {!spotlight && past.length === 0 && (
@@ -280,7 +285,7 @@ export default async function ConsultasPage() {
                 </div>
                 <div className="space-y-2">
                   {g.items.map((a) => (
-                    <ApptCard key={a.id} appt={a} />
+                    <ApptCard key={a.id} appt={a} personByPatient={personByPatient} />
                   ))}
                 </div>
               </div>
@@ -298,7 +303,12 @@ export default async function ConsultasPage() {
           </h2>
           <div className="space-y-2">
             {past.map((a) => (
-              <ApptCard key={a.id} appt={a} historical />
+              <ApptCard
+                  key={a.id}
+                  appt={a}
+                  personByPatient={personByPatient}
+                  historical
+                />
             ))}
           </div>
         </section>
@@ -339,13 +349,21 @@ function StatChip({
   );
 }
 
-function SpotlightCard({ appt }: { appt: ApptRow }) {
+function SpotlightCard({
+  appt,
+  personByPatient,
+}: {
+  appt: ApptRow;
+  personByPatient: Map<string, { name: string; isSelf: boolean; relationship: string | null }>;
+}) {
   const d = new Date(appt.scheduled_at);
   const now = new Date();
   const minutesUntil = Math.round((d.getTime() - now.getTime()) / 60000);
   const isVideo = appt.appointment_type === "telemedicine";
   const doctor = pickOne(appt.doctor);
   const clinic = pickOne(appt.clinic);
+  const forPerson = personByPatient.get(appt.patient_id);
+  const isForDependent = forPerson && !forPerson.isSelf;
 
   const dayLabel = relativeDayLabel(d, now);
   const timeStr = shortTime(d);
@@ -378,6 +396,17 @@ function SpotlightCard({ appt }: { appt: ApptRow }) {
           <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/85">
             Próxima consulta · {countdown}
           </div>
+          {isForDependent && forPerson && (
+            <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white backdrop-blur">
+              Para {forPerson.name}
+              {forPerson.relationship && (
+                <span className="opacity-75">
+                  {" "}
+                  · {RELATIONSHIP_LABEL[forPerson.relationship] ?? forPerson.relationship}
+                </span>
+              )}
+            </div>
+          )}
 
           <div className="mt-4 flex items-start gap-4">
             <div className="rounded-2xl bg-white/95 p-0.5 shadow-lg">
@@ -478,15 +507,19 @@ function SpotlightCard({ appt }: { appt: ApptRow }) {
 function ApptCard({
   appt,
   historical,
+  personByPatient,
 }: {
   appt: ApptRow;
   historical?: boolean;
+  personByPatient: Map<string, { name: string; isSelf: boolean; relationship: string | null }>;
 }) {
   const d = new Date(appt.scheduled_at);
   const doctor = pickOne(appt.doctor);
   const clinic = pickOne(appt.clinic);
   const isVideo = appt.appointment_type === "telemedicine";
   const status = STATUS_BADGE[appt.status] ?? STATUS_BADGE.scheduled;
+  const forPerson = personByPatient.get(appt.patient_id);
+  const isForDependent = forPerson && !forPerson.isSelf;
 
   return (
     <div
@@ -518,6 +551,11 @@ function ApptCard({
           {doctor?.specialty && (
             <span className="text-xs text-muted-foreground">
               · {doctor.specialty}
+            </span>
+          )}
+          {isForDependent && forPerson && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-800 ring-1 ring-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:ring-amber-500/30">
+              Para {forPerson.name.split(" ")[0]}
             </span>
           )}
         </div>

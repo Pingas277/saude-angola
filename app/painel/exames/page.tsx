@@ -13,6 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { loadPatientFamily } from "@/app/_app/family";
 import { waShareUrl } from "@/lib/whatsapp";
 import { formatDatePT } from "@/lib/labels";
 
@@ -68,19 +69,15 @@ export default async function ExamesPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/entrar");
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("id")
-    .eq("profile_id", user.id)
-    .maybeSingle();
-  if (!patient) redirect("/perfil?onboarding=1");
+  const family = await loadPatientFamily(supabase, user.id);
+  if (!family.ownPatientId) redirect("/perfil?onboarding=1");
 
   const { data: rows } = await supabase
     .from("lab_results")
     .select(
       "id, lab_name, test_name, file_url, result_summary, result_date, created_at"
     )
-    .eq("patient_id", patient.id)
+    .in("patient_id", family.patientIds)
     .order("result_date", { ascending: false, nullsFirst: false });
 
   const rawList =

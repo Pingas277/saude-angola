@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { formatDateTimePT } from "@/lib/labels";
+import { familyLookup, loadPatientFamily } from "@/app/_app/family";
 
 export const metadata = { title: "Receitas · Lunga" };
 
@@ -26,6 +27,7 @@ type Doctor = {
 
 type RxRow = {
   id: string;
+  patient_id: string;
   medications: Medication[] | unknown;
   qr_code: string;
   issued_at: string;
@@ -62,19 +64,16 @@ export default async function ReceitasPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/entrar");
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("id")
-    .eq("profile_id", user.id)
-    .maybeSingle();
-  if (!patient) redirect("/perfil?onboarding=1");
+  const family = await loadPatientFamily(supabase, user.id);
+  if (!family.ownPatientId) redirect("/perfil?onboarding=1");
+  const personByPatient = familyLookup(family.persons);
 
   const { data: rows } = await supabase
     .from("prescriptions")
     .select(
-      "id, medications, qr_code, issued_at, expires_at, doctor:profiles!prescriptions_doctor_id_fkey(full_name, specialty, avatar_url)"
+      "id, patient_id, medications, qr_code, issued_at, expires_at, doctor:profiles!prescriptions_doctor_id_fkey(full_name, specialty, avatar_url)"
     )
-    .eq("patient_id", patient.id)
+    .in("patient_id", family.patientIds)
     .order("issued_at", { ascending: false });
 
   const list = (rows as RxRow[] | null) ?? [];

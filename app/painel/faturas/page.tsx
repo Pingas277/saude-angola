@@ -12,6 +12,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { loadPatientFamily } from "@/app/_app/family";
 import {
   INVOICE_STATUS_LABELS,
   formatAOA,
@@ -40,19 +41,15 @@ export default async function FaturasPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/entrar");
 
-  const { data: patient } = await supabase
-    .from("patients")
-    .select("id")
-    .eq("profile_id", user.id)
-    .maybeSingle();
-  if (!patient) redirect("/perfil?onboarding=1");
+  const family = await loadPatientFamily(supabase, user.id);
+  if (!family.ownPatientId) redirect("/perfil?onboarding=1");
 
   const { data: rows } = await supabase
     .from("invoices")
     .select(
       "id, amount, currency, status, due_date, paid_at, created_at, payment_reference"
     )
-    .eq("patient_id", patient.id)
+    .in("patient_id", family.patientIds)
     .order("created_at", { ascending: false });
 
   const list = (rows as InvoiceRow[] | null) ?? [];

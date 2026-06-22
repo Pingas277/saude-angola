@@ -12,7 +12,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { loadPatientFamily } from "@/app/_app/family";
+import { familyLookup, loadPatientFamily } from "@/app/_app/family";
 import {
   INVOICE_STATUS_LABELS,
   formatAOA,
@@ -25,6 +25,7 @@ export const metadata = { title: "Faturas · Lunga" };
 
 type InvoiceRow = {
   id: string;
+  patient_id: string;
   amount: number | string;
   currency: string;
   status: string;
@@ -43,11 +44,12 @@ export default async function FaturasPage() {
 
   const family = await loadPatientFamily(supabase, user.id);
   if (!family.ownPatientId) redirect("/perfil?onboarding=1");
+  const personByPatient = familyLookup(family.persons);
 
   const { data: rows } = await supabase
     .from("invoices")
     .select(
-      "id, amount, currency, status, due_date, paid_at, created_at, payment_reference"
+      "id, patient_id, amount, currency, status, due_date, paid_at, created_at, payment_reference"
     )
     .in("patient_id", family.patientIds)
     .order("created_at", { ascending: false });
@@ -124,7 +126,12 @@ export default async function FaturasPage() {
           title="Por pagar"
           count={pending.length}
         />
-        <CardList rows={pending} empty="Sem faturas por pagar." showPay />
+        <CardList
+          rows={pending}
+          empty="Sem faturas por pagar."
+          showPay
+          personByPatient={personByPatient}
+        />
       </section>
 
       {/* History */}
@@ -134,7 +141,11 @@ export default async function FaturasPage() {
           title="Histórico"
           count={others.length}
         />
-        <CardList rows={others} empty="Sem faturas anteriores." />
+        <CardList
+          rows={others}
+          empty="Sem faturas anteriores."
+          personByPatient={personByPatient}
+        />
       </section>
     </main>
   );
@@ -168,10 +179,15 @@ function CardList({
   rows,
   empty,
   showPay,
+  personByPatient,
 }: {
   rows: InvoiceRow[];
   empty: string;
   showPay?: boolean;
+  personByPatient: Map<
+    string,
+    { name: string; isSelf: boolean; relationship: string | null }
+  >;
 }) {
   if (!rows.length) {
     return (
@@ -185,6 +201,8 @@ function CardList({
       {rows.map((inv) => {
         const overdue = inv.status === "overdue";
         const paid = inv.status === "paid";
+        const forPerson = personByPatient.get(inv.patient_id);
+        const isForDependent = forPerson && !forPerson.isSelf;
         return (
           <li
             key={inv.id}
@@ -215,6 +233,11 @@ function CardList({
                   <span className="text-xl font-semibold tabular-nums text-foreground">
                     {formatAOA(Number(inv.amount))}
                   </span>
+                  {isForDependent && forPerson && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-800 ring-1 ring-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:ring-amber-500/30">
+                      Para {forPerson.name.split(" ")[0]}
+                    </span>
+                  )}
                   <span
                     className={
                       "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold " +

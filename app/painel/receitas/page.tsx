@@ -143,6 +143,8 @@ export default async function ReceitasPage() {
       ) : (
         <ul className="mt-7 space-y-3">
           {list.map((rx) => {
+            const forPerson = personByPatient.get(rx.patient_id);
+            const isForDependent = forPerson && !forPerson.isSelf;
             const meds = asMeds(rx.medications);
             const dr = pickOne(rx.doctor);
             const expired = rx.expires_at
@@ -181,6 +183,11 @@ export default async function ReceitasPage() {
                         <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
                           <Stethoscope className="size-3 text-primary" />
                           {dr.specialty}
+                        </span>
+                      )}
+                      {isForDependent && forPerson && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-800 ring-1 ring-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:ring-amber-500/30">
+                          Para {forPerson.name.split(" ")[0]}
                         </span>
                       )}
                     </div>

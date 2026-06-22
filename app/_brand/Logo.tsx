@@ -16,11 +16,11 @@ type LogoProps = {
   markOnly?: boolean;
 };
 
-const RATIO = 150 / 75; // intrinsic aspect of the lunga SVG lockup (2:1)
+const RATIO = 1; // new lockup PNG is square 2000×2000
 const SIZES = {
-  sm: { h: 22, subSize: "text-[9px]" },
-  md: { h: 30, subSize: "text-[10px]" },
-  lg: { h: 42, subSize: "text-[11px]" },
+  sm: { h: 28, subSize: "text-[9px]" },
+  md: { h: 36, subSize: "text-[10px]" },
+  lg: { h: 48, subSize: "text-[11px]" },
 } as const;
 
 export default function Logo({
@@ -40,7 +40,7 @@ export default function Logo({
   const Inner = (
     <div className="flex flex-col items-start leading-none">
       <Image
-        src="/brand/logo-full.svg"
+        src="/brand/logo-full.png"
         alt="lunga"
         width={w}
         height={h}

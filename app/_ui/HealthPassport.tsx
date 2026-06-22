@@ -213,7 +213,7 @@ function Cover() {
               alt="lunga"
               width={180}
               height={180}
-              className="h-24 w-auto sm:h-28"
+              className="h-48 w-auto sm:h-56"
               priority
             />
           </div>
@@ -345,7 +345,7 @@ function DataPage({
                 alt="lunga"
                 width={88}
                 height={88}
-                className="h-14 w-auto"
+                className="h-28 w-auto"
               />
             </div>
             {isOpen && (

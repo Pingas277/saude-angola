@@ -235,7 +235,7 @@ export default function HomePage() {
                   width={420}
                   height={420}
                   priority
-                  className="h-32 w-auto sm:h-40"
+                  className="h-64 w-auto sm:h-80"
                 />
               </StaggerItem>
               <StaggerItem>
@@ -748,7 +748,7 @@ export default function HomePage() {
                 alt="lunga"
                 width={220}
                 height={220}
-                className="h-24 w-auto sm:h-28"
+                className="h-48 w-auto sm:h-56"
               />
             </div>
             <div className="mt-6 text-[10px] font-bold uppercase tracking-[0.32em] text-primary">

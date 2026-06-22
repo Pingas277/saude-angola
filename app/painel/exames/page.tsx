@@ -13,7 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { loadPatientFamily } from "@/app/_app/family";
+import { familyLookup, loadPatientFamily } from "@/app/_app/family";
 import { waShareUrl } from "@/lib/whatsapp";
 import { formatDatePT } from "@/lib/labels";
 
@@ -21,6 +21,7 @@ export const metadata = { title: "Exames · Lunga" };
 
 type LabRow = {
   id: string;
+  patient_id: string;
   lab_name: string;
   test_name: string | null;
   file_url: string | null;
@@ -71,11 +72,12 @@ export default async function ExamesPage() {
 
   const family = await loadPatientFamily(supabase, user.id);
   if (!family.ownPatientId) redirect("/perfil?onboarding=1");
+  const personByPatient = familyLookup(family.persons);
 
   const { data: rows } = await supabase
     .from("lab_results")
     .select(
-      "id, lab_name, test_name, file_url, result_summary, result_date, created_at"
+      "id, patient_id, lab_name, test_name, file_url, result_summary, result_date, created_at"
     )
     .in("patient_id", family.patientIds)
     .order("result_date", { ascending: false, nullsFirst: false });
@@ -203,7 +205,7 @@ export default async function ExamesPage() {
               <ul className="space-y-2">
                 {group.items.map((r) => (
                   <li key={r.id}>
-                    <LabCard row={r} />
+                    <LabCard row={r} personByPatient={personByPatient} />
                   </li>
                 ))}
               </ul>
@@ -225,7 +227,18 @@ export default async function ExamesPage() {
 
 /* ─────────────────────────── card ─────────────────────────── */
 
-function LabCard({ row }: { row: LabRow }) {
+function LabCard({
+  row,
+  personByPatient,
+}: {
+  row: LabRow;
+  personByPatient: Map<
+    string,
+    { name: string; isSelf: boolean; relationship: string | null }
+  >;
+}) {
+  const forPerson = personByPatient.get(row.patient_id);
+  const isForDependent = forPerson && !forPerson.isSelf;
   const friendlyId = `LG-EX-${shortId(row.id)}`;
   const waShareHref = waShareUrl(
     `Exame Lunga · ${friendlyId}\n${row.test_name ?? "Resultado"}${
@@ -243,8 +256,15 @@ function LabCard({ row }: { row: LabRow }) {
         </span>
 
         <div className="min-w-0 flex-1">
-          <div className="text-base font-semibold tracking-tight text-foreground">
-            {row.test_name ?? "Resultado"}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="text-base font-semibold tracking-tight text-foreground">
+              {row.test_name ?? "Resultado"}
+            </div>
+            {isForDependent && forPerson && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-800 ring-1 ring-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:ring-amber-500/30">
+                Para {forPerson.name.split(" ")[0]}
+              </span>
+            )}
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">

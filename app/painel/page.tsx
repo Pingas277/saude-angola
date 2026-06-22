@@ -94,6 +94,27 @@ export default async function PainelPage() {
     redirect("/perfil?onboarding=1");
   }
 
+  // Dependents — same identity card, no separate profile. Used to render
+  // an extra HealthPassport per dependent below the user's own.
+  const { data: dependentsRaw } = await supabase
+    .from("patients")
+    .select(
+      "id, full_name, id_number, date_of_birth, blood_type, gender, allergies, relationship"
+    )
+    .eq("guardian_profile_id", user.id)
+    .is("profile_id", null)
+    .order("created_at", { ascending: true });
+  const dependents = (dependentsRaw as Array<{
+    id: string;
+    full_name: string | null;
+    id_number: string | null;
+    date_of_birth: string | null;
+    blood_type: string | null;
+    gender: string | null;
+    allergies: string[] | null;
+    relationship: string | null;
+  }> | null) ?? [];
+
   const nowIso = new Date().toISOString();
   const fallbackId = "00000000-0000-0000-0000-000000000000";
   const pid = patient?.id ?? fallbackId;
@@ -228,6 +249,43 @@ export default async function PainelPage() {
           }
         />
       </section>
+
+      {/* Dependents' passports — one per dependent below the user's own */}
+      {dependents.length > 0 && (
+        <section className="mt-10 space-y-8">
+          <div className="text-xs font-bold uppercase tracking-[0.22em] text-primary">
+            Passaportes da família
+          </div>
+          {dependents.map((dep) => (
+            <div key={dep.id}>
+              <div className="mb-3 flex items-baseline gap-2 text-sm">
+                <span className="font-semibold text-foreground">
+                  {dep.full_name ?? "Dependente"}
+                </span>
+                {dep.relationship && (
+                  <span className="text-xs text-muted-foreground">
+                    · {dep.relationship}
+                  </span>
+                )}
+              </div>
+              <HealthPassport
+                userId={dep.id}
+                profile={{
+                  full_name: dep.full_name,
+                  avatar_url: null,
+                }}
+                patient={{
+                  id_number: dep.id_number,
+                  date_of_birth: dep.date_of_birth,
+                  blood_type: dep.blood_type,
+                  gender: dep.gender,
+                  allergies: dep.allergies,
+                }}
+              />
+            </div>
+          ))}
+        </section>
+      )}
 
       {/* Spotlight + telemedicina */}
       <section className="mt-6 grid gap-5 lg:grid-cols-3">

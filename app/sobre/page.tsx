@@ -182,7 +182,7 @@ export default function SobrePage() {
                     width={300}
                     height={300}
                     priority
-                    className="h-28 w-auto sm:h-32"
+                    className="h-40 w-auto sm:h-48"
                   />
                   <div className="mt-6 text-[10px] font-bold uppercase tracking-[0.32em] text-muted-foreground">
                     Saúde · Angola

@@ -17,10 +17,12 @@ type LogoProps = {
 };
 
 const RATIO = 1; // new lockup PNG is square 2000×2000
+// Heights chosen so the visible logo matches the old 2:1 SVG lockup at the
+// same call-sites — old width (h × 2) becomes the new square edge length.
 const SIZES = {
-  sm: { h: 28, subSize: "text-[9px]" },
-  md: { h: 36, subSize: "text-[10px]" },
-  lg: { h: 48, subSize: "text-[11px]" },
+  sm: { h: 44, subSize: "text-[9px]" },
+  md: { h: 60, subSize: "text-[10px]" },
+  lg: { h: 84, subSize: "text-[11px]" },
 } as const;
 
 export default function Logo({

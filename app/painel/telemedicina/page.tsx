@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { XCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
   CONSULTATION_STATUS_LABELS,
@@ -8,6 +9,7 @@ import {
   type Urgency,
 } from "@/lib/triage";
 import { formatDateTimePT } from "@/lib/labels";
+import { cancelOwnConsultationAction } from "./sala/[id]/actions";
 
 export const metadata = { title: "Telemedicina · Lunga" };
 
@@ -90,13 +92,32 @@ export default async function TelemedicinaHomePage() {
               {active.ai_triage_summary}
             </p>
           )}
-          <div className="mt-4">
+          <div className="mt-4 flex flex-wrap items-center gap-2">
             <Link
               href={`/painel/telemedicina/sala/${active.id}`}
               className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
             >
               Voltar à sala de espera →
             </Link>
+            {/* Patient can cancel while waiting / scheduled — not when the
+                doctor already joined (status="in_progress"), since that's
+                already a live consultation. */}
+            {(active.status === "waiting" || active.status === "scheduled") && (
+              <form action={cancelOwnConsultationAction}>
+                <input
+                  type="hidden"
+                  name="consultation_id"
+                  value={active.id}
+                />
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-md border border-rose-200 bg-white/70 px-4 py-2 text-sm font-semibold text-rose-700 transition-colors hover:bg-rose-50 hover:text-rose-800"
+                >
+                  <XCircle className="size-4" />
+                  Cancelar consulta
+                </button>
+              </form>
+            )}
           </div>
         </div>
       )}

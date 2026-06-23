@@ -68,7 +68,7 @@ export default async function DoctorSalaPage({
          id,
          date_of_birth, blood_type, gender, allergies, chronic_conditions,
          emergency_contact_name, emergency_contact_phone,
-         profile:profiles(full_name, phone, email)
+         profile:profiles!patients_profile_id_fkey(full_name, phone, email)
        )`
     )
     .eq("id", id)

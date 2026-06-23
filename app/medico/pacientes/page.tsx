@@ -104,7 +104,7 @@ export default async function PacientesPage({
     .select(
       `id, scheduled_at, status,
        patient:patients(id, date_of_birth, blood_type, gender, allergies, chronic_conditions,
-         profile:profiles(full_name, phone, avatar_url))`
+         profile:profiles!patients_profile_id_fkey(full_name, phone, avatar_url))`
     )
     .eq("doctor_id", user.id)
     .order("scheduled_at", { ascending: false });

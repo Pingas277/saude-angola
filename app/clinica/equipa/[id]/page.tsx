@@ -123,7 +123,7 @@ export default async function DoctorActivityPage({
   const { data: apptsRaw } = await supabase
     .from("appointments")
     .select(
-      "id, scheduled_at, duration_minutes, status, appointment_type, reason, patient:patients(id, profile:profiles(full_name, avatar_url))"
+      "id, scheduled_at, duration_minutes, status, appointment_type, reason, patient:patients(id, profile:profiles!patients_profile_id_fkey(full_name, avatar_url))"
     )
     .eq("doctor_id", id)
     .eq("clinic_id", admin.clinic_id)

@@ -74,7 +74,7 @@ export default async function ClinicAgendaPage() {
 
   const nowIso = new Date().toISOString();
   const select =
-    "id, scheduled_at, duration_minutes, status, appointment_type, reason, patient:patients(id, profile:profiles(full_name)), doctor:profiles!appointments_doctor_id_fkey(full_name, specialty)";
+    "id, scheduled_at, duration_minutes, status, appointment_type, reason, patient:patients(id, profile:profiles!patients_profile_id_fkey(full_name)), doctor:profiles!appointments_doctor_id_fkey(full_name, specialty)";
 
   const [{ data: upcoming }, { data: past }] = await Promise.all([
     supabase

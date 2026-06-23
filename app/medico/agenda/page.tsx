@@ -108,7 +108,7 @@ export default async function AgendaPage() {
 
   const nowIso = new Date().toISOString();
   const baseSelect =
-    "id, scheduled_at, duration_minutes, status, appointment_type, reason, patient:patients(id, profile:profiles(full_name, avatar_url))";
+    "id, scheduled_at, duration_minutes, status, appointment_type, reason, patient:patients(id, profile:profiles!patients_profile_id_fkey(full_name, avatar_url))";
 
   const [{ data: upcoming }, { data: past }] = await Promise.all([
     supabase

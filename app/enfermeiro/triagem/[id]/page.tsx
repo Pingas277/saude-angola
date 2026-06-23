@@ -49,7 +49,7 @@ export default async function TriagemPage({
       `id, scheduled_at, status, reason, clinic_id,
        patient:patients(
          id, date_of_birth, blood_type, gender, allergies, chronic_conditions,
-         profile:profiles(full_name, phone)
+         profile:profiles!patients_profile_id_fkey(full_name, phone)
        ),
        doctor:profiles!appointments_doctor_id_fkey(full_name, specialty)`
     )

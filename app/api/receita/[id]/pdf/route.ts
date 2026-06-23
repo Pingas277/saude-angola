@@ -742,7 +742,7 @@ export async function GET(
        ),
        patient:patients(
          date_of_birth, gender, id_number,
-         profile:profiles(full_name, phone)
+         profile:profiles!patients_profile_id_fkey(full_name, phone)
        )`
     )
     .eq("id", id)

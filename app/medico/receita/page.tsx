@@ -29,7 +29,7 @@ export default async function ReceitaRapidaPage() {
   // quick prescription can target (the action enforces this too).
   const { data: rows } = await supabase
     .from("appointments")
-    .select("patient:patients(id, profile:profiles(full_name))")
+    .select("patient:patients(id, profile:profiles!patients_profile_id_fkey(full_name))")
     .eq("doctor_id", user.id)
     .order("scheduled_at", { ascending: false });
 

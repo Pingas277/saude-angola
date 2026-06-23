@@ -131,7 +131,7 @@ export default async function RecepcaoHomePage() {
     supabase
       .from("appointments")
       .select(
-        "id, scheduled_at, duration_minutes, status, appointment_type, reason, patient:patients(id, profile:profiles(full_name, phone)), doctor:profiles!appointments_doctor_id_fkey(full_name, specialty)"
+        "id, scheduled_at, duration_minutes, status, appointment_type, reason, patient:patients(id, profile:profiles!patients_profile_id_fkey(full_name, phone)), doctor:profiles!appointments_doctor_id_fkey(full_name, specialty)"
       )
       .eq("clinic_id", clinicId)
       .gte("scheduled_at", startOfTodayISO())

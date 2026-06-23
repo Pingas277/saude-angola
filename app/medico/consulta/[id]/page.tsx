@@ -75,7 +75,7 @@ export default async function ConsultaPage({
          id,
          date_of_birth, blood_type, gender, allergies, chronic_conditions,
          emergency_contact_name, emergency_contact_phone,
-         profile:profiles(full_name, email, phone)
+         profile:profiles!patients_profile_id_fkey(full_name, email, phone)
        ),
        clinic:clinics(name)`
     )

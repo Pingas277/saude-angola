@@ -233,7 +233,7 @@ export default function HomePage() {
                   src="/brand/logo-full.png"
                   alt="lunga"
                   width={420}
-                  height={160}
+                  height={141}
                   priority
                   className="h-20 w-auto sm:h-24"
                 />
@@ -747,7 +747,7 @@ export default function HomePage() {
                 src="/brand/logo-full.png"
                 alt="lunga"
                 width={220}
-                height={84}
+                height={74}
                 className="h-14 w-auto sm:h-16"
               />
             </div>

@@ -16,7 +16,7 @@ type LogoProps = {
   markOnly?: boolean;
 };
 
-const RATIO = 1939 / 737; // trimmed lockup PNG: ~2.63:1 (was square 1:1 before trim, but had 70% transparent vertical padding)
+const RATIO = 1812 / 611; // tight-trimmed lockup PNG: ~2.97:1 (1.3% transparent margin top/bot for safety)
 const SIZES = {
   sm: { h: 24, subSize: "text-[9px]" },
   md: { h: 32, subSize: "text-[10px]" },
@@ -50,7 +50,7 @@ export default function Logo({
       />
       {subtitle && (
         <span
-          className={`mt-1.5 font-medium uppercase tracking-[0.18em] ${s.subSize} ${subColor}`}
+          className={`mt-2 font-medium uppercase tracking-[0.18em] ${s.subSize} ${subColor}`}
         >
           {subtitle}
         </span>

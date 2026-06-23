@@ -180,7 +180,7 @@ export default function SobrePage() {
                     src="/brand/logo-full.png"
                     alt="Lunga"
                     width={300}
-                    height={114}
+                    height={101}
                     priority
                     className="h-24 w-auto sm:h-28"
                   />

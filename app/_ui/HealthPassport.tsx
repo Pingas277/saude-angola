@@ -212,7 +212,7 @@ function Cover() {
               src="/brand/logo-full.png"
               alt="lunga"
               width={180}
-              height={68}
+              height={61}
               className="h-16 w-auto sm:h-20"
               priority
             />
@@ -344,7 +344,7 @@ function DataPage({
                 src="/brand/logo-full.png"
                 alt="lunga"
                 width={88}
-                height={33}
+                height={30}
                 className="h-8 w-auto"
               />
             </div>

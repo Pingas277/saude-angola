@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://saude-angola.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://lunga-app.vercel.app";
 
 // Only public, indexable pages belong here. Authenticated routes (/painel,
 // /medico, /clinica, /recepcao, /perfil) are gated by middleware and would

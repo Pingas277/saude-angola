@@ -53,9 +53,9 @@ export default async function OG() {
           <img
             src={logoSrc}
             alt="lunga"
-            width={400}
-            height={400}
-            style={{ width: 400, height: 400, objectFit: "contain" }}
+            width={320}
+            height={122}
+            style={{ width: 320, height: 122, objectFit: "contain" }}
           />
         </div>
 

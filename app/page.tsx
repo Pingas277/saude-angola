@@ -233,9 +233,9 @@ export default function HomePage() {
                   src="/brand/logo-full.png"
                   alt="lunga"
                   width={420}
-                  height={420}
+                  height={160}
                   priority
-                  className="h-64 w-auto sm:h-80"
+                  className="h-20 w-auto sm:h-24"
                 />
               </StaggerItem>
               <StaggerItem>
@@ -747,8 +747,8 @@ export default function HomePage() {
                 src="/brand/logo-full.png"
                 alt="lunga"
                 width={220}
-                height={220}
-                className="h-48 w-auto sm:h-56"
+                height={84}
+                className="h-14 w-auto sm:h-16"
               />
             </div>
             <div className="mt-6 text-[10px] font-bold uppercase tracking-[0.32em] text-primary">

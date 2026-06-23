@@ -16,13 +16,11 @@ type LogoProps = {
   markOnly?: boolean;
 };
 
-const RATIO = 1; // new lockup PNG is square 2000×2000
-// Heights chosen so the visible logo matches the old 2:1 SVG lockup at the
-// same call-sites — old width (h × 2) becomes the new square edge length.
+const RATIO = 1939 / 737; // trimmed lockup PNG: ~2.63:1 (was square 1:1 before trim, but had 70% transparent vertical padding)
 const SIZES = {
-  sm: { h: 40, subSize: "text-[9px]" },
-  md: { h: 56, subSize: "text-[10px]" },
-  lg: { h: 96, subSize: "text-[11px]" },
+  sm: { h: 24, subSize: "text-[9px]" },
+  md: { h: 32, subSize: "text-[10px]" },
+  lg: { h: 48, subSize: "text-[11px]" },
 } as const;
 
 export default function Logo({

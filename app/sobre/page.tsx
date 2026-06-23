@@ -180,9 +180,9 @@ export default function SobrePage() {
                     src="/brand/logo-full.png"
                     alt="Lunga"
                     width={300}
-                    height={300}
+                    height={114}
                     priority
-                    className="h-80 w-auto sm:h-96"
+                    className="h-24 w-auto sm:h-28"
                   />
                   <div className="mt-6 text-[10px] font-bold uppercase tracking-[0.32em] text-muted-foreground">
                     Saúde · Angola

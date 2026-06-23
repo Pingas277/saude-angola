@@ -1,16 +1,26 @@
 import { ImageResponse } from "next/og";
+import fs from "node:fs/promises";
+import path from "node:path";
 
-// Dynamic OG link-preview image rendered at the edge.
-// 1200x630 is the canonical OG size used by WhatsApp / Twitter / Facebook /
-// LinkedIn. This file lives at the route root so it covers the homepage —
-// add another `opengraph-image.tsx` inside any subroute to override it.
+// Dynamic OG link-preview image. 1200x630 is the canonical OG size used by
+// WhatsApp / Twitter / Facebook / LinkedIn. This file lives at the route
+// root so it covers the homepage — add another `opengraph-image.tsx` inside
+// any subroute to override it.
+//
+// Runs on the Node.js runtime (not edge) so we can read the brand PNG from
+// disk and inline it as base64. Inlining keeps the OG image self-contained
+// and free of network dependencies at render time.
 
-export const runtime = "edge";
 export const alt = "Lunga — Marque com qualquer médico, em qualquer clínica";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function OG() {
+  const logoBuf = await fs.readFile(
+    path.join(process.cwd(), "public/brand/logo-full.png")
+  );
+  const logoSrc = `data:image/png;base64,${logoBuf.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -36,38 +46,17 @@ export default async function OG() {
             display: "flex",
             alignItems: "center",
             gap: 14,
-            padding: "52px 64px 0 64px",
+            padding: "44px 64px 0 64px",
           }}
         >
-          <div
-            style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}
-          >
-            <span
-              style={{
-                fontSize: 56,
-                fontWeight: 800,
-                letterSpacing: -1,
-                background:
-                  "linear-gradient(90deg, #2F74C4 0%, #3DB388 60%, #4CB964 100%)",
-                backgroundClip: "text",
-                color: "transparent",
-              }}
-            >
-              lunga
-            </span>
-            <span
-              style={{
-                fontSize: 16,
-                fontWeight: 700,
-                color: "#2F74C4",
-                letterSpacing: 3,
-                textTransform: "uppercase",
-                marginTop: 4,
-              }}
-            >
-              Saúde para todos
-            </span>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={logoSrc}
+            alt="lunga"
+            width={320}
+            height={108}
+            style={{ width: 320, height: 108, objectFit: "contain" }}
+          />
         </div>
 
         {/* Headline */}
@@ -75,13 +64,15 @@ export default async function OG() {
           style={{
             display: "flex",
             flexDirection: "column",
-            padding: "40px 64px",
+            padding: "24px 64px",
             flex: 1,
             justifyContent: "center",
           }}
         >
           <div
             style={{
+              display: "flex",
+              flexWrap: "wrap",
               fontSize: 80,
               fontWeight: 800,
               color: "#0f172a",
@@ -90,9 +81,9 @@ export default async function OG() {
               maxWidth: 1000,
             }}
           >
-            Marque com{" "}
-            <span style={{ color: "#2F74C4" }}>qualquer médico</span>, em qualquer
-            clínica.
+            <span>Marque com&nbsp;</span>
+            <span style={{ color: "#2F74C4" }}>qualquer médico</span>
+            <span>,&nbsp;em qualquer clínica.</span>
           </div>
 
           <div
@@ -124,7 +115,7 @@ export default async function OG() {
           <Chip>Receita com QR</Chip>
           <Chip>RGPD-compatível</Chip>
           <div style={{ marginLeft: "auto", display: "flex", gap: 6, alignItems: "center" }}>
-            <span style={{ display: "inline-flex", overflow: "hidden", borderRadius: 4 }}>
+            <span style={{ display: "flex", overflow: "hidden", borderRadius: 4 }}>
               <span style={{ width: 12, height: 16, background: "#CD1126" }} />
               <span style={{ width: 12, height: 16, background: "#000000" }} />
               <span style={{ width: 12, height: 16, background: "#FCD116" }} />

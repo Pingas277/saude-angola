@@ -11,7 +11,7 @@
       "Bash(git add *)",
       "Bash(git commit -q -m 'Landing: real medical photo on '\\\\''Para clínicas'\\\\'' \\(Unsplash, commercial OK\\) *)",
       "Bash(git push *)",
-      "Bash(npx --yes vercel ls saude-angola)",
+      "Bash(npx --yes vercel ls lunga-app)",
       "Bash(npx tsc *)"
     ]
   }

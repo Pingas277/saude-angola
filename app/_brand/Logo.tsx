@@ -16,11 +16,11 @@ type LogoProps = {
   markOnly?: boolean;
 };
 
-const RATIO = 150 / 75; // intrinsic aspect of the lunga SVG lockup (2:1)
+const RATIO = 1812 / 611; // tight-trimmed lockup PNG: ~2.97:1 (1.3% transparent margin top/bot for safety)
 const SIZES = {
-  sm: { h: 22, subSize: "text-[9px]" },
-  md: { h: 30, subSize: "text-[10px]" },
-  lg: { h: 42, subSize: "text-[11px]" },
+  sm: { h: 24, subSize: "text-[9px]" },
+  md: { h: 32, subSize: "text-[10px]" },
+  lg: { h: 48, subSize: "text-[11px]" },
 } as const;
 
 export default function Logo({
@@ -40,7 +40,7 @@ export default function Logo({
   const Inner = (
     <div className="flex flex-col items-start leading-none">
       <Image
-        src="/brand/logo-full.svg"
+        src="/brand/logo-full.png"
         alt="lunga"
         width={w}
         height={h}
@@ -50,7 +50,7 @@ export default function Logo({
       />
       {subtitle && (
         <span
-          className={`mt-1.5 font-medium uppercase tracking-[0.18em] ${s.subSize} ${subColor}`}
+          className={`mt-2 font-medium uppercase tracking-[0.18em] ${s.subSize} ${subColor}`}
         >
           {subtitle}
         </span>

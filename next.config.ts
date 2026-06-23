@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/receita/[id]/pdf": ["./lib/fonts/**", "./public/brand/**"],
     "/api/fatura/[id]/pdf": ["./lib/fonts/**", "./public/brand/**"],
+    // OG image reads logo PNG from disk via fs at request time.
+    "/opengraph-image": ["./public/brand/**"],
   },
   // Allow next/image to render SVGs (logo). Sandboxed via CSP so any
   // inline scripts inside an SVG (even one we control) can't execute.

@@ -177,12 +177,12 @@ export default function SobrePage() {
                 {/* Centered logo + brand atmosphere */}
                 <div className="relative flex h-full flex-col items-center justify-center px-8 py-12">
                   <Image
-                    src="/brand/logo-full.svg"
+                    src="/brand/logo-full.png"
                     alt="Lunga"
                     width={300}
-                    height={150}
+                    height={101}
                     priority
-                    className="h-20 w-auto sm:h-24"
+                    className="h-24 w-auto sm:h-28"
                   />
                   <div className="mt-6 text-[10px] font-bold uppercase tracking-[0.32em] text-muted-foreground">
                     Saúde · Angola

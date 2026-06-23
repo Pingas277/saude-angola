@@ -216,7 +216,7 @@ export async function GET(
        paid_at, due_date, created_at, appointment_id, consultation_id,
        patient:patients(
          id_number,
-         profile:profiles(full_name, phone, email)
+         profile:profiles!patients_profile_id_fkey(full_name, phone, email)
        ),
        doctor_appt:appointments(doctor:profiles!appointments_doctor_id_fkey(full_name, specialty, medical_license)),
        doctor_consult:consultations(doctor:profiles!consultations_doctor_id_fkey(full_name, specialty, medical_license)),

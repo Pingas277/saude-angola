@@ -115,7 +115,7 @@ export default async function EnfermeiroHomePage() {
   }
 
   const select =
-    "id, scheduled_at, status, reason, patient:patients(id, date_of_birth, allergies, profile:profiles(full_name, phone)), doctor:profiles!appointments_doctor_id_fkey(full_name, specialty)";
+    "id, scheduled_at, status, reason, patient:patients(id, date_of_birth, allergies, profile:profiles!patients_profile_id_fkey(full_name, phone)), doctor:profiles!appointments_doctor_id_fkey(full_name, specialty)";
 
   const { data: rows } = await supabase
     .from("appointments")

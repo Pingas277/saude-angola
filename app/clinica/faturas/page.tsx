@@ -110,7 +110,7 @@ export default async function ClinicaFaturasPage({
     .select(
       `id, amount, currency, status, payment_method, payment_reference,
        paid_at, due_date, created_at,
-       patient:patients(profile:profiles(full_name, avatar_url)),
+       patient:patients(profile:profiles!patients_profile_id_fkey(full_name, avatar_url)),
        appointment:appointments(doctor:profiles!appointments_doctor_id_fkey(full_name, specialty))`
     )
     .eq("clinic_id", admin.clinic_id)

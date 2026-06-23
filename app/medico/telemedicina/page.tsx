@@ -83,7 +83,7 @@ export default async function TelemedicinaListPage() {
   if (!user) redirect("/entrar");
 
   const baseSelect =
-    "id, status, ai_urgency, ai_triage_summary, created_at, patient:patients(id, date_of_birth, allergies, chronic_conditions, profile:profiles(full_name))";
+    "id, status, ai_urgency, ai_triage_summary, created_at, patient:patients(id, date_of_birth, allergies, chronic_conditions, profile:profiles!patients_profile_id_fkey(full_name))";
 
   const [{ data: waiting }, { data: mine }] = await Promise.all([
     supabase

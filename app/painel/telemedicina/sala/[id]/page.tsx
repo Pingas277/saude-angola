@@ -55,7 +55,7 @@ export default async function SalaPage({
     .from("consultations")
     .select(
       `id, status, ai_urgency, ai_triage_summary, video_room_url,
-       patient:patients(profile:profiles(full_name, specialty, avatar_url)),
+       patient:patients(profile:profiles!patients_profile_id_fkey(full_name, specialty, avatar_url)),
        doctor:profiles!consultations_doctor_id_fkey(full_name, specialty, avatar_url)`
     )
     .eq("id", id)

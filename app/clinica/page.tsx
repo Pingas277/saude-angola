@@ -169,7 +169,7 @@ export default async function ClinicaHomePage() {
     supabase
       .from("appointments")
       .select(
-        "id, scheduled_at, status, appointment_type, reason, patient:patients(id, profile:profiles(full_name, avatar_url)), doctor:profiles!appointments_doctor_id_fkey(full_name, avatar_url)"
+        "id, scheduled_at, status, appointment_type, reason, patient:patients(id, profile:profiles!patients_profile_id_fkey(full_name, avatar_url)), doctor:profiles!appointments_doctor_id_fkey(full_name, avatar_url)"
       )
       .eq("clinic_id", clinicId)
       .gte("scheduled_at", startToday)
@@ -198,7 +198,7 @@ export default async function ClinicaHomePage() {
     supabase
       .from("invoices")
       .select(
-        "id, amount, status, created_at, paid_at, patient:patients(profile:profiles(full_name, avatar_url))"
+        "id, amount, status, created_at, paid_at, patient:patients(profile:profiles!patients_profile_id_fkey(full_name, avatar_url))"
       )
       .eq("clinic_id", clinicId)
       .order("created_at", { ascending: false })

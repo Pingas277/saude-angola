@@ -99,25 +99,28 @@ export default async function TelemedicinaHomePage() {
             >
               Voltar à sala de espera →
             </Link>
-            {/* Patient can cancel while waiting / scheduled — not when the
-                doctor already joined (status="in_progress"), since that's
-                already a live consultation. */}
-            {(active.status === "waiting" || active.status === "scheduled") && (
-              <form action={cancelOwnConsultationAction}>
-                <input
-                  type="hidden"
-                  name="consultation_id"
-                  value={active.id}
-                />
-                <button
-                  type="submit"
-                  className="inline-flex items-center justify-center gap-1.5 rounded-md border border-rose-200 bg-white/70 px-4 py-2 text-sm font-semibold text-rose-700 transition-colors hover:bg-rose-50 hover:text-rose-800"
-                >
-                  <XCircle className="size-4" />
-                  Cancelar consulta
-                </button>
-              </form>
-            )}
+            {/* Escape hatch. Wording is tuned to the state:
+                - waiting / scheduled (no doctor yet) → 'Cancelar consulta'
+                - in_progress (doctor joined, but maybe call abandoned)
+                  → 'Sair / terminar' so the patient can always recover
+                  from a stuck call. When paid-upfront ships, this is
+                  where a retention/refund policy attaches. */}
+            <form action={cancelOwnConsultationAction}>
+              <input
+                type="hidden"
+                name="consultation_id"
+                value={active.id}
+              />
+              <button
+                type="submit"
+                className="inline-flex items-center justify-center gap-1.5 rounded-md border border-rose-200 bg-white/70 px-4 py-2 text-sm font-semibold text-rose-700 transition-colors hover:bg-rose-50 hover:text-rose-800"
+              >
+                <XCircle className="size-4" />
+                {active.status === "in_progress"
+                  ? "Sair / terminar consulta"
+                  : "Cancelar consulta"}
+              </button>
+            </form>
           </div>
         </div>
       )}

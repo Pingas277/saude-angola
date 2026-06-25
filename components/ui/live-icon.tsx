@@ -18,7 +18,15 @@ import { ReceiptIcon } from "./receipt";
 import { HeartPulseIcon } from "./heart-pulse";
 import { LayersIcon } from "./layers";
 import { MapPinIcon } from "./map-pin";
-import { Video, Pill, FlaskConical, type LucideIcon } from "lucide-react";
+import {
+  Video,
+  Pill,
+  FlaskConical,
+  Users,
+  Sparkles,
+  ShieldCheck,
+  type LucideIcon,
+} from "lucide-react";
 
 // Bridges the @lucide-animated registry icons (each its own client
 // component with a {startAnimation, stopAnimation} ref handle) behind one
@@ -54,6 +62,9 @@ const STATIC: Record<string, LucideIcon> = {
   video: Video,
   pill: Pill,
   "flask-conical": FlaskConical,
+  users: Users,
+  sparkles: Sparkles,
+  "shield-check": ShieldCheck,
 };
 
 export const LiveIcon = forwardRef<

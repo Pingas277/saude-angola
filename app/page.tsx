@@ -5,7 +5,6 @@ import {
   Check,
   FileText,
   Stethoscope,
-  CreditCard,
   Smartphone,
   Building2,
   CalendarCheck,
@@ -46,8 +45,8 @@ const STEPS = [
     iconName: "calendar-check",
     n: "2",
     title: "Marque o horário",
-    desc: "Escolha o dia e a hora. Pague com Multicaixa Express.",
-    chip: { icon: CreditCard, label: "Multicaixa Express" },
+    desc: "Escolha o dia e a hora. Confirmação instantânea, sem chamadas.",
+    chip: { icon: Check, label: "Confirmação imediata" },
   },
   {
     iconName: "video",
@@ -67,6 +66,13 @@ const FEATURES = [
     chip: "Por especialidade ou nome",
   },
   {
+    iconName: "sparkles",
+    gradient: "from-violet-500 to-fuchsia-600",
+    title: "Triagem com IA clínica",
+    desc: "Antes do médico atender, a Lunga analisa os seus sintomas e organiza tudo num resumo clínico — para a consulta começar focada.",
+    chip: "Resumo clínico em segundos",
+  },
+  {
     iconName: "video",
     gradient: "from-emerald-500 to-teal-600",
     title: "Consulta por vídeo",
@@ -74,32 +80,46 @@ const FEATURES = [
     chip: "Pronta em ≈ 3 min",
   },
   {
+    iconName: "users",
+    gradient: "from-pink-500 to-rose-600",
+    title: "Conta de família",
+    desc: "Adicione filhos, pais ou outros dependentes. Marque por eles, receba as receitas e exames — tudo numa só conta.",
+    chip: "Dependentes ilimitados",
+  },
+  {
+    iconName: "shield-check",
+    gradient: "from-amber-500 to-orange-600",
+    title: "Passaporte de saúde",
+    desc: "Tipo sanguíneo, alergias, número de utente — sempre no bolso, no formato de um documento oficial.",
+    chip: "ID portátil verificável",
+  },
+  {
     iconName: "file-text",
     gradient: "from-rose-500 to-pink-600",
     title: "Receita no telemóvel",
-    desc: "Com código QR, válida nas farmácias. Sempre consigo.",
+    desc: "Com código QR, válida nas farmácias parceiras. Nunca mais perde o papel.",
     chip: "QR para a farmácia",
   },
   {
-    iconName: "layers",
-    gradient: "from-amber-500 to-orange-600",
-    title: "Tudo num só sítio",
-    desc: "Consultas, receitas, exames e faturas — sempre acessíveis.",
-    chip: "Histórico clínico",
+    iconName: "flask-conical",
+    gradient: "from-cyan-500 to-sky-600",
+    title: "Exames laboratoriais",
+    desc: "Quando a sua clínica carrega os resultados, recebe imediato. Veja o ficheiro, partilhe por WhatsApp.",
+    chip: "Resultados imediatos",
   },
   {
-    iconName: "credit-card",
-    gradient: "from-violet-500 to-purple-600",
-    title: "Multicaixa Express",
-    desc: "Pague no telemóvel. Recebe o comprovativo automaticamente.",
-    chip: "Pagamento instantâneo",
+    iconName: "bell",
+    gradient: "from-yellow-500 to-amber-600",
+    title: "Notificações em tempo real",
+    desc: "Receitas, exames, faturas, consultas marcadas — saiba assim que algo acontece, sem refrescar a página.",
+    chip: "Em tempo real",
   },
   {
     iconName: "stethoscope",
     gradient: "from-indigo-500 to-sky-600",
     title: "Sistema para clínicas",
-    desc: "Equipa, agenda, faturação e farmácia — substitua o papel.",
-    chip: "Equipa + agenda + farmácia",
+    desc: "Equipa, agenda, horários, faturação e farmácia — substitua o papel. Subscrição mensal.",
+    chip: "Equipa + agenda + faturação",
   },
 ];
 
@@ -109,12 +129,20 @@ const FAQ = [
     a: "Não. Funciona no telemóvel, tablet ou computador — só precisa do navegador. Funciona em redes 3G.",
   },
   {
+    q: "Posso usar a Lunga pelos meus filhos ou pais?",
+    a: "Sim. Adiciona-os como dependentes na sua conta de família — marca consultas, recebe receitas e exames por eles, tudo num só lugar.",
+  },
+  {
+    q: "O que é a triagem com IA?",
+    a: "Antes do médico atender, a Lunga faz algumas perguntas curtas sobre o que sente. Uma IA clínica analisa as respostas, classifica a urgência e prepara um resumo para o médico — para a consulta começar mais focada e rápida.",
+  },
+  {
     q: "As receitas são reconhecidas nas farmácias?",
     a: "Sim. Cada receita tem um código QR único, verificável no acto pelas farmácias parceiras.",
   },
   {
-    q: "Como pago a consulta?",
-    a: "Por Multicaixa Express, no telemóvel. Recebe o comprovativo automaticamente em PDF.",
+    q: "Como recebo o comprovativo da consulta?",
+    a: "A fatura aparece no seu painel logo após a consulta, em PDF — pronta a descarregar ou partilhar.",
   },
   {
     q: "Os meus dados estão seguros?",
@@ -146,7 +174,7 @@ const PLANS = [
     features: [
       "Até 10 médicos",
       "Consultas por vídeo ilimitadas",
-      "Faturação Multicaixa Express",
+      "Faturação automática em PDF",
       "Gestão de farmácia interna",
       "Suporte prioritário",
     ],
@@ -259,8 +287,9 @@ export default function HomePage() {
               </StaggerItem>
               <StaggerItem>
                 <p className="mx-auto mt-6 max-w-xl text-center text-base leading-relaxed text-muted-foreground sm:text-lg lg:mx-0 lg:text-left">
-                  A Lunga liga-o aos médicos e às clínicas de Angola.
-                  Sem filas. Sem chamadas. Em qualquer telemóvel.
+                  Marcação, triagem com IA, receitas, exames e contas
+                  de família — tudo no telemóvel. Sem filas, sem
+                  chamadas, em qualquer rede de Angola.
                 </p>
               </StaggerItem>
               <StaggerItem>
@@ -282,11 +311,15 @@ export default function HomePage() {
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <Check className="size-3.5 text-emerald-600" />
-                    21 províncias
+                    Conta de família
                   </span>
                   <span className="inline-flex items-center gap-1.5">
                     <Check className="size-3.5 text-emerald-600" />
-                    Receita digital
+                    Triagem com IA
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Check className="size-3.5 text-emerald-600" />
+                    21 províncias
                   </span>
                 </div>
               </StaggerItem>
@@ -457,7 +490,7 @@ export default function HomePage() {
                 {[
                   "Veja as suas próximas consultas",
                   "Descarregue receitas com QR para a farmácia",
-                  "Pague faturas no telemóvel com Multicaixa Express",
+                  "Receba notificações de receitas, exames e faturas",
                   "Aceda ao seu histórico clínico em qualquer lado",
                 ].map((b) => (
                   <li key={b} className="flex items-start gap-3 text-sm">
@@ -504,8 +537,9 @@ export default function HomePage() {
             <SectionEyebrow>O que recebe</SectionEyebrow>
             <SectionTitle>Tudo o que precisa.</SectionTitle>
             <SectionLede>
-              Pensado para a realidade angolana — funciona em qualquer
-              telemóvel, em qualquer rede.
+              Marcação, triagem com IA, receitas, exames, faturas e
+              contas de família — num único sítio. Pensado para a
+              realidade angolana, funciona em qualquer telemóvel.
             </SectionLede>
           </Reveal>
 
@@ -552,8 +586,8 @@ export default function HomePage() {
               <SectionTitle>Sem papel. Sem livros de marcações.</SectionTitle>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                 Um único sistema para a sua clínica — médicos, recepção,
-                enfermagem e administração — com agenda, faturação Multicaixa
-                Express e farmácia.
+                enfermagem e administração — com agenda, faturação e
+                farmácia.
               </p>
               <ul className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {[

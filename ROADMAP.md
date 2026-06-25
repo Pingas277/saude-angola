@@ -123,9 +123,13 @@ Estado atual da plataforma, organizado por sistema. Cada item tem:
 ### D5. Health Passport
 - **Estado**: Cartão 3D animado com QR. ✅ Para dependentes também.
 - **A fazer**:
-  - [ ] **ADD** — QR scaneável que abre página pública verificável (ex: emergência: o paramédico scaneia e vê tipo sanguíneo + alergias sem login). `P1 · 6h`
+  - [ ] **ADD** — **QR de Emergência público** ←pedido pelo utilizador 2026-06-26. Cada paciente (e dependente) tem um QR no perfil que **qualquer pessoa pode scanear** (sem login) e ver _só_ a informação clinicamente relevante em emergência: nome próprio, idade, tipo sanguíneo, alergias, doenças crónicas, contacto de emergência. NÃO mostra: BI, morada, telefone do próprio, histórico clínico, receitas, faturas. Uso: vítima inconsciente vai para urgência → médico/paramédico scaneia o QR no telemóvel/cartão da pessoa → vê imediatamente "Não dar penicilina, é diabético tipo 1, contactar Maria 944xxx". `P1 · 16-20h`
+    - **Backend**: novo token público por paciente (`emergency_token` uuid, separado do `id`), endpoint público `/e/<token>` que devolve JSON minimal. SECURITY DEFINER function para a SELECT escapar à RLS de forma controlada.
+    - **Frontend**: página pública `/e/<token>` sem header de app, layout estilo "alerta médico" — fácil de ler em pé com adrenalina. QR aparece no Passaporte de Saúde e em `/perfil/emergencia` (toggle ON/OFF, regenerar token).
+    - **Privacidade**: toggle ON por defeito? Provavelmente OFF até paciente ativar conscientemente. Banner: "Esta página é PÚBLICA — qualquer pessoa com o seu QR pode ver isto". Auditoria opcional dos scans (P2).
+    - **Para dependentes**: cada dependente tem o seu próprio token + QR — usado por filhos pequenos, idosos com demência.
   - [ ] **IMPROVE** — Download como PDF para imprimir. `P2 · 2h`
-- **Total**: ~8h
+- **Total**: ~22h
 
 ### D6. Notificações in-app
 - **Estado**: Sino com badge + dropdown ✅. Realtime via Supabase.

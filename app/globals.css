@@ -200,4 +200,45 @@ html {
   html {
     @apply font-sans;
   }
+
+  /* iOS notch + home-indicator safety.
+     layout.tsx sets viewport-fit=cover so the page can paint under the
+     hardware insets. This pulls content back in on the axes where it
+     matters: sticky/fixed bars must clear the top notch and any
+     bottom-anchored CTA must clear the home indicator. */
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* For sticky/fixed top bars — add `pt-safe` in markup if you need it. */
+  .pt-safe {
+    padding-top: max(env(safe-area-inset-top), 0px);
+  }
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  }
+}
+
+/* Better tap response on iOS — kills the 300ms blue tap-highlight that
+   makes buttons feel laggy. */
+@layer base {
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent iOS Safari from auto-zooming when focusing a form field whose
+     font-size is below 16px. The whole UI uses text-sm (14px) so without
+     this, every tap on a textarea/select forces a zoom-in then zoom-out
+     animation — feels broken. We bump font-size to 16px only on iOS, which
+     uses the WebKit-only -webkit-touch-callout media feature. Desktop /
+     Android keep the original 14px. */
+  @supports (-webkit-touch-callout: none) {
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
 }

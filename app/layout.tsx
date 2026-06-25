@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import ThemeProvider from "./_theme/ThemeProvider";
 import { Geist } from "next/font/google";
@@ -59,6 +59,28 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
   },
+  // Tells iOS Safari to render the page as a fullscreen 'web app' when the
+  // user adds Lunga to the home screen. Status bar matches the brand bg.
+  appleWebApp: {
+    capable: true,
+    title: "Lunga",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // viewport-fit=cover lets the layout extend under the iPhone notch + home
+  // indicator. We then opt content back in with env(safe-area-inset-*) in
+  // globals.css so nothing important sits under the notch.
+  viewportFit: "cover",
+  // Browser chrome / address bar follows the brand sky/emerald gradient,
+  // matched to light + dark themes.
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 export default function RootLayout({

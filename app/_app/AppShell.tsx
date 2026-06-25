@@ -8,6 +8,7 @@ import Logo from "../_brand/Logo";
 import { logoutAction } from "../(auth)/actions";
 import { ROLE_NAV, type RoleKey, type NavItem } from "./nav";
 import NotificationsBell from "./NotificationsBell";
+import PatientBottomTabNav from "./PatientBottomTabNav";
 import {
   Sheet,
   SheetContent,
@@ -98,8 +99,14 @@ export default function AppShell({
           </div>
         </header>
 
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pb-20 md:pb-0">{children}</main>
       </div>
+
+      {/* Mobile bottom tab nav — only for the patient role. The component
+          itself is md:hidden so it doesn't conflict with the desktop
+          sidebar. The pb-20 on main above clears the fixed bar's height
+          so content isn't hidden underneath on mobile. */}
+      {role === "patient" && <PatientBottomTabNav />}
     </div>
   );
 }

@@ -11,6 +11,7 @@ import {
   Video,
 } from "lucide-react";
 import { APPOINTMENT_STATUS_LABELS } from "@/lib/labels";
+import HealthPassport from "../_ui/HealthPassport";
 
 /**
  * Mobile-only patient home — visual 1:1 with the landing PhoneMockup
@@ -53,13 +54,16 @@ type Props = {
   firstName: string;
   greeting: string;
   dateLabel: string;
+  userId: string;
   patient: {
     id_number: string | null;
     date_of_birth: string | null;
     blood_type: string | null;
     gender: string | null;
+    allergies: string[] | null;
   } | null;
   fullName: string | null;
+  avatarUrl: string | null;
   nextAppointment: {
     id: string;
     scheduled_at: string;
@@ -78,26 +82,6 @@ type Props = {
     isUnread: boolean;
   } | null;
 };
-
-function ageFromDOB(dob: string | null): number | null {
-  if (!dob) return null;
-  const birth = new Date(dob);
-  if (Number.isNaN(birth.getTime())) return null;
-  const now = new Date();
-  let age = now.getFullYear() - birth.getFullYear();
-  const m = now.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
-  return age;
-}
-
-function shortCode(id: string | null): string {
-  if (!id) return "—";
-  // Stable, opaque-looking ID derived from id_number digits — we don't
-  // expose the real BI on the mobile front card.
-  const digits = id.replace(/\D/g, "");
-  if (!digits) return "—";
-  return `LG-${digits.slice(0, 3)}-${digits.slice(3, 7).padEnd(4, "0")}`;
-}
 
 function appointmentTimePT(iso: string): string {
   const d = new Date(iso);
@@ -136,116 +120,89 @@ export default function PatientMobileHome({
   firstName,
   greeting,
   dateLabel,
+  userId,
   patient,
   fullName,
+  avatarUrl,
   nextAppointment,
   latestNotification,
 }: Props) {
-  const age = ageFromDOB(patient?.date_of_birth ?? null);
-
   return (
-    <main className="space-y-4 px-4 pb-24 pt-6 md:hidden">
-      {/* ───── Header ───── (mirrors /painel desktop header eyebrow + h1 + date) */}
+    <main className="space-y-4 px-4 pb-24 pt-5 md:hidden">
+      {/* ───── Header ───── slightly larger so it doesn't read as cramped */}
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-sky-600">
+          <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-sky-600">
             {greeting}, {firstName}
           </div>
-          <h1 className="mt-1 text-lg font-semibold leading-tight tracking-tight text-foreground">
+          <h1 className="mt-1 text-xl font-semibold leading-tight tracking-tight text-foreground">
             O seu painel de saúde
           </h1>
-          <p className="mt-0.5 text-[11px] text-muted-foreground">
+          <p className="mt-0.5 text-[12px] text-muted-foreground">
             {dateLabel}
           </p>
         </div>
         <Link
           href="/painel/marcar"
-          className="inline-flex shrink-0 items-center gap-1 rounded-md bg-sky-600 px-2.5 py-1.5 text-[11px] font-bold text-white shadow-sm transition-colors hover:bg-sky-700"
+          className="inline-flex shrink-0 items-center gap-1 rounded-md bg-sky-600 px-3 py-2 text-xs font-bold text-white shadow-sm transition-colors hover:bg-sky-700"
         >
-          <CalendarPlus className="size-3" />
+          <CalendarPlus className="size-3.5" />
           Marcar
         </Link>
       </header>
 
-      {/* ───── Health Passport ───── (gradient + dotted overlay + Lunga stamp) */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-sky-950 to-emerald-950 p-3.5 text-white shadow-md">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-20"
-          style={{
-            backgroundImage:
-              "radial-gradient(rgba(255,255,255,0.3) 1px, transparent 1px)",
-            backgroundSize: "10px 10px",
-          }}
-        />
-        <div className="relative">
-          <div className="flex items-center justify-between text-[8px] font-bold uppercase tracking-[0.22em] text-amber-100/85">
-            <span>Passaporte de Saúde</span>
-            <span>· AO ·</span>
-          </div>
-          <div className="mt-2 flex items-end justify-between gap-3">
-            <div className="min-w-0">
-              <div className="truncate font-mono text-xs font-bold uppercase tracking-wide">
-                {fullName ?? "—"}
-              </div>
-              <div className="mt-0.5 text-[10px] text-white/55">
-                Tipo sang.{" "}
-                <strong className="text-white">
-                  {patient?.blood_type ?? "—"}
-                </strong>
-                {age !== null ? ` · ${age} anos` : ""}
-              </div>
-              <div className="mt-1 font-mono text-[9px] text-white/45">
-                ID · {shortCode(patient?.id_number ?? null)}
-              </div>
-            </div>
-            <div className="shrink-0 rounded-sm bg-white px-1.5 py-0.5 font-mono text-[9px] font-black uppercase tracking-wider text-slate-900">
-              lunga
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* ───── Health Passport — REAL component, with the 3D flip animation
+              and live ID. Same one /painel desktop uses, just rendered
+              at mobile width. Tap to flip front ↔ back. ───── */}
+      <HealthPassport
+        userId={userId}
+        profile={{
+          full_name: fullName,
+          avatar_url: avatarUrl,
+        }}
+        patient={patient}
+      />
 
-      {/* ───── Próxima consulta ───── (or empty-state CTA) */}
+      {/* ───── Próxima consulta ───── (or empty-state CTA) — bumped padding/sizes */}
       {nextAppointment ? (
         <Link
           href={`/painel/consultas`}
-          className="relative block overflow-hidden rounded-2xl bg-gradient-to-br from-sky-500 via-sky-600 to-emerald-600 p-3.5 text-white shadow-md shadow-sky-500/30"
+          className="relative block overflow-hidden rounded-2xl bg-gradient-to-br from-sky-500 via-sky-600 to-emerald-600 p-4 text-white shadow-md shadow-sky-500/30"
         >
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-6 -top-6 size-24 rounded-full bg-white/20 blur-2xl"
+            className="pointer-events-none absolute -right-8 -top-8 size-28 rounded-full bg-white/20 blur-2xl"
           />
           <div className="relative flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-white/85">
+              <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/85">
                 Próxima · {appointmentTimePT(nextAppointment.scheduled_at)}
               </div>
-              <div className="mt-1.5 flex items-center gap-2">
-                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-white/20">
-                  <Stethoscope className="size-3" />
+              <div className="mt-2 flex items-center gap-2.5">
+                <span className="grid size-7 shrink-0 place-items-center rounded-full bg-white/20">
+                  <Stethoscope className="size-3.5" />
                 </span>
-                <div className="truncate text-sm font-semibold leading-tight">
+                <div className="truncate text-base font-semibold leading-tight">
                   {nextAppointment.doctorName
                     ? `Dr(a). ${nextAppointment.doctorName}`
                     : "Médico a confirmar"}
                 </div>
               </div>
-              <div className="mt-0.5 pl-8 text-[10px] text-white/80">
+              <div className="mt-1 pl-[2.4rem] text-[11px] text-white/85">
                 {nextAppointment.doctorSpecialty ?? "Consulta"}
                 {nextAppointment.appointment_type === "video"
                   ? " · Vídeo"
                   : ""}
               </div>
             </div>
-            <span className="shrink-0 rounded-full bg-white/95 px-1.5 py-0.5 text-[9px] font-bold uppercase text-sky-700">
+            <span className="shrink-0 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-bold uppercase text-sky-700">
               {APPOINTMENT_STATUS_LABELS[nextAppointment.status] ??
                 nextAppointment.status}
             </span>
           </div>
           {nextAppointment.appointment_type === "video" && (
-            <div className="relative mt-2.5 inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-white/95 px-3 py-1.5 text-xs font-bold text-sky-700">
-              <Video className="size-3" />
+            <div className="relative mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-white/95 px-3 py-2 text-sm font-bold text-sky-700">
+              <Video className="size-3.5" />
               Entrar na consulta
             </div>
           )}
@@ -253,23 +210,23 @@ export default function PatientMobileHome({
       ) : (
         <Link
           href="/painel/marcar"
-          className="flex items-center justify-between gap-3 rounded-2xl border border-dashed border-border bg-card px-4 py-3.5 shadow-sm"
+          className="flex items-center justify-between gap-3 rounded-2xl border border-dashed border-border bg-card px-4 py-4 shadow-sm"
         >
           <div>
-            <div className="text-xs font-semibold text-foreground">
+            <div className="text-sm font-semibold text-foreground">
               Sem consultas marcadas
             </div>
-            <div className="mt-0.5 text-[10px] text-muted-foreground">
-              Toque aqui para marcar a próxima.
+            <div className="mt-0.5 text-xs text-muted-foreground">
+              Toque para marcar a próxima.
             </div>
           </div>
-          <span className="grid size-9 place-items-center rounded-full bg-primary text-primary-foreground">
+          <span className="grid size-10 place-items-center rounded-full bg-primary text-primary-foreground">
             <CalendarPlus className="size-4" />
           </span>
         </Link>
       )}
 
-      {/* ───── Quick actions (4-grid, exact like mockup) ───── */}
+      {/* ───── Quick actions (4-grid) — bumped icon size 11→13, label 10→11 */}
       <div className="grid grid-cols-4 gap-2">
         {QUICK_ACTIONS.map((a) => {
           const Icon = a.icon;
@@ -280,11 +237,12 @@ export default function PatientMobileHome({
               className="flex flex-col items-center gap-1.5 rounded-xl px-1 py-2 transition-colors active:bg-accent/50"
             >
               <span
-                className={`grid size-11 place-items-center rounded-2xl bg-gradient-to-br ${a.gradient} text-white shadow-md`}
+                className={`grid size-13 place-items-center rounded-2xl bg-gradient-to-br ${a.gradient} text-white shadow-md`}
+                style={{ width: "3.25rem", height: "3.25rem" }}
               >
-                <Icon className="size-5" />
+                <Icon className="size-6" />
               </span>
-              <span className="text-[10px] font-medium text-foreground">
+              <span className="text-[11px] font-medium text-foreground">
                 {a.label}
               </span>
             </Link>

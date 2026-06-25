@@ -232,13 +232,16 @@ export default async function PainelPage() {
     firstName,
     greeting: greetingPT(),
     dateLabel,
+    userId: user.id,
     fullName: profile?.full_name ?? null,
+    avatarUrl: profile?.avatar_url ?? null,
     patient: patient
       ? {
           id_number: patient.id_number ?? null,
           date_of_birth: patient.date_of_birth ?? null,
           blood_type: patient.blood_type ?? null,
           gender: patient.gender ?? null,
+          allergies: (patient.allergies as string[] | null) ?? null,
         }
       : null,
     nextAppointment: na

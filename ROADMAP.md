@@ -94,7 +94,8 @@ Estado atual da plataforma, organizado por sistema. Cada item tem:
 - **A fazer**:
   - [ ] **ADD** — Quick actions ("Marcar consulta", "Pedir receita", "Falar com médico") visíveis no top. `P1 · 3h`
   - [ ] **IMPROVE** — Empty states quando paciente é novo (atualmente cards vazios sem CTA). `P1 · 3h`
-- **Total**: ~6h
+  - [ ] **REDESIGN** — Mobile patient app layout deve evoluir para a vista do **PhoneMockup da landing** quando lançarmos na App Store / Play Store: bottom tab nav (Home / Consultas / Receitas / Notif / Perfil), 4-quick-action grid (Receitas / Exames / Faturas / Consultas) e Passaporte-as-header em vez do shell de sidebar atual. O mockup é o design target, não só arte de marketing. `P2 · 24h`
+- **Total**: ~30h
 
 ### D2. Marcar (`/painel/marcar`)
 - **Estado**: Pesquisa + escolha de slot + confirmação.

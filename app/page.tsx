@@ -325,8 +325,11 @@ export default function HomePage() {
               </StaggerItem>
             </Stagger>
 
-            {/* Right: phone mockup — what the app actually looks like */}
-            <Reveal className="hidden lg:flex lg:justify-center">
+            {/* Right (lg+) / stacked below (mobile + tablet): phone mockup
+                showing the real /painel UI 1:1. Now visible on every
+                viewport so mobile users see exactly what they're
+                signing up for. */}
+            <Reveal className="flex justify-center lg:justify-end">
               <PhoneMockup />
             </Reveal>
           </div>

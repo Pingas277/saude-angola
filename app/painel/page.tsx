@@ -27,6 +27,7 @@ import {
 import GradientStatCard from "../_ui/GradientStatCard";
 import HealthPassport from "../_ui/HealthPassport";
 import QuickShortcut from "./QuickShortcut";
+import PatientMobileHome from "./PatientMobileHome";
 
 export const metadata = { title: "Painel · Lunga" };
 
@@ -129,6 +130,7 @@ export default async function PainelPage() {
     { data: lastRx },
     { data: lastLab },
     { data: lastVitals },
+    { data: latestNotif },
   ] = await Promise.all([
     supabase
       .from("appointments")
@@ -179,6 +181,14 @@ export default async function PainelPage() {
       .order("recorded_at", { ascending: false })
       .limit(1)
       .maybeSingle(),
+    // Latest notification — used by the mobile home notif peek. RLS scopes
+    // to the current user automatically.
+    supabase
+      .from("notifications")
+      .select("id, type, title, body, link, read_at, created_at")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
   ]);
 
   const v = lastVitals as
@@ -200,8 +210,64 @@ export default async function PainelPage() {
     (r) => r.id !== na?.id
   );
 
+  // ───── Mobile home props (consumed by PatientMobileHome, the layout that
+  // mirrors the landing PhoneMockup 1:1 on mobile viewports). ─────
+  const dateLabel = new Date().toLocaleDateString("pt-PT", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+  const notif = latestNotif as
+    | {
+        id: string;
+        type: string;
+        title: string;
+        body: string | null;
+        link: string | null;
+        read_at: string | null;
+        created_at: string;
+      }
+    | null;
+  const mobileProps = {
+    firstName,
+    greeting: greetingPT(),
+    dateLabel,
+    fullName: profile?.full_name ?? null,
+    patient: patient
+      ? {
+          id_number: patient.id_number ?? null,
+          date_of_birth: patient.date_of_birth ?? null,
+          blood_type: patient.blood_type ?? null,
+          gender: patient.gender ?? null,
+        }
+      : null,
+    nextAppointment: na
+      ? {
+          id: na.id,
+          scheduled_at: na.scheduled_at,
+          status: na.status,
+          appointment_type: na.appointment_type ?? null,
+          doctorName: naDoctor?.full_name ?? null,
+          doctorSpecialty: naDoctor?.specialty ?? null,
+        }
+      : null,
+    latestNotification: notif
+      ? {
+          id: notif.id,
+          type: notif.type,
+          title: notif.title,
+          body: notif.body,
+          link: notif.link,
+          created_at: notif.created_at,
+          isUnread: !notif.read_at,
+        }
+      : null,
+  };
+
   return (
-    <main className="mx-auto max-w-6xl px-6 py-8">
+    <>
+      <PatientMobileHome {...mobileProps} />
+      <main className="mx-auto hidden max-w-6xl px-6 py-8 md:block">
       {/* Header */}
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
@@ -621,7 +687,8 @@ export default async function PainelPage() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }
 

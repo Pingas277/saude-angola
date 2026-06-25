@@ -35,7 +35,6 @@ export const metadata: Metadata = {
     "dependentes",
     "passaporte de saúde",
     "Luanda",
-    "Multicaixa Express",
   ],
   openGraph: {
     type: "website",

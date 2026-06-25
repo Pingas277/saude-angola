@@ -5,7 +5,6 @@ import {
   Check,
   FileText,
   Stethoscope,
-  CreditCard,
   Smartphone,
   Building2,
   CalendarCheck,
@@ -46,8 +45,8 @@ const STEPS = [
     iconName: "calendar-check",
     n: "2",
     title: "Marque o horário",
-    desc: "Escolha o dia e a hora. Pague com Multicaixa Express.",
-    chip: { icon: CreditCard, label: "Multicaixa Express" },
+    desc: "Escolha o dia e a hora. Confirmação instantânea, sem chamadas.",
+    chip: { icon: Check, label: "Confirmação imediata" },
   },
   {
     iconName: "video",
@@ -109,13 +108,6 @@ const FEATURES = [
     chip: "Resultados imediatos",
   },
   {
-    iconName: "credit-card",
-    gradient: "from-violet-500 to-purple-600",
-    title: "Multicaixa Express",
-    desc: "Pague no telemóvel. Recebe o comprovativo automaticamente.",
-    chip: "Pagamento instantâneo",
-  },
-  {
     iconName: "bell",
     gradient: "from-yellow-500 to-amber-600",
     title: "Notificações em tempo real",
@@ -149,8 +141,8 @@ const FAQ = [
     a: "Sim. Cada receita tem um código QR único, verificável no acto pelas farmácias parceiras.",
   },
   {
-    q: "Como pago a consulta?",
-    a: "Por Multicaixa Express, no telemóvel. Recebe o comprovativo automaticamente em PDF.",
+    q: "Como recebo o comprovativo da consulta?",
+    a: "A fatura aparece no seu painel logo após a consulta, em PDF — pronta a descarregar ou partilhar.",
   },
   {
     q: "Os meus dados estão seguros?",
@@ -182,7 +174,7 @@ const PLANS = [
     features: [
       "Até 10 médicos",
       "Consultas por vídeo ilimitadas",
-      "Faturação Multicaixa Express",
+      "Faturação automática em PDF",
       "Gestão de farmácia interna",
       "Suporte prioritário",
     ],
@@ -498,7 +490,7 @@ export default function HomePage() {
                 {[
                   "Veja as suas próximas consultas",
                   "Descarregue receitas com QR para a farmácia",
-                  "Pague faturas no telemóvel com Multicaixa Express",
+                  "Receba notificações de receitas, exames e faturas",
                   "Aceda ao seu histórico clínico em qualquer lado",
                 ].map((b) => (
                   <li key={b} className="flex items-start gap-3 text-sm">
@@ -594,8 +586,8 @@ export default function HomePage() {
               <SectionTitle>Sem papel. Sem livros de marcações.</SectionTitle>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
                 Um único sistema para a sua clínica — médicos, recepção,
-                enfermagem e administração — com agenda, faturação Multicaixa
-                Express e farmácia.
+                enfermagem e administração — com agenda, faturação e
+                farmácia.
               </p>
               <ul className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {[

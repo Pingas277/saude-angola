@@ -151,17 +151,21 @@ export default function PatientMobileHome({
         </Link>
       </header>
 
-      {/* ───── Health Passport — REAL component, with the 3D flip animation
-              and live ID. Same one /painel desktop uses, just rendered
-              at mobile width. Tap to flip front ↔ back. ───── */}
-      <HealthPassport
-        userId={userId}
-        profile={{
-          full_name: fullName,
-          avatar_url: avatarUrl,
-        }}
-        patient={patient}
-      />
+      {/* ───── Health Passport — REAL component (with the 3D flip + live
+              ID + allergies) at 65% scale on mobile because the natural
+              size was eating the whole fold. CSS zoom scales the
+              visual + the reserved layout box together, so the cards
+              that follow shift up to fit. ───── */}
+      <div style={{ zoom: 0.65 }}>
+        <HealthPassport
+          userId={userId}
+          profile={{
+            full_name: fullName,
+            avatar_url: avatarUrl,
+          }}
+          patient={patient}
+        />
+      </div>
 
       {/* ───── Próxima consulta ───── (or empty-state CTA) — bumped padding/sizes */}
       {nextAppointment ? (

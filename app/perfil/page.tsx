@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ArrowRight, ShieldAlert } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import Logo from "../_brand/Logo";
 import AvatarUpload from "../_app/AvatarUpload";
@@ -95,6 +96,30 @@ export default async function PerfilPage() {
         </div>
 
         <DependentsSection initial={dependents} />
+
+        {/* Privacy & emergency entry — link to the dedicated page so the
+            toggle / regenerate / scan log have room to breathe. */}
+        <div className="mt-6">
+          <Link
+            href="/perfil/emergencia"
+            className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm transition-colors hover:bg-accent"
+          >
+            <div className="flex items-center gap-3">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-rose-500/15 text-rose-700">
+                <ShieldAlert className="size-5" />
+              </span>
+              <div>
+                <div className="text-sm font-semibold text-foreground">
+                  Cartão de Emergência
+                </div>
+                <div className="mt-0.5 text-xs text-muted-foreground">
+                  Gerir o QR público para si e dependentes.
+                </div>
+              </div>
+            </div>
+            <ArrowRight className="size-4 shrink-0 text-muted-foreground" />
+          </Link>
+        </div>
       </div>
     </main>
   );

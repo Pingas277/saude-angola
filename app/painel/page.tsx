@@ -86,7 +86,7 @@ export default async function PainelPage() {
   const { data: patient } = await supabase
     .from("patients")
     .select(
-      "id, id_number, date_of_birth, blood_type, gender, allergies"
+      "id, id_number, date_of_birth, blood_type, gender, allergies, emergency_token, emergency_card_enabled"
     )
     .eq("profile_id", user.id)
     .maybeSingle();
@@ -100,7 +100,7 @@ export default async function PainelPage() {
   const { data: dependentsRaw } = await supabase
     .from("patients")
     .select(
-      "id, full_name, id_number, date_of_birth, blood_type, gender, allergies, relationship"
+      "id, full_name, id_number, date_of_birth, blood_type, gender, allergies, relationship, emergency_token, emergency_card_enabled"
     )
     .eq("guardian_profile_id", user.id)
     .is("profile_id", null)
@@ -114,6 +114,8 @@ export default async function PainelPage() {
     gender: string | null;
     allergies: string[] | null;
     relationship: string | null;
+    emergency_token: string | null;
+    emergency_card_enabled: boolean | null;
   }> | null) ?? [];
 
   const nowIso = new Date().toISOString();
@@ -232,9 +234,16 @@ export default async function PainelPage() {
     firstName,
     greeting: greetingPT(),
     dateLabel,
-    patientId: patient?.id ?? "",
+    emergencyToken: (patient as { emergency_token?: string } | null)?.emergency_token ?? "",
     fullName: profile?.full_name ?? null,
     avatarUrl: profile?.avatar_url ?? null,
+    dependents: dependents.map((d) => ({
+      fullName: d.full_name,
+      relationship: d.relationship,
+      bloodType: d.blood_type,
+      dateOfBirth: d.date_of_birth,
+      emergencyToken: d.emergency_token ?? "",
+    })),
     patient: patient
       ? {
           id_number: patient.id_number ?? null,

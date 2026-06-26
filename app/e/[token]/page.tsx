@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import {
   AlertTriangle,
   Droplet,
   Heart,
   Phone,
   ShieldAlert,
+  ShieldOff,
   User as UserIcon,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
@@ -17,7 +19,7 @@ export const metadata = {
 };
 
 type Card = {
-  first_name: string;
+  first_name: string | null;
   age: number | null;
   blood_type: string | null;
   gender: string | null;
@@ -25,6 +27,7 @@ type Card = {
   chronic_conditions: string[] | null;
   emergency_contact_name: string | null;
   emergency_contact_phone: string | null;
+  enabled: boolean;
 };
 
 const GENDER_PT: Record<string, string> = {
@@ -36,21 +39,65 @@ const GENDER_PT: Record<string, string> = {
 export default async function EmergencyCardPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ token: string }>;
 }) {
-  const { id } = await params;
+  const { token } = await params;
 
   // SECURITY DEFINER fn — runs as postgres, bypasses RLS on patients in
-  // a controlled way. Returns only the subset we expose to the public.
+  // a controlled way. Returns only the subset we expose to the public,
+  // and logs the scan to emergency_card_scans for the owner to review.
+  const h = await headers();
+  const ua = h.get("user-agent");
+  const ip =
+    h.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    h.get("x-real-ip") ??
+    null;
+
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("emergency_card", {
-    p_patient_id: id,
+    p_token: token,
+    p_user_agent: ua,
+    p_ip: ip,
   });
 
   if (error || !data || (Array.isArray(data) && data.length === 0)) {
+    // Unknown token → real 404.
     notFound();
   }
   const c = (Array.isArray(data) ? data[0] : data) as Card;
+
+  // The owner toggled the card off — show a tombstone instead of the
+  // info. Better than 404 because the paramedic can at least see this
+  // is a valid Lunga URL that was intentionally disabled.
+  if (!c.enabled) {
+    return (
+      <main className="min-h-[100dvh] bg-slate-50">
+        <div className="bg-slate-700 px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.18em] text-white">
+          <span className="inline-flex items-center gap-1.5">
+            <ShieldOff className="size-3.5" />
+            Cartão desativado
+          </span>
+        </div>
+        <div className="mx-auto max-w-md px-5 py-12">
+          <div className="rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+            <span className="mx-auto grid size-14 place-items-center rounded-full bg-slate-200 text-slate-600">
+              <ShieldOff className="size-7" />
+            </span>
+            <h1 className="mt-5 text-lg font-semibold text-foreground">
+              Cartão de emergência desativado
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              O proprietário deste cartão optou por mantê-lo privado. Não
+              é possível mostrar informação médica neste momento.
+            </p>
+            <p className="mt-6 text-[10px] text-muted-foreground">
+              Lunga · Cartão de Emergência
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   const allergies = (c.allergies ?? []).filter(
     (a) => a && a.toLowerCase() !== "no" && a.toLowerCase() !== "não"
@@ -81,7 +128,7 @@ export default async function EmergencyCardPage({
                 Identidade
               </div>
               <div className="mt-0.5 text-2xl font-bold tracking-tight text-foreground">
-                {c.first_name}
+                {c.first_name ?? "—"}
                 {c.age !== null && (
                   <span className="ml-2 text-base font-medium text-muted-foreground">
                     · {c.age} anos

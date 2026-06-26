@@ -232,7 +232,7 @@ export default async function PainelPage() {
     firstName,
     greeting: greetingPT(),
     dateLabel,
-    userId: user.id,
+    patientId: patient?.id ?? "",
     fullName: profile?.full_name ?? null,
     avatarUrl: profile?.avatar_url ?? null,
     patient: patient

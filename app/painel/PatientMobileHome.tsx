@@ -1,4 +1,5 @@
 import Link from "next/link";
+import QRCode from "qrcode";
 import {
   CalendarCheck,
   CalendarPlus,
@@ -11,7 +12,7 @@ import {
   Video,
 } from "lucide-react";
 import { APPOINTMENT_STATUS_LABELS } from "@/lib/labels";
-import HealthPassport from "../_ui/HealthPassport";
+import EmergencyPassport from "./EmergencyPassport";
 
 /**
  * Mobile-only patient home — visual 1:1 with the landing PhoneMockup
@@ -54,7 +55,7 @@ type Props = {
   firstName: string;
   greeting: string;
   dateLabel: string;
-  userId: string;
+  patientId: string;
   patient: {
     id_number: string | null;
     date_of_birth: string | null;
@@ -116,17 +117,47 @@ function notifTimeAgo(iso: string): string {
   });
 }
 
-export default function PatientMobileHome({
+function ageFromDOB(dob: string | null): number | null {
+  if (!dob) return null;
+  const birth = new Date(dob);
+  if (Number.isNaN(birth.getTime())) return null;
+  const now = new Date();
+  let age = now.getFullYear() - birth.getFullYear();
+  const m = now.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+  return age;
+}
+
+function shortIdFromUuid(id: string): string {
+  const hex = id.replace(/-/g, "").toUpperCase();
+  return `LG-${hex.slice(0, 3)}-${hex.slice(3, 7)}`;
+}
+
+export default async function PatientMobileHome({
   firstName,
   greeting,
   dateLabel,
-  userId,
+  patientId,
   patient,
   fullName,
-  avatarUrl,
   nextAppointment,
   latestNotification,
 }: Props) {
+  // Generate the emergency QR server-side as SVG markup. The qrcode lib
+  // emits a self-contained, sanitised SVG that the client modal injects.
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://lunga-app.vercel.app";
+  const qrUrl = `${baseUrl}/e/${patientId}`;
+  const qrSvg = await QRCode.toString(qrUrl, {
+    type: "svg",
+    errorCorrectionLevel: "M",
+    margin: 1,
+    width: 240,
+    color: { dark: "#0f172a", light: "#ffffff" },
+  });
+  const age = ageFromDOB(patient?.date_of_birth ?? null);
+  const shortId = shortIdFromUuid(patientId);
+
   return (
     <main className="space-y-4 px-4 pb-24 pt-5 md:hidden">
       {/* ───── Header ───── slightly larger so it doesn't read as cramped */}
@@ -151,21 +182,17 @@ export default function PatientMobileHome({
         </Link>
       </header>
 
-      {/* ───── Health Passport — REAL component (with the 3D flip + live
-              ID + allergies) at 65% scale on mobile because the natural
-              size was eating the whole fold. CSS zoom scales the
-              visual + the reserved layout box together, so the cards
-              that follow shift up to fit. ───── */}
-      <div style={{ zoom: 0.65 }}>
-        <HealthPassport
-          userId={userId}
-          profile={{
-            full_name: fullName,
-            avatar_url: avatarUrl,
-          }}
-          patient={patient}
-        />
-      </div>
+      {/* ───── Passport (compact, mockup-style) ─ tap opens emergency QR
+              modal. Encodes /e/<patientId> which renders the public
+              emergency card via SECURITY DEFINER on emergency_card(). */}
+      <EmergencyPassport
+        fullName={fullName}
+        bloodType={patient?.blood_type ?? null}
+        age={age}
+        shortId={shortId}
+        qrSvg={qrSvg}
+        qrUrl={qrUrl}
+      />
 
       {/* ───── Próxima consulta ───── (or empty-state CTA) — bumped padding/sizes */}
       {nextAppointment ? (

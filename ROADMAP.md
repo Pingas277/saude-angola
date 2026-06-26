@@ -309,7 +309,19 @@ Estado atual da plataforma, organizado por sistema. Cada item tem:
   - [ ] **RENAME** — Projeto Vercel + repo GitHub para `lunga-app`. `P1 · 30min`
 - **Total**: ~3h
 
-### I12. Backups + DR
+### I12. Supabase Pro plan upgrade (~$25/mês)
+- **Estado**: ❌ Free tier — bloqueia 4 features de segurança/qualidade que pedem Pro. Sinalizado pelo utilizador 2026-06-27 quando tentou ativar Leaked Password Protection e descobriu que não está disponível em Free.
+- **A fazer (quando upgradear)**:
+  - [ ] **ENABLE** — **Leaked Password Protection** (Auth → Providers → Email): verifica passwords contra HaveIBeenPwned. Bloqueia "123456" e passwords vazadas em data breaches conhecidos. `P0 quando Pro · 5min`
+  - [ ] **ENABLE** — **Custom SMTP** para Auth emails: hoje os emails de reset/confirmação saem do domínio supabase.io. Com Pro + SMTP próprio (Resend/Brevo/SendGrid) saem de `no-reply@lunga.ao`. Pré-requisito do I2 (email transacional). `P0 quando Pro · 30min`
+  - [ ] **ENABLE** — **Daily backups + Point-in-Time Recovery (PITR)**: Free tier guarda backups limitados; Pro guarda 7 dias + PITR ao segundo. Crítico para data clínica regulada. `P0 quando Pro · automático`
+  - [ ] **ENABLE** — **Database branching**: cria branches isoladas do DB para testar migrações antes de produção. Hoje aplicamos migrações direto em produção via MCP — funciona mas tem risco. `P1 quando Pro · automático`
+  - [ ] **CONSIDER** — **Read replicas + advanced compute**: só importa quando passares de 1.000 utilizadores ativos. `P2 quando Pro`
+- **Trigger natural**: quando começares a aceitar pacientes reais com receita médica armazenada (compliance), PITR + custom SMTP deixam de ser "nice" e passam a "obrigatório legalmente".
+- **Custo**: $25/mês USD (~22.000 Kz/mês). Único custo recorrente da plataforma além do domínio + Vercel.
+- **Total**: ~1h de config após upgrade
+
+### I13. Backups + DR
 - **Estado**: Supabase faz backups diários (pro tier) — não verificado restore.
 - **A fazer**:
   - [ ] **TEST** — Fazer restore de backup numa branch e validar. `P1 · 2h`

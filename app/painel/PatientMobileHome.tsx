@@ -1,4 +1,5 @@
 import Link from "next/link";
+import QRCode from "qrcode";
 import {
   CalendarCheck,
   CalendarPlus,
@@ -11,7 +12,7 @@ import {
   Video,
 } from "lucide-react";
 import { APPOINTMENT_STATUS_LABELS } from "@/lib/labels";
-import HealthPassport from "../_ui/HealthPassport";
+import EmergencyPassport from "./EmergencyPassport";
 
 /**
  * Mobile-only patient home — visual 1:1 with the landing PhoneMockup
@@ -50,11 +51,19 @@ const QUICK_ACTIONS = [
   },
 ] as const;
 
+type Dependent = {
+  fullName: string | null;
+  relationship: string | null;
+  bloodType: string | null;
+  dateOfBirth: string | null;
+  emergencyToken: string;
+};
+
 type Props = {
   firstName: string;
   greeting: string;
   dateLabel: string;
-  userId: string;
+  emergencyToken: string;
   patient: {
     id_number: string | null;
     date_of_birth: string | null;
@@ -63,7 +72,7 @@ type Props = {
     allergies: string[] | null;
   } | null;
   fullName: string | null;
-  avatarUrl: string | null;
+  dependents: Dependent[];
   nextAppointment: {
     id: string;
     scheduled_at: string;
@@ -116,17 +125,61 @@ function notifTimeAgo(iso: string): string {
   });
 }
 
-export default function PatientMobileHome({
+function ageFromDOB(dob: string | null): number | null {
+  if (!dob) return null;
+  const birth = new Date(dob);
+  if (Number.isNaN(birth.getTime())) return null;
+  const now = new Date();
+  let age = now.getFullYear() - birth.getFullYear();
+  const m = now.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+  return age;
+}
+
+function shortIdFromUuid(id: string): string {
+  const hex = id.replace(/-/g, "").toUpperCase();
+  return `LG-${hex.slice(0, 3)}-${hex.slice(3, 7)}`;
+}
+
+async function buildQr(token: string): Promise<{ qrUrl: string; qrSvg: string }> {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://lunga-app.vercel.app";
+  const qrUrl = `${baseUrl}/e/${token}`;
+  const qrSvg = await QRCode.toString(qrUrl, {
+    type: "svg",
+    errorCorrectionLevel: "M",
+    margin: 1,
+    width: 240,
+    color: { dark: "#0f172a", light: "#ffffff" },
+  });
+  return { qrUrl, qrSvg };
+}
+
+export default async function PatientMobileHome({
   firstName,
   greeting,
   dateLabel,
-  userId,
+  emergencyToken,
   patient,
   fullName,
-  avatarUrl,
+  dependents,
   nextAppointment,
   latestNotification,
 }: Props) {
+  // Generate own QR + one per dependent in parallel.
+  const ownQr = emergencyToken
+    ? await buildQr(emergencyToken)
+    : { qrUrl: "", qrSvg: "" };
+  const depQrs = await Promise.all(
+    dependents.map((d) =>
+      d.emergencyToken
+        ? buildQr(d.emergencyToken)
+        : Promise.resolve({ qrUrl: "", qrSvg: "" })
+    )
+  );
+  const age = ageFromDOB(patient?.date_of_birth ?? null);
+  const shortId = shortIdFromUuid(emergencyToken);
+
   return (
     <main className="space-y-4 px-4 pb-24 pt-5 md:hidden">
       {/* ───── Header ───── slightly larger so it doesn't read as cramped */}
@@ -151,21 +204,51 @@ export default function PatientMobileHome({
         </Link>
       </header>
 
-      {/* ───── Health Passport — REAL component (with the 3D flip + live
-              ID + allergies) at 65% scale on mobile because the natural
-              size was eating the whole fold. CSS zoom scales the
-              visual + the reserved layout box together, so the cards
-              that follow shift up to fit. ───── */}
-      <div style={{ zoom: 0.65 }}>
-        <HealthPassport
-          userId={userId}
-          profile={{
-            full_name: fullName,
-            avatar_url: avatarUrl,
-          }}
-          patient={patient}
-        />
-      </div>
+      {/* ───── Passport (compact, mockup-style) ─ tap opens emergency QR
+              modal. Encodes /e/<emergencyToken> which renders the public
+              card via the SECURITY DEFINER emergency_card() function. */}
+      <EmergencyPassport
+        fullName={fullName}
+        bloodType={patient?.blood_type ?? null}
+        age={age}
+        shortId={shortId}
+        qrSvg={ownQr.qrSvg}
+        qrUrl={ownQr.qrUrl}
+      />
+
+      {/* ───── Dependents — each gets their own compact passport + own QR.
+              Useful for children, elderly with dementia, etc. ───── */}
+      {dependents.length > 0 && (
+        <section className="space-y-3 pt-2">
+          <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+            Passaportes da família
+          </div>
+          {dependents.map((dep, i) => (
+            <div key={i}>
+              {(dep.fullName || dep.relationship) && (
+                <div className="mb-2 flex items-baseline gap-1.5 text-xs">
+                  <span className="font-semibold text-foreground">
+                    {dep.fullName ?? "Dependente"}
+                  </span>
+                  {dep.relationship && (
+                    <span className="text-muted-foreground">
+                      · {dep.relationship}
+                    </span>
+                  )}
+                </div>
+              )}
+              <EmergencyPassport
+                fullName={dep.fullName}
+                bloodType={dep.bloodType}
+                age={ageFromDOB(dep.dateOfBirth)}
+                shortId={shortIdFromUuid(dep.emergencyToken)}
+                qrSvg={depQrs[i].qrSvg}
+                qrUrl={depQrs[i].qrUrl}
+              />
+            </div>
+          ))}
+        </section>
+      )}
 
       {/* ───── Próxima consulta ───── (or empty-state CTA) — bumped padding/sizes */}
       {nextAppointment ? (

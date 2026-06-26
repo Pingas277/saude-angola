@@ -4,6 +4,14 @@ import { NextResponse, type NextRequest } from "next/server";
 const PROTECTED_PREFIXES = ["/painel", "/perfil", "/medico", "/clinica", "/recepcao"];
 const AUTH_ROUTES = ["/entrar", "/registar"];
 
+/** Apply .lunga.ao cookie domain in production so the auth cookie is
+ *  shared between lunga.ao and www.lunga.ao. */
+function withDomain(options: CookieOptions | undefined): CookieOptions {
+  const isProd = process.env.VERCEL_ENV === "production";
+  if (!isProd) return options ?? {};
+  return { ...(options ?? {}), domain: ".lunga.ao" };
+}
+
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -39,7 +47,7 @@ export async function updateSession(request: NextRequest) {
             );
             response = NextResponse.next({ request });
             cookiesToSet.forEach(({ name, value, options }) =>
-              response.cookies.set(name, value, options)
+              response.cookies.set(name, value, withDomain(options))
             );
           },
         },

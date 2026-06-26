@@ -28,11 +28,14 @@ async function readLastUser(): Promise<LastUser | null> {
 export default async function EntrarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ redirect?: string }>;
+  searchParams: Promise<{ redirect?: string; error?: string }>;
 }) {
-  const { redirect } = await searchParams;
+  const { redirect, error } = await searchParams;
   const redirectTo = redirect && redirect.startsWith("/") ? redirect : "/painel";
   const lastUser = await readLastUser();
+  // Friendly subtitle when bounced back from /auth/callback after an
+  // expired / replayed recovery link.
+  const linkInvalido = error === "link_invalido";
 
   const firstName = lastUser?.name?.split(" ")[0] ?? null;
 
@@ -41,9 +44,11 @@ export default async function EntrarPage({
       eyebrow={lastUser ? "Olá, de novo" : "Bem-vindo de volta"}
       title={lastUser && firstName ? `Olá, ${firstName}` : "Entrar"}
       subtitle={
-        lastUser
-          ? "Coloque a sua palavra-passe para continuar."
-          : "Entre com o seu email e palavra-passe."
+        linkInvalido
+          ? "O link de recuperação expirou ou já foi usado. Tente de novo abaixo."
+          : lastUser
+            ? "Coloque a sua palavra-passe para continuar."
+            : "Entre com o seu email e palavra-passe."
       }
       compact={!!lastUser}
       footer={

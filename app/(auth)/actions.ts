@@ -170,6 +170,93 @@ export async function clearLastUserAction() {
   revalidatePath("/entrar");
 }
 
+/* ─────────────────────────── Password reset ─────────────────────────── */
+
+export type ResetState = { error?: string; sent?: boolean } | null;
+
+/** Step 1 — user types their email and we ask Supabase to send a reset
+ *  link. We always return success even when the email doesn't exist —
+ *  attackers can't enumerate accounts. */
+export async function requestPasswordResetAction(
+  _prev: ResetState,
+  formData: FormData
+): Promise<ResetState> {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (!email || !email.includes("@")) {
+    return { error: "Por favor, escreva um email válido." };
+  }
+
+  const ip = await clientIp();
+  if (!(await rateLimit(`reset:${ip}`, 4, 600))) {
+    return {
+      error:
+        "Demasiados pedidos. Tente novamente daqui a uns minutos.",
+    };
+  }
+
+  const supabase = await createClient();
+  // redirectTo wraps /auth/callback so Supabase's email link lands on a
+  // route that swaps the recovery code for a session, then bounces to
+  // /redefinir where the user actually picks a new password.
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://lunga.ao";
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${siteUrl}/auth/callback?next=/redefinir`,
+  });
+
+  // Don't leak whether the email existed. Only surface infrastructure
+  // errors (Supabase down, etc) which shouldn't happen often.
+  if (error && !error.message.toLowerCase().includes("not found")) {
+    console.error("[reset] resetPasswordForEmail failed:", error);
+  }
+
+  return { sent: true };
+}
+
+export type UpdatePasswordState = { error?: string } | null;
+
+/** Step 2 — user is on /redefinir after clicking the email link. The
+ *  callback route already exchanged the code, so we have a recovery
+ *  session in cookies. Set the new password and redirect to /painel. */
+export async function updatePasswordAction(
+  _prev: UpdatePasswordState,
+  formData: FormData
+): Promise<UpdatePasswordState> {
+  const password = String(formData.get("password") ?? "");
+  const confirm = String(formData.get("password_confirm") ?? "");
+
+  if (password.length < 8) {
+    return { error: "A nova palavra-passe deve ter pelo menos 8 caracteres." };
+  }
+  if (password !== confirm) {
+    return { error: "As duas palavras-passe não coincidem." };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    // Recovery session expired or the link was never opened — push back
+    // to the forgot-password page so they can re-request.
+    redirect("/esqueci-palavra-passe?expirou=1");
+  }
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) {
+    return { error: traduzirErro(error.message) };
+  }
+
+  await setFlash({
+    kind: "success",
+    title: "Palavra-passe atualizada",
+    desc: "Está pronto.",
+  });
+  redirect("/painel");
+}
+
+/* ───────────────────────── Error translation ────────────────────────── */
+
 function traduzirErro(msg: string): string {
   const m = msg.toLowerCase();
   if (m.includes("invalid login"))

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import {
   Mail,
@@ -96,12 +97,12 @@ export default function LoginForm({
         />
 
         <div className="text-right">
-          <a
-            href="mailto:suporte@lunga.ao?subject=Recuperar%20palavra-passe"
+          <Link
+            href="/esqueci-palavra-passe"
             className="text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             Esqueceu a palavra-passe?
-          </a>
+          </Link>
         </div>
 
         {state?.error && (
@@ -165,12 +166,12 @@ export default function LoginForm({
           placeholder="••••••••"
         />
         <div className="mt-1.5 text-right">
-          <a
-            href="mailto:suporte@lunga.ao?subject=Recuperar%20palavra-passe"
+          <Link
+            href="/esqueci-palavra-passe"
             className="text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
           >
             Esqueceu a palavra-passe?
-          </a>
+          </Link>
         </div>
       </div>
 

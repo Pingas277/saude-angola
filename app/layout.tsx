@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://lunga-app.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://lunga.ao";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

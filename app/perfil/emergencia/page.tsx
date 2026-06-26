@@ -29,7 +29,7 @@ type PatientRow = {
 
 async function buildQr(token: string): Promise<{ url: string; svg: string }> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://lunga-app.vercel.app";
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://lunga.ao";
   const url = `${baseUrl}/e/${token}`;
   const svg = await QRCode.toString(url, {
     type: "svg",

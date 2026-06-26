@@ -143,7 +143,7 @@ function shortIdFromUuid(id: string): string {
 
 async function buildQr(token: string): Promise<{ qrUrl: string; qrSvg: string }> {
   const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://lunga-app.vercel.app";
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://lunga.ao";
   const qrUrl = `${baseUrl}/e/${token}`;
   const qrSvg = await QRCode.toString(qrUrl, {
     type: "svg",

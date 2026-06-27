@@ -1,4 +1,5 @@
 "use server";
+import { safeError } from "@/lib/safe-error";
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -86,7 +87,7 @@ export async function saveVitalSignsAction(
     notes,
   });
 
-  if (error) return { error: error.message };
+  if (error) return { error: safeError(error) };
 
   revalidatePath("/enfermeiro");
   revalidatePath(`/enfermeiro/triagem/${appointmentId}`);

@@ -1,4 +1,5 @@
 "use server";
+import { safeError } from "@/lib/safe-error";
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -66,7 +67,7 @@ export async function addStaffAction(
     .update({ role, clinic_id: admin.clinic_id })
     .eq("id", target.id);
 
-  if (error) return { error: error.message };
+  if (error) return { error: safeError(error) };
 
   revalidatePath("/clinica/equipa");
   revalidatePath("/clinica");

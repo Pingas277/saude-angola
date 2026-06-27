@@ -1,4 +1,5 @@
 "use server";
+import { safeError } from "@/lib/safe-error";
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -85,7 +86,7 @@ export async function addDependentAction(
     id_number: idNumber || null,
   });
 
-  if (error) return { error: error.message };
+  if (error) return { error: safeError(error) };
 
   revalidatePath("/perfil");
   revalidatePath("/painel/marcar");
@@ -115,7 +116,7 @@ export async function removeDependentAction(
     .eq("guardian_profile_id", user.id)
     .is("profile_id", null);
 
-  if (error) return { error: error.message };
+  if (error) return { error: safeError(error) };
 
   revalidatePath("/perfil");
   revalidatePath("/painel/marcar");

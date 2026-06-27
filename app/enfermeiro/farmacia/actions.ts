@@ -1,4 +1,5 @@
 "use server";
+import { safeError } from "@/lib/safe-error";
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -64,7 +65,7 @@ export async function addStockItemAction(
     expiry_date: expiry,
   });
 
-  if (error) return { error: error.message };
+  if (error) return { error: safeError(error) };
   revalidatePath("/enfermeiro/farmacia");
   revalidatePath("/enfermeiro");
   return { ok: true };

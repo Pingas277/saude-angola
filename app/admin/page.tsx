@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 import {
   Building2,
   CheckCircle2,
@@ -117,6 +118,18 @@ function waLink(phone: string, text: string): string {
 
 export default async function AdminInboxPage() {
   const supabase = await createClient();
+
+  // Hard gate. Middleware already requires a session for /admin (now in
+  // PROTECTED_PREFIXES), but only Lunga staff should ever see this page.
+  // Anyone else gets a 404 — not a 403 — so we don't leak the route's
+  // existence to a logged-in patient or doctor.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/entrar?redirect=/admin");
+
+  const { data: isStaff } = await supabase.rpc("is_lunga_staff");
+  if (!isStaff) notFound();
 
   const [{ data: messagesRaw }, { data: leadsRaw }] = await Promise.all([
     supabase

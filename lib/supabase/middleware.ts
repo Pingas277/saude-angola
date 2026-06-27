@@ -1,7 +1,15 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED_PREFIXES = ["/painel", "/perfil", "/medico", "/clinica", "/recepcao"];
+const PROTECTED_PREFIXES = [
+  "/painel",
+  "/perfil",
+  "/medico",
+  "/clinica",
+  "/recepcao",
+  "/admin",
+  "/enfermeiro",
+];
 const AUTH_ROUTES = ["/entrar", "/registar"];
 
 /** Apply .lunga.ao cookie domain in production so the auth cookie is

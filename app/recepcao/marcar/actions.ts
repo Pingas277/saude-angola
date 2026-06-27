@@ -1,4 +1,5 @@
 "use server";
+import { safeError } from "@/lib/safe-error";
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -39,7 +40,7 @@ export async function searchPatientsAction(
     .eq("role", "patient")
     .limit(15);
 
-  if (error) return { query: q, error: error.message };
+  if (error) return { query: q, error: safeError(error) };
 
   const results: SearchResult[] = (data ?? []).map((p: {
     id: string;
@@ -195,7 +196,7 @@ export async function bookForPatientAction(
     })
     .select("id")
     .single();
-  if (error) return { error: error.message };
+  if (error) return { error: safeError(error) };
 
   revalidatePath("/recepcao");
   return { ok: true, appointment_id: inserted.id };

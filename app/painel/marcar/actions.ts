@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { setFlash } from "@/lib/flash";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
+import { sendEmail } from "@/lib/email/send";
+import { appointmentConfirmation } from "@/lib/email/templates";
 
 export type BookingState = { error?: string } | null;
 
@@ -83,18 +85,22 @@ export async function bookAppointmentAction(
     .maybeSingle();
   if (!doctor) return { error: "Médico não encontrado." };
 
-  const { error } = await supabase.from("appointments").insert({
-    patient_id: patient.id,
-    doctor_id: doctor.id,
-    clinic_id: doctor.clinic_id,
-    scheduled_at: scheduledAt.toISOString(),
-    duration_minutes: 30,
-    status: "scheduled",
-    appointment_type: type,
-    reason: reason || null,
-  });
+  const { data: inserted, error } = await supabase
+    .from("appointments")
+    .insert({
+      patient_id: patient.id,
+      doctor_id: doctor.id,
+      clinic_id: doctor.clinic_id,
+      scheduled_at: scheduledAt.toISOString(),
+      duration_minutes: 30,
+      status: "scheduled",
+      appointment_type: type,
+      reason: reason || null,
+    })
+    .select("id")
+    .single();
 
-  if (error) return { error: error.message };
+  if (error || !inserted) return { error: error?.message ?? "Falha ao marcar." };
 
   const friendlyDate = scheduledAt.toLocaleDateString("pt-PT", {
     weekday: "short",
@@ -105,6 +111,41 @@ export async function bookAppointmentAction(
     hour: "2-digit",
     minute: "2-digit",
   });
+
+  // Confirmation email — fire & forget. Failure is logged inside sendEmail
+  // and never breaks the booking. We hydrate doctor + clinic + patient
+  // contact in one extra round-trip rather than refactoring the insert
+  // above, because the booking insert hot-path stays tight.
+  void (async () => {
+    const recipient = user.email;
+    if (!recipient) return;
+    const [{ data: doctorRich }, { data: profile }] = await Promise.all([
+      supabase
+        .from("profiles")
+        .select("full_name, specialty, clinic:clinics(name, address)")
+        .eq("id", doctor.id)
+        .maybeSingle(),
+      supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .maybeSingle(),
+    ]);
+    const clinic = Array.isArray(doctorRich?.clinic)
+      ? doctorRich?.clinic[0]
+      : doctorRich?.clinic;
+    const tpl = appointmentConfirmation({
+      patientName: profile?.full_name ?? "paciente",
+      doctorName: doctorRich?.full_name ?? "—",
+      doctorSpecialty: doctorRich?.specialty ?? null,
+      clinicName: clinic?.name ?? null,
+      clinicAddress: clinic?.address ?? null,
+      scheduledAt: scheduledAt.toISOString(),
+      appointmentType: type,
+      appointmentId: inserted.id,
+    });
+    await sendEmail({ to: recipient, ...tpl });
+  })();
 
   await setFlash({
     kind: "success",

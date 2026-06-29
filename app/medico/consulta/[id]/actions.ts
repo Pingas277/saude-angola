@@ -3,6 +3,47 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { sendEmail } from "@/lib/email/send";
+import {
+  invoiceIssued,
+  labResultAvailable,
+  prescriptionReady,
+} from "@/lib/email/templates";
+
+/**
+ * Pull patient name + email via the SECURITY DEFINER RPC. Returns null on
+ * any failure so the calling action never throws because of an email
+ * lookup. Used by the prescription / lab / invoice hooks below.
+ */
+async function patientContact(patientId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .rpc("patient_contact_internal", { p_patient_id: patientId })
+    .maybeSingle();
+  if (!data) return null;
+  const row = data as { full_name: string | null; email: string | null };
+  if (!row.email) return null;
+  return { name: row.full_name ?? "paciente", email: row.email };
+}
+
+/**
+ * Resolve the signed-in doctor's display name once per action. Falls back
+ * to a generic 'o(a) seu médico' if anything goes sideways so the email
+ * never reads as broken.
+ */
+async function doctorFullName(): Promise<string> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return "o(a) seu médico";
+  const { data } = await supabase
+    .from("profiles")
+    .select("full_name")
+    .eq("id", user.id)
+    .maybeSingle();
+  return data?.full_name ?? "o(a) seu médico";
+}
 
 export type RecordState = { error?: string; ok?: boolean } | null;
 export type RxState = { error?: string; ok?: boolean; prescriptionId?: string } | null;
@@ -242,10 +283,22 @@ export async function issuePrescriptionAction(
   const { data: inserted, error } = await supabase
     .from("prescriptions")
     .insert(insertRow)
-    .select("id")
+    .select("id, patient_id")
     .single();
 
   if (error) return { error: error.message };
+
+  // Email patient — fire & forget, swallows its own errors.
+  void (async () => {
+    const contact = await patientContact(inserted.patient_id);
+    if (!contact) return;
+    const tpl = prescriptionReady({
+      patientName: contact.name,
+      doctorName: await doctorFullName(),
+      prescriptionId: inserted.id,
+    });
+    await sendEmail({ to: contact.email, ...tpl });
+  })();
 
   for (const p of revalidate) revalidatePath(p);
   return { ok: true, prescriptionId: inserted.id };
@@ -304,10 +357,27 @@ export async function createInvoiceAction(
   const { data: inserted, error } = await supabase
     .from("invoices")
     .insert(insertRow)
-    .select("id")
+    .select("id, patient_id, amount")
     .single();
 
   if (error) return { error: error.message };
+
+  // Email patient — fire & forget, swallows its own errors.
+  void (async () => {
+    const contact = await patientContact(inserted.patient_id);
+    if (!contact) return;
+    const amountKzFormatted = new Intl.NumberFormat("pt-PT", {
+      style: "currency",
+      currency: "AOA",
+      maximumFractionDigits: 0,
+    }).format(Number(inserted.amount));
+    const tpl = invoiceIssued({
+      patientName: contact.name,
+      amountKzFormatted,
+      invoiceId: inserted.id,
+    });
+    await sendEmail({ to: contact.email, ...tpl });
+  })();
 
   for (const p of pathsForEncounter(loaded.encounter)) revalidatePath(p);
   revalidatePath("/painel/faturas");
@@ -410,7 +480,7 @@ export async function uploadExamAction(
       result_date: resultDate || null,
       uploaded_by: loaded.userId,
     })
-    .select("id")
+    .select("id, patient_id, test_name, lab_name")
     .single();
 
   if (insErr) {
@@ -418,6 +488,18 @@ export async function uploadExamAction(
     await supabase.storage.from("lab-files").remove([path]);
     return { error: insErr.message };
   }
+
+  // Email patient — fire & forget, swallows its own errors.
+  void (async () => {
+    const contact = await patientContact(row.patient_id);
+    if (!contact) return;
+    const tpl = labResultAvailable({
+      patientName: contact.name,
+      testName: row.test_name,
+      labName: row.lab_name,
+    });
+    await sendEmail({ to: contact.email, ...tpl });
+  })();
 
   revalidatePath(`/medico/consulta/${ref.id}`);
   revalidatePath("/painel/exames");

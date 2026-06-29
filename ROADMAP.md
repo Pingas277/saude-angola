@@ -59,13 +59,6 @@ Estado atual da plataforma, organizado por sistema. Cada item tem:
   - [ ] **ADD** — Verificação telefónica por SMS (Twilio/Plivo). `P1 · 8h`
 - **Total**: ~11h
 
-### B3. Recuperação de palavra-passe
-- **Estado**: ❌ Não existe.
-- **A fazer**:
-  - [ ] **ADD** — Fluxo `/esqueci-palavra-passe` com email de reset. `P0 · 4h`
-  - [ ] **ADD** — Página de confirmação `/redefinir/<token>`. `P0 · 2h`
-- **Total**: ~6h
-
 ---
 
 ## 🚪 C. Onboarding
@@ -90,15 +83,14 @@ Estado atual da plataforma, organizado por sistema. Cada item tem:
 ## 👤 D. Paciente
 
 ### D1. Dashboard (`/painel`)
-- **Estado**: Cards com próxima consulta, receitas, exames, faturas. Passaporte de saúde.
+- **Estado**: Cards próxima consulta + receitas + exames + faturas + passaporte. Mobile shell já mockup-style (bottom tab nav + quick actions grid + passaporte-header) ✅.
 - **A fazer**:
-  - [ ] **ADD** — Quick actions ("Marcar consulta", "Pedir receita", "Falar com médico") visíveis no top. `P1 · 3h`
+  - [ ] **ADD** — Quick actions ("Marcar consulta", "Pedir receita", "Falar com médico") visíveis no top do desktop. `P1 · 3h`
   - [ ] **IMPROVE** — Empty states quando paciente é novo (atualmente cards vazios sem CTA). `P1 · 3h`
-  - [ ] **REDESIGN** — Mobile patient app layout deve evoluir para a vista do **PhoneMockup da landing** quando lançarmos na App Store / Play Store: bottom tab nav (Home / Consultas / Receitas / Notif / Perfil), 4-quick-action grid (Receitas / Exames / Faturas / Consultas) e Passaporte-as-header em vez do shell de sidebar atual. O mockup é o design target, não só arte de marketing. `P2 · 24h`
-- **Total**: ~30h
+- **Total**: ~6h
 
 ### D2. Marcar (`/painel/marcar`)
-- **Estado**: Pesquisa + escolha de slot + confirmação.
+- **Estado**: Clinic-first ✅ (mentor feedback). Lista clínicas → escolhes → vês médicos da clínica + filtro especialidade → BookingSheet.
 - **A fazer**:
   - [ ] **ADD** — Filtros: especialidade × proximidade × seguro × idioma. `P1 · 8h`
   - [ ] **IMPROVE** — Mapa de Angola com pins das clínicas. `P2 · 8h`
@@ -121,16 +113,11 @@ Estado atual da plataforma, organizado por sistema. Cada item tem:
 - **Total**: ~7h
 
 ### D5. Health Passport
-- **Estado**: Cartão 3D animado com QR. ✅ Para dependentes também. **QR de Emergência MVP shipped 2026-06-26/27** (token + toggle + audit + dependents) — mas o QR ainda não está a resolver em produção: precisa de verificação.
+- **Estado**: Cartão 3D animado com QR ✅. Para dependentes ✅. Emergency QR público + token regenerável + toggle ON/OFF + audit log de scans + página `/e/<token>` ✅. Tudo live em `lunga.ao`.
 - **A fazer**:
-  - [ ] **FIX** — **QR de Emergência não resolve em produção** ←sinalizado pelo utilizador 2026-06-27. Toda a backend (DB function + audit + tokens) está em `main` e em produção; a página `/e/<token>` existe. Suspeitas mais prováveis: (a) `NEXT_PUBLIC_SITE_URL` na Vercel ainda aponta para `saude-angola.vercel.app` enquanto o utilizador testa no domínio próprio comprado; (b) cache da Vercel ainda não invalidou após merge; (c) browser/scanner está a abrir a URL com SCHEME http em vez de https. Próximo passo: confirmar o URL exato gravado no QR + URL que o utilizador está a tentar abrir, alinhar `NEXT_PUBLIC_SITE_URL` ao domínio em produção, forçar redeploy sem cache. `P0 · 1-2h`
-  - [ ] **ADD** — **QR de Emergência público** ←pedido pelo utilizador 2026-06-26. Cada paciente (e dependente) tem um QR no perfil que **qualquer pessoa pode scanear** (sem login) e ver _só_ a informação clinicamente relevante em emergência: nome próprio, idade, tipo sanguíneo, alergias, doenças crónicas, contacto de emergência. NÃO mostra: BI, morada, telefone do próprio, histórico clínico, receitas, faturas. Uso: vítima inconsciente vai para urgência → médico/paramédico scaneia o QR no telemóvel/cartão da pessoa → vê imediatamente "Não dar penicilina, é diabético tipo 1, contactar Maria 944xxx". `P1 · 16-20h`
-    - **Backend**: novo token público por paciente (`emergency_token` uuid, separado do `id`), endpoint público `/e/<token>` que devolve JSON minimal. SECURITY DEFINER function para a SELECT escapar à RLS de forma controlada.
-    - **Frontend**: página pública `/e/<token>` sem header de app, layout estilo "alerta médico" — fácil de ler em pé com adrenalina. QR aparece no Passaporte de Saúde e em `/perfil/emergencia` (toggle ON/OFF, regenerar token).
-    - **Privacidade**: toggle ON por defeito? Provavelmente OFF até paciente ativar conscientemente. Banner: "Esta página é PÚBLICA — qualquer pessoa com o seu QR pode ver isto". Auditoria opcional dos scans (P2).
-    - **Para dependentes**: cada dependente tem o seu próprio token + QR — usado por filhos pequenos, idosos com demência.
-  - [ ] **IMPROVE** — Download como PDF para imprimir. `P2 · 2h`
-- **Total**: ~22h
+  - [ ] **IMPROVE** — Download como PDF para imprimir (versão "papel" para carteira). `P2 · 2h`
+  - [ ] **CHANGE** — Default ON → default OFF, com opt-in explícito no onboarding (passo do `/perfil`). `P2 · 2h`
+- **Total**: ~4h
 
 ### D6. Notificações in-app
 - **Estado**: Sino com badge + dropdown ✅. Realtime via Supabase.
@@ -300,14 +287,8 @@ Estado atual da plataforma, organizado por sistema. Cada item tem:
   - [ ] **ADD** — Analytics produto (PostHog ou Mixpanel) — quantos completam triagem, quanto demora, etc. `P1 · 6h`
 - **Total**: ~9h
 
-### I11. Domínio + DNS
-- **Estado**: 🟢 Domínio comprado (em curso conexão). Vercel projeto ainda como `saude-angola`.
-- **A fazer**:
-  - [ ] **CONFIG** — Apontar domínio para Vercel (A + CNAME). `P0 · 1h`
-  - [ ] **CONFIG** — `NEXT_PUBLIC_SITE_URL` na Vercel para novo domínio. `P0 · 15min`
-  - [ ] **CONFIG** — DNS records para email (Resend/SES) — depende do I2. `P0 · 1h`
-  - [ ] **RENAME** — Projeto Vercel + repo GitHub para `lunga-app`. `P1 · 30min`
-- **Total**: ~3h
+### I11. Domínio + DNS ✅ DONE
+- **Estado**: `https://lunga.ao` + `https://www.lunga.ao` live com SSL. Cookies cross-subdomain. `NEXT_PUBLIC_SITE_URL=https://lunga.ao`. Resta apenas: DNS records para email (Resend/SES) — depende do I2.
 
 ### I12. Supabase Pro plan upgrade (~$25/mês)
 - **Estado**: ❌ Free tier — bloqueia 4 features de segurança/qualidade que pedem Pro. Sinalizado pelo utilizador 2026-06-27 quando tentou ativar Leaked Password Protection e descobriu que não está disponível em Free.
@@ -332,22 +313,30 @@ Estado atual da plataforma, organizado por sistema. Cada item tem:
 
 ## 📊 Resumo por prioridade
 
-| Prioridade | Total horas | Bloqueia... |
-|---|---|---|
-| **P0** (bloqueia lançamento real) | ~100h + legal | Receita real, email, compliance, recuperação password, domínio |
-| **P1** (qualidade do lançamento) | ~200h | Diferenciadores: AI bot, push notifications, login redesign, identity switcher |
-| **P2** (pós-lançamento) | ~150h | Polish e features de escala |
-| **P3** (futuro) | — | Avaliações, SMS, deep WhatsApp |
+| Prioridade | Bloqueia... |
+|---|---|
+| **P0** (bloqueia lançamento real) | Multicaixa real (I1), email transacional (I2), compliance/APD (I9), termos+privacidade legal (A2) |
+| **P1** (qualidade do lançamento) | Login redesign (B1), AI bot (H2), identity verification (C2), email lembretes (I2 extra) |
+| **P2** (pós-lançamento) | Polish, dependents PDF passport, performance, error boundaries, busca avançada |
+| **P3** (futuro) | SMS, deep WhatsApp, reviews, multi-clinic chains |
 
-## 📌 Próximos 5 movimentos sugeridos (ordem)
+## ✅ Já shipped (movido para git history)
 
-1. **I11. Domínio + DNS** — desbloqueia tudo o resto (email precisa domínio fixo). `~3h`
-2. **B3. Recuperação de palavra-passe** — qualquer utilizador real vai precisar. `~6h`
-3. **B1. Login redesign** — primeiro contacto, marca-te a perceção. `~11h`
-4. **I2. Email transacional** — sem isto pacientes não sabem que têm consulta. `~14h`
-5. **H2. AI Support bot** — escala o suporte sem contratares pessoas. `~16h`
+- I11. Domínio + DNS (lunga.ao + www.lunga.ao live, cookies cross-subdomain)
+- B3. Recuperação de palavra-passe (`/esqueci-palavra-passe` → email → `/redefinir`)
+- D2. Marcar clinic-first (`search_clinics` RPC + 2-view marcar page)
+- D5. Emergency QR público (token + toggle + audit + dependents + `/e/<token>`)
+- D1. Mobile patient shell (bottom tab nav + mockup-style)
+- D3. Telemedicina com IA Claude Haiku 4.5 + cancel/escape hatch
+- Security audit 9-point (HSTS+CSP+XFO+Referrer+Permissions, /admin guard, safeError, deps 26→4)
 
-Total destes 5: **~50h** = 1.5 semanas focadas. Depois disto, podes lançar B2C com confiança.
+## 📌 Próximos movimentos sugeridos
+
+1. **I2. Email transacional via Resend** (~14h, P0) — free 3k emails/mo, desbloqueia confirmações de consulta + lembretes + alertas de exames.
+2. **B1. Login redesign** (~11h, P1) — split-screen, Google OAuth, show/hide password, lembrar-me, mensagens de erro melhores.
+3. **H2. AI Support bot** (~16h, P1) — GPT-4o-mini, ~$30/mês a 200 sessões/dia.
+4. **D6. Push notifications** (~12h, P1) — Web Push API, complementa o sistema in-app já existente.
+5. **I1. Multicaixa real** (~38h, P0) — depende de conta business em Proxypay/EMIS (passo externo).
 
 ---
 

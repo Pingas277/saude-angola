@@ -37,9 +37,9 @@ const STEPS = [
   {
     iconName: "search",
     n: "1",
-    title: "Procure o médico",
-    desc: "Veja médicos por especialidade ou nome — em toda a Angola.",
-    chip: { icon: Stethoscope, label: "500+ médicos em rede" },
+    title: "Escolha a clínica",
+    desc: "Procure pela clínica perto de si — depois escolha o médico da especialidade que precisa.",
+    chip: { icon: Building2, label: "Clínicas em toda a Angola" },
   },
   {
     iconName: "calendar-check",
@@ -61,9 +61,9 @@ const FEATURES = [
   {
     iconName: "search",
     gradient: "from-sky-500 to-blue-600",
-    title: "Encontre o seu médico",
-    desc: "Procure por especialidade, clínica, província ou nome. Marque em segundos.",
-    chip: "Por especialidade ou nome",
+    title: "Encontre a sua clínica",
+    desc: "Procure por nome, província ou especialidade. Escolha a clínica e depois o médico.",
+    chip: "Clínica → médico → hora",
   },
   {
     iconName: "sparkles",
@@ -215,7 +215,7 @@ export default function HomePage() {
           <Logo size="md" />
           <nav className="hidden items-center gap-1 md:flex">
             <NavLink href="#como">Como funciona</NavLink>
-            <NavLink href="#procurar">Procurar médico</NavLink>
+            <NavLink href="#procurar">Encontrar clínica</NavLink>
             <NavLink href="#precos">Preços</NavLink>
             <NavLink href="/sobre">Sobre nós</NavLink>
             <NavLink href="#faq">Perguntas</NavLink>
@@ -412,10 +412,11 @@ export default function HomePage() {
       <section id="procurar" className="border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-24">
           <Reveal className="mx-auto max-w-2xl text-center">
-            <SectionEyebrow>Médicos e clínicas</SectionEyebrow>
-            <SectionTitle>Encontre o seu médico em segundos.</SectionTitle>
+            <SectionEyebrow>Clínicas em Angola</SectionEyebrow>
+            <SectionTitle>Comece pela clínica.</SectionTitle>
             <SectionLede>
-              Procure por especialidade, clínica ou província. Marque online.
+              Escolha a clínica perto de si — depois o médico da especialidade
+              que precisa. Marque em segundos.
             </SectionLede>
           </Reveal>
 
@@ -837,7 +838,7 @@ export default function HomePage() {
             title="Produto"
             links={[
               { href: "#como", label: "Como funciona" },
-              { href: "#procurar", label: "Procurar médico" },
+              { href: "#procurar", label: "Encontrar clínica" },
               { href: "/precos", label: "Preços" },
               { href: "/registar", label: "Criar conta" },
             ]}
